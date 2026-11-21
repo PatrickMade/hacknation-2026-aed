@@ -8,6 +8,7 @@ root = Path(__file__).resolve().parents[1]
 modified = {
     'backend/docker/app/Dockerfile',
     'frontend/proxy.local.conf.json',
+    'frontend/src/app/app-routing.module.ts',
     'frontend/src/app/app.config.ts',
     'frontend/src/app/app.module.ts',
 }

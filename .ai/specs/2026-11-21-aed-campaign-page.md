@@ -8,7 +8,7 @@ Dysponenci AED i jury nie mają w lokalnym portalu dane.gov.pl jednego miejsca, 
 Nowa trasa `/pl/aed` w istniejącym układzie `MainLayoutComponent` (nagłówek, stopka i nawigacja portalu bez zmian):
 
 - nazwa akcji, slogan i znak jako wyraźnie oznaczone placeholdery (`PLACEHOLDER`) w jednym pliku `aed-campaign.brand.ts`, do podmiany po decyzji o marce;
-- liczniki: dysponenci (unikalne `operator_name`), rekordy AED (wiersze raportu), gminy z danymi (unikalne 7-cyfrowe `terc`) z 2477;
+- liczniki: dysponenci (unikalne `operator_name`), rekordy AED (wiersze raportu), gminy z oficjalnymi danymi z liczby gmin w pliku granic PRG (2479 w wersji GUGiK z 2026-11-10; brief podawał 2477). Gminę rekordu wyznacza 7-cyfrowe `terc` (części gminy miejsko-wiejskiej, typ 4 i 5, liczą się do gminy typu 3), a gdy kod nie wskazuje gminy z PRG - współrzędne;
 - mapa pokrycia gmin: gmina z oficjalnym rekordem, gmina, w której tylko OSM zna AED (luka), gmina bez danych; dymek z nazwą gminy, liczbą AED, dysponentami i liczbą punktów OSM;
 - tekstowa alternatywa mapy: legenda z opisem słownym i tabela gmin z lukami oraz gmin z danymi;
 - CTA „Udostępnij swoje AED” do panelu dostawcy (`https://admin.mcod.local/`, w którym L5 dodaje „Dodaj dane AED”).
@@ -22,7 +22,7 @@ Nowa trasa `/pl/aed` w istniejącym układzie `MainLayoutComponent` (nagłówek,
 Granice gmin: PRG (GUGiK, dane bez opłat, pobrane 2026-11-21), uproszczone do statycznego GeoJSON w `frontend/src/assets/aed/gminy.geojson` z polami `terc` (JPT_KOD_JE) i `name`. Atrybucja na stronie.
 
 ## Zakres
-Nowy moduł `frontend/src/app/pages/aed-campaign/`, jedna linia trasy w `app-routing.module.ts`, plik granic w `assets/aed/`, wpis o modyfikacji w `UPSTREAM.md` i `scripts/check-portal-source.py`. Bez nowych zależności (Leaflet przez istniejący `LeafletService`), bez zmian backendu, globalnych stylów, nagłówka i strony głównej.
+Nowy moduł `frontend/src/app/pages/aed-campaign/`, jedna linia trasy w `app-routing.module.ts`, plik granic w `assets/aed/`, wpis o modyfikacji w `UPSTREAM.md` i `scripts/check-portal-source.py`. Bez nowych zależności: Leaflet jest już zależnością portalu; strona ładuje go przez dynamiczny `import('leaflet')`, bo istniejący `LeafletService` używa `require('leaflet')`, którego obecny serwer deweloperski (esbuild) nie obsługuje. Bez zmian backendu, globalnych stylów, nagłówka, strony głównej i `LeafletService`.
 
 ## Poza zakresem
 Agregacja (L4), kreator dysponenta (L5), zgłoszenia (L7), finalne materiały marki (podmiana placeholderów w osobnym małym kroku), tłumaczenie EN.
@@ -37,13 +37,13 @@ Agregacja (L4), kreator dysponenta (L5), zgłoszenia (L7), finalne materiały ma
 
 ## Ryzyka
 - Raport L4 powstaje równolegle; tytuły zasobów i nazwy kolumn mogą się różnić. Kontrakt powyżej zgłaszam koordynatorowi; rozbieżność oznacza drobną poprawkę dopasowania.
-- Rozmiar GeoJSON gmin wpływa na czas ładowania; cel poniżej 1,5 MB po uproszczeniu.
+- Rozmiar GeoJSON gmin wpływa na czas ładowania: 1,55 MB (0,41 MB gzip) po uproszczeniu mapshaper do 1,2% wierzchołków i dokładności 0,001°. Mapa służy do przeglądu pokrycia, nie do ustalania granic.
 - Pobieranie OSM stronami po 100 wierszy przy ~10-15 tys. punktów to ok. 100-150 żądań; równoległość ograniczona do 6.
 
 ## Progress
-1. [ ] Spec, issue APP-44, claim.
-2. [ ] Granice gmin z PRG: uproszczenie, `terc`, `name`, rozmiar.
-3. [ ] RED: test obliczeń pokrycia.
-4. [ ] GREEN: serwis danych, obliczenia, komponent strony, trasa.
-5. [ ] Przeglądarka: desktop, 360 px, klawiatura, stan pusty, dane testowe przez przechwycone API.
+1. [x] Spec, issue APP-44, claim.
+2. [x] Granice gmin z PRG: uproszczenie, `terc`, `name`, rozmiar.
+3. [x] RED: test obliczeń pokrycia (4 asercje nie przechodzą na zaślepce).
+4. [x] GREEN: serwis danych, obliczenia, komponent strony, trasa.
+5. [x] Przeglądarka: stan pusty na prawdziwym API; dane przez lokalną atrapę trzech endpointów (rekordy ze scrape gov.pl i Przemyśla, punkty OSM z migawki L4): desktop, 360 px bez przewijania w poziomie, klawiatura z widocznym fokusem. Weryfikacja na prawdziwym raporcie L4 po jego publikacji.
 6. [ ] UPSTREAM.md, kontrola źródeł, pełna bramka, PR po scaleniu #3.

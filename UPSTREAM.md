@@ -19,6 +19,7 @@ Oficjalny plik README.txt jest zachowany jako NOTICE.upstream.txt, a LICENCE.txt
 - frontend/proxy.local.conf.json: lokalny serwer flag zamiast produkcyjnego.
 - frontend/src/app/app.config.ts: lokalne adresy flag, puste identyfikatory telemetrii.
 - frontend/src/app/app.module.ts: wyłączenie Sentry i Matomo.
+- frontend/src/app/app-routing.module.ts: jedna trasa `/pl/aed` (strona akcji AED) w istniejącym układzie portalu; nowy moduł frontend/src/app/pages/aed-campaign/ i granice gmin frontend/src/assets/aed/gminy.geojson (PRG, GUGiK).
 - Pliki w katalogu głównym, local/ i scripts/: Compose, konfiguracja lokalna, generowanie env, instrukcja startu, kontrola źródeł i testy. Dotychczasowy szkielet Flutter zostaje zastąpiony portalem.
 
 Nie zmieniamy szablonów, stylów, treści ani layoutu portalu. Pusta baza po migracjach nie zawiera produkcyjnych stron CMS. Seed nie ładuje upstream basic_data.json ani jego kont z publicznie znanymi hasłami.
