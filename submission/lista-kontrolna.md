@@ -51,7 +51,8 @@ Wymagania z pełnej treści zadania, pkt 2-5.
 - [ ] Logo w .jpg, .png, .pdf i .svg; księga znaku w PDF z wymaganymi
       sekcjami.
 - [ ] Opis, ograniczenia i oświadczenie AI odpowiadają scalonemu stanowi;
-      brak znaczników "do uzupełnienia".
+      brak znaczników "do uzupełnienia", "do wykonania" i "w realizacji"
+      w `opis-projektu.md`, `ograniczenia.md` i `oswiadczenie-ai.md`.
 - [ ] Teksty w pierwszej osobie liczby pojedynczej lub bezosobowo.
 - [ ] Wszystkie linki w zgłoszeniu działają, w tym dostęp jury do
       repozytorium.

@@ -48,6 +48,10 @@ o ograniczenia stwierdzone w ich testach.
     Nie sprawdza granic administracyjnych, istnienia kodu w rejestrze TERYT,
     pełnej gramatyki `opening_hours` ani braku danych osobowych w dowolnym
     tekście.
+
+Punkty 13-17 opisują założenia modułów AED, które są w realizacji
+[do uzupełnienia: potwierdzić po scaleniu modułów i ich testach].
+
 13. Deduplikacja wskazuje kandydatów do scalenia. Wspólny adres lub
     współrzędne nie dowodzą, że dwa rekordy opisują to samo urządzenie.
 14. Wbudowana mapa portalu czyta dane tabelaryczne. Zasób GeoJSON jest
@@ -67,5 +71,6 @@ o ograniczenia stwierdzone w ich testach.
 18. Wymagania WCAG 2.2 AA i responsywności (od 360 px) dotyczą nowych stron
     AED. Pozostała część portalu jest bez zmian i poza zakresem audytu.
 19. Kod portalu pochodzi z oficjalnego wydania (backend 2.62.3, frontend
-    3.5.2) na licencji GPLv3. Zmiany i moduły AED są rozpowszechniane na tej
-    samej licencji.
+    3.5.2) na licencji GPLv3. Zmiany i moduły AED podlegają tej samej
+    licencji [do uzupełnienia: plik licencji i opis zmian po scaleniu
+    konfiguracji portalu].

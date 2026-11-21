@@ -15,7 +15,7 @@ portalu po scaleniu modułów AED.
 
 - 5 zbiorów AED w dane.gov.pl, każdy w innym układzie; w Markach rekord
   zakodowany w jednej kolumnie i zamienione współrzędne.
-- 739 wpisów o AED na 20 stronach urzędów, tylko 137 ze współrzędnymi.
+- 739 wpisów o AED z 20 źródeł na stronach urzędów, tylko 137 ze współrzędnymi.
 - Ponad 18 tysięcy punktów w OSM, bez wskazania odpowiedzialnego dysponenta.
 - Wniosek: brak jednego, aktualnego, maszynowo czytelnego źródła.
 - **Zrzut:** fragmenty dwóch istniejących zbiorów w różnych układach.

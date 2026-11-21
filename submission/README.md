@@ -9,7 +9,7 @@ Materiały zgłoszenia do zadania "Misja AED - Dane na ratunek"
 | [oswiadczenie-ai.md](oswiadczenie-ai.md) | Zakres wykorzystania AI według obszarów (regulamin zadania, par. 2 ust. 8) |
 | [ograniczenia.md](ograniczenia.md) | Ograniczenia prototypu |
 | [prezentacja-konspekt.md](prezentacja-konspekt.md) | Konspekt prezentacji z listą zrzutów ekranu |
-| [lista-kontrolna.md](lista-kontrolna.md) | Siedem wymaganych rezultatów ze statusem i kontrola przed wysłaniem |
+| [lista-kontrolna.md](lista-kontrolna.md) | Lista robocza: siedem wymaganych rezultatów ze statusem i kontrola przed wysłaniem; nie wchodzi do treści zgłoszenia |
 
 Wzorcowy zakres danych AED (słownik XLSX, szablon, schemat, walidator)
 znajduje się w [`aed-standard/`](../aed-standard/).

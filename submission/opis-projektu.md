@@ -133,11 +133,11 @@ nginx oraz frontend Angular z mapą Leaflet. Całość uruchamia jedna
 konfiguracja Docker Compose z danymi startowymi: instytucje dysponentów
 i konta o różnych rolach (administrator, edytorzy instytucji, zwykły
 użytkownik). Moduły AED to nowe aplikacje Django w backendzie i nowe trasy
-we frontendzie portalu. Walidacja w portalu korzysta z tego samego schematu
-i walidatora co pakiet `aed-standard/`.
+we frontendzie portalu. Walidacja w portalu ma korzystać z tego samego schematu
+i walidatora co pakiet `aed-standard/` (w realizacji).
 
 Jury uruchamia prototyp lokalnie z kodu. Instrukcja: `README.md`
-w repozytorium.
+w repozytorium [do uzupełnienia po scaleniu konfiguracji portalu].
 
 ## Stan prototypu
 
