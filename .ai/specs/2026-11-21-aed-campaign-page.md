@@ -38,6 +38,7 @@ Agregacja (L4), kreator dysponenta (L5), zgłoszenia (L7), zmiany plików `brand
 6. `python3 -B scripts/check-portal-source.py` i pełna bramka `validation.commands` przechodzą.
 
 ## Ryzyka
+- Czytanie pasami pomija wiersze bez szerokości geograficznej. Dla OSM to bez znaczenia (punkt bez współrzędnych nie trafia na mapę). Raport oficjalny ma kilkadziesiąt wierszy i czyta się go bez pasów; dopiero powyżej 10000 wierszy rekord bez współrzędnych mógłby wypaść z licznika rekordów.
 - Raport L4 powstaje równolegle; tytuły zasobów i nazwy kolumn mogą się różnić. Kontrakt powyżej zgłaszam koordynatorowi; rozbieżność oznacza drobną poprawkę dopasowania.
 - Rozmiar GeoJSON gmin wpływa na czas ładowania: 1,55 MB (0,41 MB gzip) po uproszczeniu mapshaper do 1,2% wierzchołków i dokładności 0,001°. Mapa służy do przeglądu pokrycia, nie do ustalania granic.
 - Pobieranie OSM stronami po 100 wierszy przy ~10-15 tys. punktów to ok. 100-150 żądań; równoległość ograniczona do 6.
@@ -54,4 +55,5 @@ Agregacja (L4), kreator dysponenta (L5), zgłoszenia (L7), zmiany plików `brand
 9. [x] Finalny znak i kolory z `brand/` (L3).
 10. [x] Defekt z integracyjnego QA (L8): wyszukiwanie z `<mark>` w tytule i odczyt OSM ponad okno 10000 wierszy; testy regresji RED, potem GREEN; dowód na stosie z `aed_refresh`.
 11. [x] Dowód na stosie L7 z danymi `aed_refresh` (tylko odczyt): liczniki 4/74/5 z 2479, mapa, tabele, CTA do kreatora, 360 px bez przewijania w poziomie; poprawka linku do zbioru (`/pl/dataset/6,raport-zbiorczy-aed`) i liczniki przed wczytaniem OSM.
-12. [ ] Niezależny review nowego head, CI, merge gate (kolejność 6).
+12. [x] Uwagi z review 01804b1: stały region `aria-live` dla komunikatów mapy; osobny komunikat o niepełnych danych OSM (mapa), a nie o licznikach.
+13. [ ] Aktualizacja z main po #10, niezależny review, CI, merge gate (kolejność 6).

@@ -39,7 +39,7 @@
             </p>
           }
           @case ('ready') {
-            @if (report.truncated || osmTruncated) {
+            @if (report.truncated) {
               <p class="aed-campaign__notice">
                 Części wierszy nie udało się wczytać z portalu, więc liczby mogą być zaniżone.
               </p>
@@ -79,12 +79,20 @@
     </section>
 
     <!-- Coverage map: needs the large OpenStreetMap resource, which loads after the counters -->
-    @if (state === 'ready' && osmState === 'loading') {
-      <p class="aed-campaign__notice" aria-live="polite">Trwa wczytywanie mapy luk w danych…</p>
-    }
-    @if (state === 'ready' && osmState === 'error') {
-      <p class="aed-campaign__notice" aria-live="polite">Nie udało się wczytać mapy luk. Odśwież stronę za chwilę.</p>
-    }
+    <!-- Permanent live region: screen readers announce text that changes inside it. -->
+    <div aria-live="polite">
+      @if (state === 'ready' && osmState === 'loading') {
+        <p class="aed-campaign__notice">Trwa wczytywanie mapy luk w danych…</p>
+      }
+      @if (state === 'ready' && osmState === 'error') {
+        <p class="aed-campaign__notice">Nie udało się wczytać mapy luk. Odśwież stronę za chwilę.</p>
+      }
+      @if (state === 'ready' && osmState === 'ready' && osmTruncated) {
+        <p class="aed-campaign__notice">
+          Części punktów OpenStreetMap nie udało się wczytać, więc mapa może pokazywać za mało luk.
+        </p>
+      }
+    </div>
     @if (state === 'ready' && osmState === 'ready') {
       <section class="aed-campaign__section" aria-labelledby="aed-campaign-map">
         <h2 id="aed-campaign-map" class="heading heading--sm">Gdzie brakuje danych o AED</h2>
@@ -205,12 +213,8 @@
       <p class="aed-campaign__slogan">{{ brand.dysponentLine }}</p>
       <ol class="aed-campaign__steps">
         <li>Zaloguj się do panelu dostawcy jako pełnomocnik lub edytor swojej instytucji.</li>
-        <li>Wybierz „Dodaj dane AED”, pobierz szablon albo wgraj własny plik CSV, XLSX lub GeoJSON.</li>
-        <li>
-          Popraw błędy wskazane w raporcie walidacji i opublikuj zasób. Raport zbiorczy uwzględni go przy odświeżeniu.
-        </li>
+        <li>Wybierz „Dodaj dane AED”, pobierz szablon albo</li>
       </ol>
-      <a class="btn btn-primary" [href]="providerPanelUrl">Udostępnij swoje AED</a>
     </section>
   </div>
 </section>
