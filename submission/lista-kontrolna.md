@@ -33,13 +33,13 @@ Wymagania z pełnej treści zadania, pkt 2-5.
 
 | Pole | Status | Źródło treści |
 |---|---|---|
-| Nazwa projektu | do zrobienia: aktualizacja po wyborze nazwy akcji | `opis-projektu.md`, sekcja Tytuł |
+| Nazwa projektu | do zrobienia: nazwa akcji wybrana ("Mapa Serc"), tytuł do aktualizacji | `opis-projektu.md`, sekcja Tytuł |
 | Nazwa zespołu, numer stolika | do zrobienia: uzupełnia autor | - |
 | Zadanie partnerskie | do sprawdzenia: przypisane w drafcie (termin draftu 2026-11-21, 19:00 UTC) | "Misja AED - Dane na ratunek" |
 | Problem, rozwiązanie, krótki opis | gotowe do wklejenia (wersja 1) | `opis-projektu.md`, sekcje Krótki opis i Teksty do formularza HackTribe |
 | Link do repozytorium | do zrobienia: dostęp dla jury | Repozytorium staje się publiczne wyłącznie za zgodą autora, przed terminem |
 | Prezentacja PDF | do zrobienia | Maksymalnie 10 MB |
-| Materiały dodatkowe | do zrobienia | XLSX, pliki logo, księga znaku, nagranie |
+| Materiały dodatkowe | w realizacji: XLSX gotowy, pliki logo i księga znaku w przeglądzie, nagranie do zrobienia | `aed-standard/field-dictionary.xlsx`, `brand/`, nagranie |
 
 ## Kontrola przed wysłaniem
 
@@ -48,8 +48,8 @@ Wymagania z pełnej treści zadania, pkt 2-5.
 - [ ] Prototyp uruchomiony od zera według `README.md`; demo przechodzi
       wszystkie kroki z konspektu.
 - [ ] PDF prezentacji ma co najmniej 5 slajdów i najwyżej 10 MB.
-- [ ] Logo w .jpg, .png, .pdf i .svg; księga znaku w PDF z wymaganymi
-      sekcjami.
+- [x] Logo w .jpg, .png, .pdf i .svg; księga znaku w PDF z wymaganymi
+      sekcjami (`brand/`).
 - [ ] Opis, ograniczenia i oświadczenie AI odpowiadają scalonemu stanowi;
       brak znaczników "do uzupełnienia", "do wykonania" i "w realizacji"
       w `opis-projektu.md`, `ograniczenia.md` i `oswiadczenie-ai.md`.

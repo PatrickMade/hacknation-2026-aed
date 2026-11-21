@@ -5,8 +5,8 @@ Source doc: .ai/specs/2026-11-21-mapa-serc-brand.md
 Brief: .ai/specs/briefs/2026-11-21-kierunek-kampanii-aed.md
 Route: agreed delivery (small change)
 Evidence: nazwę "Mapa Serc" i hasło "Wszystkie AED pod ręką." wybrał właściciel
-21 listopada 2026 r.; koordynator potwierdził zakres (logo, naklejka QR, księga
-znaku, katalog `brand/`).
+21 listopada 2026 r.; zakres (logo, naklejka QR, księga znaku, katalog
+`brand/`) jest uzgodniony.
 
 ## Problem
 
