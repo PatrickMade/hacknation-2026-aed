@@ -2,12 +2,16 @@
 
 ## Tytuł
 
-**Misja AED - jeden standard danych o defibrylatorach w dane.gov.pl**
+**Mapa Serc - jeden standard danych o defibrylatorach AED w dane.gov.pl**
 
 Zadanie: "Misja AED - Dane na ratunek" (Ministerstwo Cyfryzacji, Departament
 Zarządzania Danymi). Zespół jednoosobowy.
 
-Nazwa i hasło akcji dla dysponentów: **[do uzupełnienia po wyborze marki]**.
+Nazwa i hasło akcji: **Mapa Serc - „Wszystkie AED pod ręką.”** Zdanie dla
+dysponentów: „Lista AED w szufladzie nikogo nie uratuje.”
+
+Kod: https://github.com/PatrickMade/hacknation-2026-aed (repozytorium
+publiczne). Projekt w HackTribe: https://hacknation2026.hacktribe.co/mapa-serc/
 
 ## Krótki opis
 
@@ -133,26 +137,26 @@ nginx oraz frontend Angular z mapą Leaflet. Całość uruchamia jedna
 konfiguracja Docker Compose z danymi startowymi: instytucje dysponentów
 i konta o różnych rolach (administrator, edytorzy instytucji, zwykły
 użytkownik). Moduły AED to nowe aplikacje Django w backendzie i nowe trasy
-we frontendzie portalu. Walidacja w portalu ma korzystać z tego samego schematu
-i walidatora co pakiet `aed-standard/` (w realizacji).
+we frontendzie portalu. Walidacja w portalu korzysta z tego samego schematu
+i walidatora co pakiet `aed-standard/`.
 
 Jury uruchamia prototyp lokalnie z kodu. Instrukcja: `README.md`
-w repozytorium [do uzupełnienia po scaleniu konfiguracji portalu].
+w repozytorium.
 
 ## Stan prototypu
 
-Stan na 2026-11-21 (wersja 1 opisu, zostanie zaktualizowana po scaleniu
-modułów AED):
+Stan na 2026-11-21, 20:45 UTC. "W przeglądzie" oznacza pull request
+czekający na przegląd i scalenie do `main`.
 
 | Element | Stan |
 |---|---|
 | Wzorcowy zakres danych `aed-standard/` | gotowy, w `main` |
-| Lokalny portal dane.gov.pl z kontami | gotowy, w przeglądzie |
-| Agregator i raport zbiorczy AED | w realizacji |
-| Kreator dysponenta i walidator | w realizacji |
-| Strona akcji i mapa pokrycia | w realizacji |
-| Zgłoszenia problemów, QR, "Najbliższy AED" | w realizacji |
-| Nazwa, hasło, logo, księga znaku | w realizacji |
+| Lokalny portal dane.gov.pl z kontami | gotowy, w `main` |
+| Agregator i raport zbiorczy AED | gotowy, w `main` |
+| Kreator dysponenta i walidator | w przeglądzie (PR #5) |
+| Strona akcji i mapa pokrycia | w przeglądzie (PR #6) |
+| Zgłoszenia problemów, QR, "Najbliższy AED" | w przeglądzie (PR #7) |
+| Nazwa, hasło, logo, księga znaku | w przeglądzie (PR #10) |
 
 Ograniczenia: `ograniczenia.md`. Użycie AI: `oswiadczenie-ai.md`.
 

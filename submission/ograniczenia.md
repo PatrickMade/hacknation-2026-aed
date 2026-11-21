@@ -1,7 +1,6 @@
 # Ograniczenia prototypu
 
-Wersja 1 (2026-11-21). Lista zostanie uzupełniona po scaleniu modułów AED
-o ograniczenia stwierdzone w ich testach.
+Stan na 2026-11-21.
 
 ## Środowisko i publikacja
 
@@ -49,9 +48,6 @@ o ograniczenia stwierdzone w ich testach.
     pełnej gramatyki `opening_hours` ani braku danych osobowych w dowolnym
     tekście.
 
-Punkty 13-17 opisują założenia modułów AED, które są w realizacji
-[do uzupełnienia: potwierdzić po scaleniu modułów i ich testach].
-
 13. Deduplikacja wskazuje kandydatów do scalenia. Wspólny adres lub
     współrzędne nie dowodzą, że dwa rekordy opisują to samo urządzenie.
 14. Wbudowana mapa portalu czyta dane tabelaryczne. Zasób GeoJSON jest
@@ -72,5 +68,5 @@ Punkty 13-17 opisują założenia modułów AED, które są w realizacji
     AED. Pozostała część portalu jest bez zmian i poza zakresem audytu.
 19. Kod portalu pochodzi z oficjalnego wydania (backend 2.62.3, frontend
     3.5.2) na licencji GPLv3. Zmiany i moduły AED podlegają tej samej
-    licencji [do uzupełnienia: plik licencji i opis zmian po scaleniu
-    konfiguracji portalu].
+    licencji (`LICENSE`, `UPSTREAM.md`). Datowane kopie danych źródłowych
+    zachowują licencje źródeł (CC0 1.0, CC BY 4.0, ODbL 1.0).

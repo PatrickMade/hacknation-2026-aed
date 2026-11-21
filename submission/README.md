@@ -1,26 +1,28 @@
 # Pakiet zgłoszenia HackNation 2026
 
-Materiały zgłoszenia do zadania "Misja AED - Dane na ratunek"
-(Ministerstwo Cyfryzacji, Departament Zarządzania Danymi).
+Materiały zgłoszenia "Mapa Serc" do zadania "Misja AED - Dane na ratunek"
+(Ministerstwo Cyfryzacji, Departament Zarządzania Danymi). Projekt
+w HackTribe: https://hacknation2026.hacktribe.co/mapa-serc/
 
 | Plik | Zawartość |
 |---|---|
+| [mapa-serc-prezentacja.pdf](mapa-serc-prezentacja.pdf) | Prezentacja zgłoszenia (PDF, 14 slajdów) |
+| [prezentacja/](prezentacja/) | Źródła slajdów: HTML, CSS, zrzuty ekranu, znak, krój pisma i skrypt budujący PDF |
 | [opis-projektu.md](opis-projektu.md) | Tytuł, krótki i szczegółowy opis, kroki użytkownika, teksty do formularza HackTribe |
 | [oswiadczenie-ai.md](oswiadczenie-ai.md) | Zakres wykorzystania AI według obszarów (regulamin zadania, par. 2 ust. 8) |
 | [ograniczenia.md](ograniczenia.md) | Ograniczenia prototypu |
-| [prezentacja-konspekt.md](prezentacja-konspekt.md) | Konspekt prezentacji z listą zrzutów ekranu |
+| [akceptacja.md](akceptacja.md) | Lista akceptacji autora: demo, PDF, księga znaku, XLSX, oświadczenie AI |
 | [lista-kontrolna.md](lista-kontrolna.md) | Lista robocza: siedem wymaganych rezultatów ze statusem i kontrola przed wysłaniem; nie wchodzi do treści zgłoszenia |
 
 Wzorcowy zakres danych AED (słownik XLSX, szablon, schemat, walidator)
 znajduje się w [`aed-standard/`](../aed-standard/).
 
-## Wersja 1 i elementy do uzupełnienia
+## Budowa PDF
 
-Ta wersja zawiera teksty, które nie wymagają zrzutów ekranu. Wersja 2,
-po scaleniu modułów AED, doda:
+```sh
+python3 -B submission/prezentacja/build-pdf.py
+```
 
-- zrzuty ekranu z lokalnego portalu i PDF prezentacji (najwyżej 10 MB);
-- nagranie demo (do 2 minut);
-- nazwę, hasło i znak akcji w miejscach oznaczonych "do uzupełnienia";
-- aktualny stan prototypu w opisie, ograniczenia z testów modułów
-  i narzędzia użyte przy znaku w oświadczeniu AI.
+Skrypt drukuje `prezentacja/slajdy.html` przez Chrome lub Chromium bez
+interfejsu i sprawdza limit 10 MB oraz liczbę slajdów. Szczegóły:
+[prezentacja/README.md](prezentacja/README.md).
