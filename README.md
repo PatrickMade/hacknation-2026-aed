@@ -91,21 +91,22 @@ docker compose up -d
 - `frontend/`: oficjalny Angular, lokalny proxy, Sentry i Matomo wyłączone.
 - `compose.yaml`: PostgreSQL, Elasticsearch, Redis, RabbitMQ, Fuseki, MailHog, flagi, aplikacje i nginx.
 - `local/`, `scripts/`: konfiguracja i sprawdzenie pochodzenia źródeł.
+- `backend/mcod/aed_wizard/`: kreator „Dodaj dane AED” w panelu dostawcy (`https://admin.mcod.local/aed/kreator/`, konta pełnomocnika i edytora instytucji) oraz publiczny walidator „Sprawdź swój plik” (`https://admin.mcod.local/aed/sprawdz-plik/`). Reguły zgodności pochodzą z `aed-standard/validate.py`. Testy kreatora są częścią bramki poniżej (`mcod.aed_wizard`).
 
 Po budowie obrazów i przygotowaniu usług/bazy z instrukcji startu uruchom bramkę w tej kolejności:
 
 ```sh
 python3 -B scripts/check-portal-source.py
 docker compose --profile tools config --quiet
-docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed mcod.aed_aggregate --noinput --keepdb
+docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed mcod.aed_aggregate mcod.aed_wizard --noinput --keepdb
 python3 -B .ai/scripts/check_project_copy.py
 python3 -B .ai/scripts/check_client_config.py
 ```
 
-Test obejmuje seed, ponowienie, brak hasła, logowanie edytorów i odmowę dostępu do obcej instytucji oraz panelu dla zwykłego użytkownika. Testy `mcod.aed_aggregate` sprawdzają mapowanie źródeł AED do wzorcowego zakresu, deduplikację, pochodzenie rekordów, walidację przez `aed-standard/validate.py` oraz publikację zasobów raportu. Nie jest to pełny zestaw testów całego portalu.
+Test obejmuje seed, ponowienie, brak hasła, logowanie edytorów i odmowę dostępu do obcej instytucji oraz panelu dla zwykłego użytkownika. Testy `mcod.aed_aggregate` sprawdzają mapowanie źródeł AED do wzorcowego zakresu, deduplikację, pochodzenie rekordów, walidację przez `aed-standard/validate.py` oraz publikację zasobów raportu. Testy `mcod.aed_wizard` sprawdzają mapowanie plików dysponentów do standardu, raport walidacji, publikację przez konto instytucji, publiczny walidator oraz to, że opublikowany zasób trafia do raportu zbiorczego po odświeżeniu. Nie jest to pełny zestaw testów całego portalu.
 
 ## Licencja i użycie AI
 
 Portal i nasze modyfikacje są udostępniane na GNU GPL v3.0. Wyjątek: datowane kopie danych źródłowych w `backend/data/aed/sources/` nie są objęte GPL v3.0; zachowują licencje źródeł (CC0 1.0, CC BY 4.0, OpenStreetMap: ODbL 1.0), opisane w `backend/data/aed/sources/LICENSES.md`. Zobacz `LICENSE`, `NOTICE.upstream.txt` i `UPSTREAM.md` z wersjami, sumami archiwów i listą zmian. Zachowano oryginalne notices i licencje zależności.
 
-AI wspierało analizę, konfigurację lokalną, seed kont, agregator raportu zbiorczego AED (mapowanie, deduplikacja, publikacja), testy i dokumentację tej wersji. Oficjalny kod portalu pochodzi z dystrybucji dane.gov.pl. Zakres użycia AI należy aktualizować w materiałach zgłoszenia zgodnie z regulaminem HackNation §2 ust. 8; końcowy rezultat wymaga przeglądu i odpowiedzialności zespołu.
+AI wspierało analizę, konfigurację lokalną, seed kont, agregator raportu zbiorczego AED (mapowanie, deduplikacja, publikacja), kod kreatora AED i walidatora, testy i dokumentację tej wersji. Oficjalny kod portalu pochodzi z dystrybucji dane.gov.pl. Zakres użycia AI należy aktualizować w materiałach zgłoszenia zgodnie z regulaminem HackNation §2 ust. 8; końcowy rezultat wymaga przeglądu i odpowiedzialności zespołu.

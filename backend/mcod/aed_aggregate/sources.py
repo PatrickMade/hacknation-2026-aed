@@ -226,6 +226,62 @@ def official_records():
     return records
 
 
+PUBLISHED_TAG = 'zgodny ze standardem AED'
+
+
+def published_records():
+    """Records of the newest published CSV resource of each dataset tagged PUBLISHED_TAG (e.g. by the provider
+    wizard, APP-43). Each publication is a full snapshot, so older CSV resources of the same dataset are ignored;
+    resources in other formats (a PDF, a link) neither count nor hide the CSV.
+
+    A file is used only when it passes validate.py as a whole and every record names the publishing institution
+    as its source (`source_id` = `dysponent:<institution slug>`); its cells are parsed with the profile's own field
+    rules. Returns (records, skipped resource ids) - unreadable or non-conforming files are skipped, not fatal.
+    """
+    import tempfile
+
+    from mcod.aed_aggregate import standard
+    from mcod.resources.models import Resource
+
+    records, skipped, seen_datasets = [], [], set()
+    resources = Resource.objects.filter(
+        status='published', dataset__status='published', dataset__tags__name=PUBLISHED_TAG,
+    ).select_related('dataset__organization').distinct().order_by('-pk')
+    for resource in resources:
+        if resource.dataset_id in seen_datasets:
+            continue
+        main = resource.files.filter(is_main=True).first()
+        if main is None or not (main.file.name or '').lower().endswith('.csv'):
+            continue
+        seen_datasets.add(resource.dataset_id)
+        try:
+            with main.file.open('rb') as handle:
+                content = handle.read()
+        except (ValueError, OSError):  # missing media file
+            skipped.append(resource.pk)
+            continue
+        with tempfile.NamedTemporaryFile(suffix='.csv') as temp:
+            temp.write(content)
+            temp.flush()
+            if standard.file_errors(temp.name):
+                skipped.append(resource.pk)
+                continue
+        own_source = 'dysponent:' + resource.dataset.organization.slug
+        rows = []
+        for row in csv.DictReader(io.StringIO(content.decode('utf-8'), newline='')):
+            record = {}
+            for name, value in row.items():
+                parsed = standard.validator.scalar(value, standard.FIELD_DEFS[name])
+                if parsed is not None:
+                    record[name] = parsed
+            rows.append(record)
+        if any(s['source_id'] != own_source for record in rows for s in record['source_records']):
+            skipped.append(resource.pk)
+            continue
+        records.extend(rows)
+    return records, skipped
+
+
 PHONE_CANDIDATE = re.compile(r'\+?\d[\d\s().-]{7,}\d')
 HOURS = re.compile(r'\d{1,2}[.:]\d{2}\s*-\s*\d{1,2}[.:]\d{2}')
 EMAIL = re.compile(r'[^\s@]+@[^\s@]+\.[^\s@]+')

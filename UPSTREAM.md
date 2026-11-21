@@ -16,6 +16,7 @@ Oficjalny plik README.txt jest zachowany jako NOTICE.upstream.txt, a LICENCE.txt
 - backend/docker/app/Dockerfile: utworzenie logs przed kompilacją tłumaczeń (logger wymaga katalogu).
 - backend/mcod/settings/jury.py: nowa konfiguracja oparta na local.py.sample; poprawione ustawienia indeksów Elasticsearch (bez index.timeout), lokalne flagi, wyłączona telemetria.
 - backend/mcod/core/management/commands/seed_jury.py oraz backend/mcod/core/tests/test_jury_seed.py: powtarzalny seed kont i instytucji oraz testy jego kontraktu.
+- backend/mcod/urls.py: jedna linia dołączająca adresy /aed/ kreatora dysponenta AED i publicznego walidatora (APP-43). Kod kreatora jest w nowym katalogu backend/mcod/aed_wizard/, rejestracja aplikacji i pozycja menu w backend/mcod/settings/jury.py, a Compose montuje aed-standard/ tylko do odczytu.
 - frontend/proxy.local.conf.json: lokalny serwer flag zamiast produkcyjnego.
 - frontend/src/app/app.config.ts: lokalne adresy flag, puste identyfikatory telemetrii.
 - frontend/src/app/app.module.ts: wyłączenie Sentry i Matomo.

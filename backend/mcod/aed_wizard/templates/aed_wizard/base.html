@@ -1,0 +1,32 @@
+{% extends "admin/base_site.html" %}
+{% block extrastyle %}{{ block.super }}
+<style>
+  .aed-steps { list-style: none; margin: 0 0 1.5em; padding: 0; display: flex; flex-wrap: wrap; gap: .5em; }
+  .aed-steps li { padding: .35em .8em; border: 1px solid #8a8a8a; border-radius: 3px; color: #333; }
+  .aed-steps li[aria-current="step"] { background: #0052a5; border-color: #0052a5; color: #fff; font-weight: bold; }
+  .aed-box { border: 1px solid #ccc; padding: 1em 1.2em; margin-bottom: 1.2em; background: #fff; }
+  .aed-table-wrap { overflow-x: auto; max-width: 100%; }
+  .aed-table { border-collapse: collapse; font-size: 13px; }
+  .aed-table th, .aed-table td { border: 1px solid #ccc; padding: .3em .5em; text-align: left; vertical-align: top; }
+  .aed-error { color: #a4000f; }
+  .aed-ok { color: #1a6d2a; font-weight: bold; }
+  .aed-mark { display: inline-block; border: 2px solid #1a6d2a; color: #1a6d2a; padding: .2em .6em; font-weight: bold; }
+  .aed-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: .4em 1.5em; }
+  .aed-grid label { display: block; font-weight: bold; margin-bottom: .1em; }
+  .aed-grid select, .aed-grid input[type=text] { width: 100%; max-width: 100%; box-sizing: border-box; min-height: 32px; }
+  .aed-actions .btn { min-height: 44px; min-width: 44px; }
+  .aed-box ul.aed-radio, .aed-box fieldset ul { list-style: none; margin-left: 0; }
+</style>
+{% endblock %}
+{% block breadcrumbs %}
+<ul class="breadcrumb"><li><a href="{% url 'admin:index' %}">Start</a> <span class="divider">/</span></li><li class="active">Dodaj dane AED</li></ul>
+{% endblock %}
+{% block content %}
+<ol class="aed-steps" aria-label="Kroki kreatora">
+  <li{% if step == 1 %} aria-current="step"{% endif %}>1. Plik źródłowy</li>
+  <li{% if step == 2 %} aria-current="step"{% endif %}>2. Kolumny</li>
+  <li{% if step == 3 %} aria-current="step"{% endif %}>3. Raport walidacji</li>
+  <li{% if step == 4 %} aria-current="step"{% endif %}>4. Publikacja</li>
+</ol>
+{% block step %}{% endblock %}
+{% endblock %}

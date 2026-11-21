@@ -1,0 +1,20 @@
+{% if errors %}
+<h3 class="aed-error">Błędy walidatora standardu: {{ errors|length }}</h3>
+<p>Błędy blokują publikację. Wiersz oznacza rekord pliku (bez nagłówka).</p>
+<div class="aed-table-wrap" tabindex="0" role="region" aria-label="Błędy walidacji">
+<table class="aed-table">
+  <thead><tr><th scope="col">Wiersz</th><th scope="col">Pole</th><th scope="col">Błąd</th></tr></thead>
+  <tbody>{% for item in errors %}<tr><td>{{ item.row|default:"-" }}</td><td>{{ item.field|default:"-" }}</td><td>{{ item.message }}</td></tr>{% endfor %}</tbody>
+</table>
+</div>
+{% endif %}
+{% if warnings %}
+<h3>Ostrzeżenia: {{ warnings|length }}</h3>
+<p>Ostrzeżenia nie blokują publikacji. Sprawdź je przed udostępnieniem danych.</p>
+<div class="aed-table-wrap" tabindex="0" role="region" aria-label="Ostrzeżenia">
+<table class="aed-table">
+  <thead><tr><th scope="col">Wiersz</th><th scope="col">Pole</th><th scope="col">Ostrzeżenie</th></tr></thead>
+  <tbody>{% for item in warnings %}<tr><td>{{ item.row }}</td><td>{{ item.field|default:"-" }}</td><td>{{ item.message }}</td></tr>{% endfor %}</tbody>
+</table>
+</div>
+{% endif %}
