@@ -5,6 +5,7 @@ x-app: &app
   build:
     context: backend
     dockerfile: docker/app/Dockerfile
+    platforms: [linux/amd64]
     extra_hosts:
       - flags.dane.gov.pl=127.0.0.1
   env_file: .env

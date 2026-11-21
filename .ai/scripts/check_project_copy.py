@@ -115,7 +115,7 @@ def check_extensions(root, skills):
 def check_text(root, skills):
     unknown, residue, scanned = {}, [], 0
     for rel in project_files(root):
-        if rel.startswith(EXEMPT) or rel == 'local/upstream-files.json':
+        if rel.startswith(EXEMPT) or rel in ('local/upstream-files.json', '.gitleaksignore'):
             continue
         text = text_of(root / rel)
         if text is None:
