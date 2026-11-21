@@ -126,11 +126,13 @@ class MappingTests(SimpleTestCase):
         book = Workbook()
         book.active.append(["nazwa", "szerokosc_geograficzna", "dlugosc_geograficzna"])
         book.active.append(["Starostwo", 52.421807, 20.939056])
+        book.active.cell(row=2, column=readers.MAX_COLUMNS + 500, value="far away")
         stream = io.BytesIO()
         book.save(stream)
         result = convert(readers.read("aed.xlsx", stream.getvalue()))
         self.assertEqual(standard.validate_bytes(result.csv_bytes()), [])
         self.assertEqual(result.records[0]["latitude"], "52.421807")
+        self.assertLessEqual(len(readers.read("aed.xlsx", stream.getvalue()).columns), readers.MAX_COLUMNS)
 
     def test_unreadable_sources_are_explained(self):
         with self.assertRaisesMessage(readers.SourceError, "nie zawiera rekordów"):

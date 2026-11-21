@@ -4,7 +4,7 @@ import io
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import transaction
-from django.utils.html import escape
+from django.utils.html import escape, linebreaks
 
 from mcod.aed_wizard import standard
 from mcod.aed_wizard.models import AedPublication
@@ -103,7 +103,7 @@ def publish(organization, user, csv_bytes, records_count, warnings_count, meta):
         dataset = aed_dataset(organization, user, meta["license"], meta["update_frequency"])
         extra = meta.get("description") or ""
         description = "<p><strong>{}</strong>. Sprawdzono walidatorem aed-standard: {} rekordów.</p>{}".format(
-            mark(), records_count, "<p>{}</p>".format(escape(extra)) if extra else ""
+            mark(), records_count, linebreaks(extra, autoescape=True) if extra else ""
         )
         resource = Resource.objects.create(
             title=meta["title"],

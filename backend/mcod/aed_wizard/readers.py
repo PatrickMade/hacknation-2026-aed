@@ -8,9 +8,11 @@ import socket
 from urllib.parse import urljoin, urlsplit
 
 import requests
+import urllib3
 
 MAX_BYTES = 10 * 1024 * 1024
 MAX_ROWS = 20000
+MAX_COLUMNS = 200
 GEOJSON_LAT = "geometry_latitude"
 GEOJSON_LON = "geometry_longitude"
 
@@ -132,7 +134,7 @@ def read_xlsx(data):
     except Exception as error:  # openpyxl raises many types for damaged files
         raise SourceError("Nie można odczytać pliku XLSX: {}".format(error))
     records = []
-    for row in sheet.iter_rows(values_only=True):
+    for row in sheet.iter_rows(max_col=MAX_COLUMNS, values_only=True):
         if len(records) > MAX_ROWS:
             raise SourceError("Arkusz ma więcej niż {} wierszy.".format(MAX_ROWS))
         records.append([cell(value) for value in row])
@@ -216,7 +218,7 @@ def fetch(url):
             data = response.raw.read(MAX_BYTES + 1, decode_content=True)
         finally:
             response.close()
-    except requests.RequestException as error:
+    except (requests.RequestException, urllib3.exceptions.HTTPError) as error:
         raise SourceError("Nie udało się pobrać pliku: {}".format(error))
     filename = parts.path.rsplit("/", 1)[-1]
     content_type = response.headers.get("Content-Type", "")
