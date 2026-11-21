@@ -11,7 +11,7 @@
 <section class="s okladka">
   <img class="logo" src="../../brand/logo/mapa-serc-logo-haslo-kolor.svg" alt="Mapa Serc - Wszystkie AED pod ręką.">
   <h1>Każdy AED w Polsce w&nbsp;jednym otwartym zbiorze na dane.gov.pl.</h1>
-  <p class="lid">Dysponent publikuje dane o swoich defibrylatorach we wspólnym standardzie. Portal sam składa z&nbsp;nich ogólnopolski Raport zbiorczy AED: z&nbsp;mapą, API i&nbsp;wskazaniem, kto odpowiada za każde urządzenie.</p>
+  <p class="lid">Mapa Serc integruje informacje od dysponentów AED w&nbsp;jednym zbiorze: ogólnopolskim, otwartym i&nbsp;odświeżanym codziennie. Działa w&nbsp;oficjalnym kodzie portalu dane.gov.pl, więc operator niczego nie buduje od zera.</p>
   <p class="stopa"><b>HackNation 2026</b>, zadanie „Misja AED - Dane na ratunek” Ministerstwa Cyfryzacji<br>Zespół jednoosobowy. Kod: github.com/PatrickMade/hacknation-2026-aed</p>
   <div class="mapa">
     <figure class="kadr">
@@ -88,7 +88,7 @@
       <tr><td><span class="tak"></span>&nbsp; <b>Bez danych osobowych</b></td><td>Tylko kontakt instytucjonalny; dane zgłaszającego znikają po 30 dniach</td><td>Słownik pól; klauzula formularza (slajd 10)</td></tr>
     </table>
   </div>
-  <p class="zrodla">Oficjalny kod portalu: backend 2.62.3, frontend 3.5.2, GPLv3. Skrypt <code>check-portal-source.py</code> potwierdza 7462 pliki zgodne z&nbsp;wydaniem i&nbsp;8 opisanych zmian.</p>
+  <p class="zrodla"><b>Ostatnie odświeżenie:</b> 74 z&nbsp;74 rekordów z&nbsp;4 źródeł przeszło walidator. Kod portalu 2.62.3 / 3.5.2 (GPLv3): 7462 pliki zgodne z&nbsp;wydaniem, 8 opisanych zmian.</p>
   <span class="nr">4 / 14</span>
 </section>
 
@@ -268,7 +268,7 @@
       </ul>
     </div>
   </div>
-  <p class="zrodla">Kopie źródeł pobrane 21.11.2026, 17:32 UTC, z&nbsp;adresem i&nbsp;licencją w&nbsp;<code>backend/data/aed/sources/LICENSES.md</code>. Flagi z&nbsp;pola <code>quality_flags</code> raportu.</p>
+  <p class="zrodla"><b>Wynik agregacji:</b> 74 rekordy przyjęte, 0 odrzuconych, 7 par współrzędnych naprawionych, 4 możliwe duplikaty oznaczone. Kopie źródeł z&nbsp;21.11.2026, licencje w&nbsp;<code>LICENSES.md</code>.</p>
   <span class="nr">12 / 14</span>
 </section>
 
@@ -314,7 +314,10 @@
     <div>
       <p class="etykieta">Użycie AI (regulamin zadania, § 2 ust. 8)</p>
       <p style="font-size:19px; line-height:1.42">Narzędzia AI (Claude Code, Codex) napisały kod modułów, standard danych, pliki znaku i&nbsp;tę prezentację. Moje są decyzje: moduł wewnątrz portalu, raport zbiorczy na wzór zbioru 4354, OSM jako osobny zasób, nazwa, hasło i&nbsp;wariant znaku. AI nie wytworzyło danych o&nbsp;prawdziwych urządzeniach.</p>
-      <p style="font-size:19px; font-weight:800; margin-top:16px">github.com/PatrickMade/hacknation-2026-aed</p>
+      <div style="display:flex; align-items:center; gap:16px; margin-top:14px">
+        <img src="img/qr-repozytorium.svg" alt="Kod QR do repozytorium projektu" style="width:104px; height:104px; background:#fff; border-radius:6px">
+        <p style="font-size:18px; font-weight:800; line-height:1.35">github.com/PatrickMade/<br>hacknation-2026-aed<br><span style="font-weight:500; font-size:15px">Kod QR prowadzi do repozytorium.</span></p>
+      </div>
     </div>
   </div>
   <pre class="ciemny-kod" style="margin: 0 0 40px; font-size:12px; line-height:1.6; columns: 2; column-gap: 36px">python3 scripts/init-env.py
