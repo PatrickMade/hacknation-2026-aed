@@ -6,6 +6,7 @@ import { concatMap, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { AED_REPORT_DATASET_TITLE } from '@app/pages/aed-campaign/aed-campaign.brand';
 import { AedOfficialRecord, AedPoint, GminaFeature } from '@app/pages/aed-campaign/aed-coverage';
 import {
+  hasConfirmedOperator,
   isOsmDatasetTitle,
   isOsmResource,
   isReportDatasetTitle,
@@ -121,6 +122,7 @@ export class AedCampaignService {
               terc: row['terc'] ?? null,
               operatorName: row['operator_name'],
               publishers: publishersFromSourceRecords(row['source_records']),
+              confirmedOperator: hasConfirmedOperator(row['source_records'], row['quality_flags']),
               lat: toNumber(row['latitude']),
               lon: toNumber(row['longitude']),
             })),

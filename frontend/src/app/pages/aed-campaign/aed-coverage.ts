@@ -13,6 +13,11 @@ export interface AedOfficialRecord {
   operatorName: string | null;
   /** Institutions that published the record (source_records[].publisher_name). */
   publishers: string[];
+  /**
+   * False when operator_name is not a confirmed dysponent: L4 fills municipal records from the source's location
+   * text (flag operator_from_location) and marks OSM candidates with operator_unconfirmed.
+   */
+  confirmedOperator: boolean;
   lat: number | null;
   lon: number | null;
 }
@@ -166,7 +171,8 @@ export function computeCoverage(
   const publishers = new Set<string>();
   const confirmedOperators = new Set<string>();
   records.forEach((record) => {
-    const operator = isConfirmedOperator(record.operatorName) ? record.operatorName.trim() : null;
+    const operator =
+      record.confirmedOperator && isConfirmedOperator(record.operatorName) ? record.operatorName.trim() : null;
     if (operator) {
       confirmedOperators.add(operator);
     }

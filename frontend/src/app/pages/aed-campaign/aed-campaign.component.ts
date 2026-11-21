@@ -152,7 +152,7 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  /** Up to three names, then how many more: one gmina can have dozens of dysponenci. */
+  /** Up to three names, then how many more, so a long list does not stretch the table. */
   shortList(names: string[]): string {
     const shown = names.slice(0, 3).join(', ');
     const more = names.length - 3;
@@ -227,7 +227,7 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
       );
     const list = (label: string, names: string[]) =>
       names.length ? `<br>${label}: ${names.slice(0, 5).map(escape).join(', ')}${names.length > 5 ? '…' : ''}` : '';
-    const institutions = list('Dysponenci', gmina.operators) + list('Wydawcy danych', gmina.publishers);
+    const institutions = list('Potwierdzeni dysponenci', gmina.operators) + list('Wydawcy danych', gmina.publishers);
     return `<strong>${escape(gmina.name)}</strong><br>AED w oficjalnych danych: ${gmina.officialCount}<br>AED w OpenStreetMap: ${gmina.osmCount}${institutions}`;
   }
 }

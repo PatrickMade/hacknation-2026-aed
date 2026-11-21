@@ -69,22 +69,43 @@ describe('AedCampaignService.getReport', () => {
   it('reads publishers from source_records and finds OSM in its own dataset (L4 compliance contract)', (done) => {
     const sourceRecords = (publisher: string) =>
       JSON.stringify([{ source_id: 'dane.gov.pl', publisher_name: publisher, source_url: 'https://example.org' }]);
+    const flags = (...names: string[]) => JSON.stringify(names);
+    const demo = JSON.stringify([
+      { source_id: 'dysponent:demo-1', publisher_name: 'Przychodnia Zdrowie (dane demonstracyjne)' },
+    ]);
     const compliance = [
       {
-        operator_name: 'nieustalony',
+        operator_name: 'Szkoła Podstawowa nr 1',
         terc: '1434011',
         source_records: sourceRecords('Urząd Miasta Marki'),
+        quality_flags: flags('operator_from_location'),
         latitude: 52.32,
         longitude: 21.11,
       },
       {
-        operator_name: 'nieustalony',
+        operator_name: 'Urząd Miasta Krosna',
         terc: '1861011',
         source_records: sourceRecords('Urząd Miasta Krosna'),
+        quality_flags: flags('operator_from_location', 'encoded_csv'),
         latitude: 49.69,
         longitude: 21.77,
       },
-      { operator_name: 'nieustalony', terc: '1861011', source_records: 'not json', latitude: 49.68, longitude: 21.76 },
+      {
+        operator_name: 'Hala sportowa',
+        terc: '1861011',
+        source_records: 'not json',
+        quality_flags: 'not json',
+        latitude: 49.68,
+        longitude: 21.76,
+      },
+      {
+        operator_name: 'Przychodnia Zdrowie (dane demonstracyjne)',
+        terc: '1408011',
+        source_records: demo,
+        quality_flags: flags(),
+        latitude: 52.4,
+        longitude: 20.9,
+      },
     ];
     const osmPoints = [{ aed_id: 'osm-1', latitude: 52.2, longitude: 21.0 }];
     const complianceApi = {
@@ -115,7 +136,9 @@ describe('AedCampaignService.getReport', () => {
           ['Urząd Miasta Marki'],
           ['Urząd Miasta Krosna'],
           [],
+          ['Przychodnia Zdrowie (dane demonstracyjne)'],
         ]);
+        expect(report.records.map((record) => record.confirmedOperator)).toEqual([false, false, true, true]);
         expect(report.records[0].terc).toBe('1434011');
         expect(report.osmResourceId).toBe('11');
         done();

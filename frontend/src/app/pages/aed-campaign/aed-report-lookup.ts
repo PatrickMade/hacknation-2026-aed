@@ -37,6 +37,38 @@ export function publishersFromSourceRecords(cell: string | null | undefined): st
   return Array.from(new Set(names));
 }
 
+/**
+ * L4 contract: a record's dysponent is confirmed when a source is a dysponent publication (source_id
+ * "dysponent:…", the provider wizard) or when no quality flag marks the name as unconfirmed
+ * (operator_from_location: taken from the source's location text; operator_unconfirmed: OSM candidate).
+ */
+export function hasConfirmedOperator(
+  sourceRecordsCell: string | null | undefined,
+  flagsCell: string | null | undefined,
+): boolean {
+  const sources = parseJsonArray(sourceRecordsCell);
+  const fromDysponent = sources.some(
+    (entry) =>
+      !!entry &&
+      typeof entry === 'object' &&
+      String((entry as { source_id?: unknown }).source_id || '').startsWith('dysponent:'),
+  );
+  if (fromDysponent) {
+    return true;
+  }
+  const flags = parseJsonArray(flagsCell).map(String);
+  return !flags.includes('operator_from_location') && !flags.includes('operator_unconfirmed');
+}
+
+function parseJsonArray(cell: string | null | undefined): unknown[] {
+  try {
+    const value = JSON.parse(cell || '[]');
+    return Array.isArray(value) ? value : [];
+  } catch {
+    return [];
+  }
+}
+
 /** Title without the search API's <mark> highlight tags, lower case, single spaces. */
 function plainTitle(title: string | null | undefined): string {
   return (title || '')
