@@ -22,9 +22,12 @@ Oficjalny plik README.txt jest zachowany jako NOTICE.upstream.txt, a LICENCE.txt
 - frontend/src/app/app.module.ts: wyłączenie Sentry i Matomo.
 - backend/mcod/aed_aggregate/ (nowa aplikacja), backend/data/aed/ (datowane kopie źródeł AED) i jedna linia INSTALLED_APPS w backend/mcod/settings/jury.py: raport zbiorczy AED (APP-46). Pliki upstream bez zmian. Dane w backend/data/aed/sources/ mają licencje swoich źródeł, nie GPL v3.0 (backend/data/aed/sources/LICENSES.md).
 - frontend/src/app/services/leflet.service.ts (poprawka działania, 2026-11-21): statyczny import ESM `leaflet` zamiast `require('leaflet')`, którego builder esbuild nie obsługuje w przeglądarce; bez tej zmiany zakładka Mapa zasobu i mapa regionów są puste. Bez zmian wyglądu.
+- backend/mcod/aed_reports/ (nowy moduł, 2026-11-21, APP-45): rejestr urządzeń AED, zgłoszenia problemów do dysponenta, kody QR i komendy demonstracyjne; rejestracja w backend/mcod/settings/jury.py.
+- backend/mcod/routes.py (2026-11-21, APP-45): dołączenie tras API modułu aed_reports.
+- frontend/src/app/app-routing.module.ts i frontend/src/app/pages/aed-device/ (2026-11-21, APP-45): trasa /pl/aed/<aed_id> ze stroną urządzenia i formularzem zgłoszenia.
 - Pliki w katalogu głównym, local/ i scripts/: Compose, konfiguracja lokalna, generowanie env, instrukcja startu, kontrola źródeł i testy. Dotychczasowy szkielet Flutter zostaje zastąpiony portalem.
 
-Nie zmieniamy szablonów, stylów, treści ani layoutu portalu. Pusta baza po migracjach nie zawiera produkcyjnych stron CMS. Seed nie ładuje upstream basic_data.json ani jego kont z publicznie znanymi hasłami.
+Poza obszarami AED opisanymi wyżej nie zmieniamy szablonów, stylów, treści ani layoutu portalu. Pusta baza po migracjach nie zawiera produkcyjnych stron CMS. Seed nie ładuje upstream basic_data.json ani jego kont z publicznie znanymi hasłami.
 
 ## Kontrola sekretów w źródłach upstream
 

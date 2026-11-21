@@ -1,0 +1,208 @@
+<!-- AED device record and incident report form (APP-45, 2026-11-21). -->
+<section class="container vertical-spacing">
+  @switch (state()) {
+    @case ('loading') {
+      <p role="status">Wczytywanie danych urządzenia…</p>
+    }
+    @case ('not-found') {
+      <h1 class="heading heading--md">Nie znaleziono urządzenia AED</h1>
+      <p>Sprawdź adres z kodu QR. Identyfikator urządzenia nie występuje w rejestrze dysponentów.</p>
+    }
+    @case ('error') {
+      <h1 class="heading heading--md">Dane urządzenia są chwilowo niedostępne</h1>
+      <p>Spróbuj ponownie za chwilę.</p>
+    }
+    @case ('ready') {
+      @let d = device();
+      <h1 class="heading heading--md">{{ d.name }}</h1>
+      <p class="mb-4">
+        Defibrylator AED. Za dane i obsługę zgłoszeń odpowiada:
+        <strong>{{ d.organization.title }}</strong
+        >.
+      </p>
+
+      <dl class="aed-device__details mb-4">
+        @if (d.address) {
+          <dt>Adres</dt>
+          <dd>{{ d.address }}</dd>
+        }
+        @if (d.location_description) {
+          <dt>Gdzie dokładnie</dt>
+          <dd>{{ d.location_description }}</dd>
+        }
+        @if (d.access) {
+          <dt>Dostęp</dt>
+          <dd>{{ accessLabel(d.access) }}</dd>
+        }
+        @if (d.opening_hours) {
+          <dt>Godziny dostępności</dt>
+          <dd>{{ d.opening_hours }}</dd>
+        }
+        @if (d.operator_name) {
+          <dt>Operator</dt>
+          <dd>{{ d.operator_name }}</dd>
+        }
+        <dt>Identyfikator AED</dt>
+        <dd>{{ d.aed_id }}</dd>
+      </dl>
+
+      <div class="aed-device__actions d-flex flex-wrap gap-2 mb-4">
+        @if (!formOpen()) {
+          <button type="button" class="btn btn-primary" (click)="openForm()" aria-controls="aed-report-form">
+            Zgłoś problem
+          </button>
+        }
+        @if (d.latitude !== null && d.longitude !== null) {
+          <a class="btn btn-outline-primary" [href]="mapUrl(d)" target="_blank" rel="noopener">
+            Pokaż na mapie OpenStreetMap<span class="visually-hidden"> (otwiera się w nowej karcie)</span>
+          </a>
+        }
+      </div>
+
+      <p class="small">
+        W nagłym zatrzymaniu krążenia dzwoń pod 112. Ten formularz nie wzywa pomocy; przekazuje informację dysponentowi
+        urządzenia.
+      </p>
+
+      <div #resultBox tabindex="-1" aria-live="polite">
+        @if (reportId()) {
+          <div class="alert alert-success" role="status">
+            Zgłoszenie nr {{ reportId() }} zostało przyjęte i przekazane dysponentowi: {{ d.organization.title }}.
+          </div>
+        }
+        @if (submitError()) {
+          <div class="alert alert-danger" role="alert">{{ submitError() }}</div>
+        }
+      </div>
+
+      @if (formOpen() && !reportId()) {
+        <div class="form-wrapper col-md-10 col-lg-8 aed-device__form" id="aed-report-form">
+          <h2 #formHeading tabindex="-1" class="heading heading--sm">Zgłoś problem z tym AED</h2>
+          <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+            <fieldset
+              class="form-part aed-device__types"
+              [attr.aria-describedby]="invalid('type') ? 'type-error' : null">
+              <legend class="form-label">Rodzaj problemu <small>(pole wymagane)</small></legend>
+              @for (option of d.report_types; track option.value) {
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    formControlName="type"
+                    [id]="'type-' + option.value"
+                    [value]="option.value"
+                    [attr.aria-invalid]="invalid('type')" />
+                  <label class="form-check-label" [for]="'type-' + option.value">{{ option.label }}</label>
+                </div>
+              }
+              @if (invalid('type')) {
+                <div class="invalid-feedback d-block" id="type-error">Wybierz rodzaj problemu.</div>
+              }
+            </fieldset>
+
+            <div class="form-field">
+              <label for="description" class="form-label">Opis <small>(pole wymagane)</small></label>
+              <div class="input-wrapper" [class.is-invalid]="invalid('description')">
+                <textarea
+                  id="description"
+                  formControlName="description"
+                  class="form-control"
+                  rows="5"
+                  maxlength="2000"
+                  [class.is-invalid]="invalid('description')"
+                  [attr.aria-invalid]="invalid('description')"
+                  aria-describedby="description-hint description-error"></textarea>
+              </div>
+              <div class="form-text" id="description-hint">
+                Np. „szafka zamknięta na klucz”, „AED przeniesiono do holu”.
+              </div>
+              <div class="invalid-feedback" id="description-error">
+                @if (invalid('description')) {
+                  Opisz problem (do 2000 znaków).
+                }
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="reporter_name" class="form-label">Imię lub podpis <small>(pole wymagane)</small></label>
+              <div class="input-wrapper" [class.is-invalid]="invalid('reporter_name')">
+                <input
+                  id="reporter_name"
+                  type="text"
+                  formControlName="reporter_name"
+                  class="form-control"
+                  maxlength="200"
+                  autocomplete="name"
+                  [class.is-invalid]="invalid('reporter_name')"
+                  [attr.aria-invalid]="invalid('reporter_name')"
+                  aria-describedby="reporter_name-error" />
+              </div>
+              <div class="invalid-feedback" id="reporter_name-error">
+                @if (invalid('reporter_name')) {
+                  Podaj imię lub podpis.
+                }
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="contact" class="form-label"
+                >Kontakt do odpowiedzi <small>(opcjonalnie: e-mail lub telefon)</small></label
+              >
+              <div class="input-wrapper">
+                <input
+                  id="contact"
+                  type="text"
+                  formControlName="contact"
+                  class="form-control"
+                  maxlength="200"
+                  autocomplete="email"
+                  aria-describedby="contact-hint" />
+              </div>
+              <div class="form-text" id="contact-hint">
+                Podaj kontakt tylko wtedy, gdy dysponent ma się z Tobą skontaktować.
+              </div>
+            </div>
+
+            @if (form.value.contact?.trim()) {
+              <div class="form-check mb-3">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="consent"
+                  formControlName="consent"
+                  [attr.aria-invalid]="consentMissing() && form.controls.consent.touched"
+                  aria-describedby="consent-error" />
+                <label class="form-check-label" for="consent">
+                  Wyrażam zgodę na przetwarzanie podanego kontaktu przez dysponenta AED w celu odpowiedzi na to
+                  zgłoszenie.
+                </label>
+                <div class="invalid-feedback d-block" id="consent-error">
+                  @if ((consentMissing() && form.controls.consent.touched) || serverErrors()['consent']) {
+                    Zaznacz zgodę albo usuń kontakt.
+                  }
+                </div>
+              </div>
+            }
+
+            <p class="small">
+              Informacja RODO: administratorem danych ze zgłoszenia jest dysponent tego AED ({{
+                d.organization.title
+              }}). Dane służą wyłącznie obsłudze zgłoszenia. Kontakt jest dobrowolny; bez niego zgłoszenie też zostanie
+              przyjęte. Prototyp HackNation 2026: dane są przechowywane tylko w lokalnej instancji demonstracyjnej.
+            </p>
+
+            <button type="submit" class="btn btn-primary" [disabled]="submitting()">
+              {{ submitting() ? 'Wysyłanie…' : 'Wyślij zgłoszenie' }}
+            </button>
+          </form>
+        </div>
+      }
+
+      <details class="mt-5">
+        <summary>Kod QR tego urządzenia (dla dysponenta)</summary>
+        <img class="aed-device__qr mt-2" [src]="'/api' + d.qr_url" alt="Kod QR prowadzący do tej strony" />
+        <p><a [href]="'/api' + d.qr_url" download>Pobierz kod QR (SVG)</a></p>
+      </details>
+    }
+  }
+</section>
