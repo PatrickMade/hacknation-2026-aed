@@ -12,7 +12,7 @@ Nowa trasa `/pl/aed` w istniejącym układzie `MainLayoutComponent` (nagłówek,
 - liczniki: dysponenci (unikalne `operator_name`), rekordy AED (wiersze raportu), gminy z oficjalnymi danymi z liczby gmin w pliku granic PRG (2479 w wersji GUGiK z 2026-11-10; brief podawał 2477). Gminę rekordu wyznaczają współrzędne; 7-cyfrowe `terc`, jeśli kiedyś się pojawi, ma pierwszeństwo (części gminy miejsko-wiejskiej, typ 4 i 5, liczą się do gminy typu 3);
 - mapa pokrycia gmin: gmina z oficjalnym rekordem, gmina, w której tylko OSM zna AED (luka), gmina bez danych; dymek z nazwą gminy, liczbą AED, dysponentami i liczbą punktów OSM;
 - tekstowa alternatywa mapy: legenda z opisem słownym i tabela gmin z lukami oraz gmin z danymi;
-- CTA „Udostępnij swoje AED” do panelu dostawcy (`https://admin.mcod.local/`, w którym L5 dodaje „Dodaj dane AED”).
+- CTA „Udostępnij swoje AED” do kreatora „Dodaj dane AED” w panelu dostawcy (`https://admin.mcod.local/aed/kreator/`, L5).
 
 ## Kontrakt danych (publiczne API portalu, bez wewnętrznych modułów L4)
 1. `GET /api/search?q=Raport zbiorczy AED&model[terms]=dataset&per_page=10` (istniejące `DatasetService.getAll`) - zbiór, którego tytuł zawiera „Raport zbiorczy AED” (bez rozróżniania wielkości liter). Wyszukiwarka zwraca tytuł z podświetleniem `<mark>`, więc tagi są usuwane przed porównaniem.

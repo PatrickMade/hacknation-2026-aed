@@ -11,8 +11,8 @@ export const AED_CAMPAIGN_BRAND = {
   markSrc: '/assets/aed/mapa-serc-symbol-kolor.svg',
 };
 
-/** Provider panel, where an agent of a dysponent publishes AED data ("Dodaj dane AED"). */
-export const AED_PROVIDER_PANEL_URL = 'https://admin.mcod.local/';
+/** "Dodaj dane AED" wizard in the provider panel (L5, APP-43); the panel asks for login first. */
+export const AED_PROVIDER_PANEL_URL = 'https://admin.mcod.local/aed/kreator/';
 
 /** Title of the national dataset published by the portal operator. */
 export const AED_REPORT_DATASET_TITLE = 'Raport zbiorczy AED';
