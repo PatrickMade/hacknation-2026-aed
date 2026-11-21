@@ -1,0 +1,34 @@
+{% extends "aed_wizard/base.html" %}
+{% block step %}
+<div class="aed-box" aria-live="polite">
+  <h2>Raport walidacji</h2>
+  <p>Instytucja: <strong>{{ organization.title }}</strong>. Rekordów: {{ records }}. Licencja: {{ license_name }}. Data danych: {{ data_date }}.</p>
+  {% if generated_ids %}<p>Nadano {{ generated_ids }} identyfikatorów <code>aed_id</code> (UUID). Zachowaj je w ewidencji; przy kolejnym wgraniu tego samego źródła kreator nada te same wartości.</p>{% endif %}
+  {% if not errors %}<p class="aed-ok">Plik przechodzi kontrole walidatora standardu AED.</p>{% endif %}
+  {% include "aed_wizard/report_tables.html" %}
+  <p><a href="{% url 'aed_wizard:converted_csv' %}">Pobierz plik w standardzie AED (CSV)</a></p>
+  <h3>Podgląd wyniku</h3>
+  <div class="aed-table-wrap" tabindex="0" role="region" aria-label="Podgląd pliku w standardzie">
+  <table class="aed-table">
+    <thead><tr>{% for column in columns %}<th scope="col">{{ column }}</th>{% endfor %}</tr></thead>
+    <tbody>{% for row in preview %}<tr>{% for value in row %}<td>{{ value|truncatechars:50 }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+  </table>
+  </div>
+</div>
+{% if errors %}
+<p class="aed-actions"><a class="btn btn-primary" href="{% url 'aed_wizard:mapping' %}">Wróć do przypisania kolumn</a>
+  <a class="btn" href="{% url 'aed_wizard:source' %}">Wgraj poprawiony plik</a></p>
+{% else %}
+<form method="post" class="aed-box" novalidate>
+  {% csrf_token %}
+  <h2>Publikacja w zbiorze AED instytucji</h2>
+  <p>Zasób trafi do zbioru „Defibrylatory AED - {{ organization.title }}” (kategoria Zdrowie, słowa kluczowe: AED, defibrylator, zgodny ze standardem AED). Otrzyma oznaczenie <span class="aed-mark">{{ mark }}</span>.</p>
+  {% for field in form %}
+  <p><label for="{{ field.id_for_label }}"><strong>{{ field.label }}</strong></label><br>{{ field }}
+    {% if field.errors %}<span class="aed-error" role="alert">{{ field.errors|join:" " }}</span>{% endif %}</p>
+  {% endfor %}
+  <p class="aed-actions"><a class="btn" href="{% url 'aed_wizard:mapping' %}">Wróć</a>
+    <button type="submit" class="btn btn-primary">Opublikuj zasób</button></p>
+</form>
+{% endif %}
+{% endblock %}

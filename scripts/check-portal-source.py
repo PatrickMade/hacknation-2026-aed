@@ -7,6 +7,7 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 modified = {
     'backend/docker/app/Dockerfile',
+    'backend/mcod/urls.py',
     'frontend/proxy.local.conf.json',
     'frontend/src/app/app.config.ts',
     'frontend/src/app/app.module.ts',

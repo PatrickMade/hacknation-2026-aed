@@ -41,7 +41,7 @@ Run in order (the list lives in `validation.commands` of
 
 - `python3 -B scripts/check-portal-source.py`
 - `docker compose --profile tools config --quiet`
-- `docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed mcod.aed_aggregate --noinput --keepdb`
+- `docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed mcod.aed_aggregate mcod.aed_wizard --noinput --keepdb`
 - `python3 -B .ai/scripts/check_project_copy.py`
 - `python3 -B .ai/scripts/check_client_config.py`
 

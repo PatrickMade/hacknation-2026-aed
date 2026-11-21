@@ -1,0 +1,46 @@
+{% extends "aed_wizard/base.html" %}
+{% block step %}
+<div class="aed-box">
+  <h2>Źródło: {{ source_name }}</h2>
+  <p>Instytucja: <strong>{{ organization.title }}</strong>. Wierszy: {{ rows_count }}. Podgląd pierwszych wierszy:</p>
+  <div class="aed-table-wrap" tabindex="0" role="region" aria-label="Podgląd pliku źródłowego">
+  <table class="aed-table">
+    <thead><tr>{% for column in columns %}<th scope="col">{{ column }}</th>{% endfor %}</tr></thead>
+    <tbody>{% for row in preview %}<tr>{% for value in row %}<td>{{ value|truncatechars:60 }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+  </table>
+  </div>
+</div>
+<form method="post" novalidate>
+  {% csrf_token %}
+  {% if form.errors %}<p class="aed-error" role="alert">Popraw zaznaczone pola.</p>{% endif %}
+  <fieldset class="aed-box">
+    <legend><h2>Przypisz kolumny do pól standardu</h2></legend>
+    <p>Kreator zaproponował przypisania na podstawie nazw kolumn. Sprawdź je. Kolumn nieprzypisanych nie publikujemy.</p>
+    <div class="aed-grid">
+    {% for field in form.target_fields %}
+      <div><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}</div>
+    {% endfor %}
+    </div>
+  </fieldset>
+  <fieldset class="aed-box">
+    <legend><h2>Wartości dla pól wymaganych bez kolumny</h2></legend>
+    <p>Wartość domyślna trafia do każdego rekordu, w którym źródło nie podaje pola. Wybierz <code>unknown</code>, jeśli nie masz potwierdzenia.</p>
+    <div class="aed-grid">
+    {% for field in form.default_fields %}
+      <div><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}</div>
+    {% endfor %}
+      <div><label for="{{ form.operator_name.id_for_label }}">{{ form.operator_name.label }}</label>{{ form.operator_name }}
+        {% if form.operator_name.errors %}<span class="aed-error">{{ form.operator_name.errors|join:" " }}</span>{% endif %}</div>
+    </div>
+  </fieldset>
+  <fieldset class="aed-box">
+    <legend><h2>Licencja i data danych</h2></legend>
+    <p><strong>{{ form.license.label }}</strong></p>{{ form.license }}
+    <p><label for="{{ form.data_date.id_for_label }}"><strong>{{ form.data_date.label }}</strong></label><br>{{ form.data_date }}
+      {% if form.data_date.errors %}<span class="aed-error" role="alert">{{ form.data_date.errors|join:" " }}</span>{% endif %}</p>
+    <p><label for="{{ form.swap_axes.id_for_label }}">{{ form.swap_axes }} {{ form.swap_axes.label }}</label></p>
+  </fieldset>
+  <p class="aed-actions"><a class="btn" href="{% url 'aed_wizard:source' %}">Wróć</a>
+    <button type="submit" class="btn btn-primary">Dalej: sprawdź dane</button></p>
+</form>
+{% endblock %}
