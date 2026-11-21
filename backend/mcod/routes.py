@@ -1,4 +1,5 @@
 from mcod.academy import views as academy_views
+from mcod.aed_reports.routes import routes as aed_reports_routes
 from mcod.core.api.utils import views as core_views
 from mcod.core.api.views import MetricsResource
 from mcod.datasets import views as dataset_views
@@ -332,6 +333,7 @@ routes = [
     ("/reports/brokenlinks", reports_views.BrokenLinksReportView()),
     ("/reports/brokenlinks/data", reports_views.BrokenLinksReportDataView()),
     ("/reports/brokenlinks/{extension}", reports_views.PublicBrokenLinksReportDownloadView()),
+    *aed_reports_routes,  # AED incident reports (APP-45, 2026-11-21)
 ]
 
 

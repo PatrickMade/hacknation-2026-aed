@@ -19,4 +19,5 @@ def aed_refresh_task():
 
 def register_beat_schedule():
     from mcod.celeryapp import app
-    app.conf.beat_schedule.setdefault('aed-refresh-daily', {'task': TASK_NAME, 'schedule': crontab(minute=30, hour=3)})
+    app.conf.beat_schedule.setdefault('aed-refresh-daily', {'task': TASK_NAME, 'schedule': crontab(minute=30, hour=3),
+                                                            'options': {'queue': 'periodic'}})

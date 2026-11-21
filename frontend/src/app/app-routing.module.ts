@@ -85,8 +85,18 @@ const routes: Routes = [
         loadChildren: () => import('./pages/broken-links/broken-links.routes').then((mod) => mod.BROKEN_LINKS_ROUTES),
       },
       {
+        path: '!aed',
+        data: { breadcrumbs: { label: 'Akcja AED' } },
+        loadChildren: () => import('./pages/aed-campaign/aed-campaign.routes').then((mod) => mod.AED_CAMPAIGN_ROUTES),
+      },
+      {
         path: '!user',
         loadChildren: () => import('./user/user.module').then((m) => m.UserModule),
+      },
+      {
+        // AED device record and incident report form (APP-45, 2026-11-21)
+        path: '!aed/!:aedId',
+        loadComponent: () => import('./pages/aed-device/aed-device.component').then((m) => m.AedDeviceComponent),
       },
       { path: '!refresh', component: SitemapComponent },
       { path: '!newsletter', component: NewsletterComponent },

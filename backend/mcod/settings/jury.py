@@ -19,6 +19,7 @@ else:
     EMAIL_FILE_PATH = "/tmp/app-messages"
 
 NO_REPLY_EMAIL = "no-reply@mcod.local"
+EMAIL_TIMEOUT = 10  # AED report mail is sent in the request; never hang it (APP-45)
 
 ELASTICSEARCH_DSL_INDEX_SETTINGS = {
     "number_of_shards": 1,
@@ -81,3 +82,15 @@ ENABLE_SENTRY = False
 
 # Local AED modules, 2026-11-21.
 INSTALLED_APPS += ["mcod.aed_aggregate"]  # noqa: F405
+
+# AED provider wizard (APP-43, 2026-11-21): reference profile from aed-standard/.
+INSTALLED_APPS += ["mcod.aed_wizard"]  # noqa: F405
+AED_STANDARD_DIR = env("AED_STANDARD_DIR", default=str(ROOT_DIR.path("..", "aed-standard")))  # noqa: F405
+SUIT_CONFIG["MENU"][0]["models"].insert(0, {"label": "Dodaj dane AED", "url": "/aed/kreator/", "icon": "icon-heart"})  # noqa: F405
+
+# AED incident reports, QR codes and device registry (APP-45, 2026-11-21).
+INSTALLED_APPS += ["mcod.aed_reports"]  # noqa: F405
+SUIT_CONFIG["MENU"][0]["models"] += [  # noqa: F405
+    {"model": "aed_reports.aedincidentreport", "label": "Zgłoszenia AED", "icon": "icon-bullhorn"},
+    {"model": "aed_reports.aeddevice", "label": "Urządzenia AED", "icon": "icon-map-marker"},
+]

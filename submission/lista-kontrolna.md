@@ -49,8 +49,8 @@ Projekt: https://hacknation2026.hacktribe.co/mapa-serc/
       kroki z `akceptacja.md`.
 - [ ] PDF prezentacji ma co najmniej 5 slajdów i najwyżej 10 MB
       (`python3 -B submission/prezentacja/build-pdf.py`).
-- [ ] Logo w .jpg, .png, .pdf i .svg; księga znaku w PDF z wymaganymi
-      sekcjami.
+- [x] Logo w .jpg, .png, .pdf i .svg; księga znaku w PDF z wymaganymi
+      sekcjami (`brand/`).
 - [ ] Opis, ograniczenia, oświadczenie AI i slajdy odpowiadają scalonemu
       stanowi: `grep -rin -E "do uzupełnienia|do wykonania|w realizacji|w przeglądzie" submission/*.md submission/prezentacja/slajdy.html`
       nie zwraca wyników poza tą listą.
