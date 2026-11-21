@@ -18,8 +18,8 @@ Wymagania z pełnej treści zadania, pkt 2-5.
 | 3 | Działający prototyp | Zbieranie danych AED z wielu źródeł do jednego maszynowo czytelnego zbioru w dane.gov.pl | Lokalny portal (APP-42); agregator (`backend/mcod/aed_aggregate/`); kreator i walidator (APP-43); strona akcji (APP-44); zgłoszenia i "Najbliższy AED" (`backend/mcod/aed_reports/`) | portal w przeglądzie; moduły AED w realizacji | repozytorium, `README.md` |
 | 4 | Wzorcowy zakres danych | Tabela w formacie XLSX | Wzorcowy zakres danych (APP-41) | gotowe | `aed-standard/field-dictionary.xlsx` |
 | 5 | Kod źródłowy | Kod źródłowy rozwiązania | Wszystkie obszary | w realizacji; dostęp jury do repozytorium do zrobienia | repozytorium GitHub |
-| 6 | Nazwa akcji, hasło, logo, księga znaku | Logo w .jpg, .png, .pdf i formacie otwartym (np. .svg); księga znaku PDF: kolorystyka, pole ochronne, minimalna wielkość, niedozwolone użycia, opis koncepcji w 3-5 zdaniach | Marka akcji | w realizacji: kierunek do wyboru | do ustalenia |
-| 7 | Oświadczenie o użyciu AI | Zakres wykorzystania AI (regulamin zadania, par. 2 ust. 8) | Pakiet zgłoszenia (APP-47) | w przeglądzie (wersja 1); uzupełnić narzędzia użyte przy znaku | `submission/oswiadczenie-ai.md` |
+| 6 | Nazwa akcji, hasło, logo, księga znaku | Logo w .jpg, .png, .pdf i formacie otwartym (np. .svg); księga znaku PDF: kolorystyka, pole ochronne, minimalna wielkość, niedozwolone użycia, opis koncepcji w 3-5 zdaniach | Marka akcji (APP-48) | w przeglądzie: nazwa "Mapa Serc", hasło "Wszystkie AED pod ręką." | `brand/` |
+| 7 | Oświadczenie o użyciu AI | Zakres wykorzystania AI (regulamin zadania, par. 2 ust. 8) | Pakiet zgłoszenia (APP-47) | w przeglądzie (wersja 1); wiersz o znaku uzupełniony | `submission/oswiadczenie-ai.md` |
 
 ## Elementy uzupełniające
 

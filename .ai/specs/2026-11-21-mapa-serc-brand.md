@@ -22,8 +22,10 @@ czeka na znak i kolory.
 Nowy katalog `brand/` z gotowym znakiem akcji "Mapa Serc", naklejką z kodem
 QR do umieszczenia przy urządzeniu i księgą znaku. Znak jest prosty, czytelny
 dla każdego odbiorcy i nie naśladuje oznakowania gov.pl ani dane.gov.pl.
-Wariant znaku: serce z błyskawicą AED w kształcie znacznika mapy (wariant 1
-ze szkiców), o ile właściciel nie wskaże innego do 18:30 UTC 21 listopada.
+Wariant znaku wybrany przez właściciela 21 listopada 2026 r.: pełny kształt
+Polski z wyciętym sercem i błyskawicą AED pośrodku. Kontur Polski pochodzi
+z danych Natural Earth 1:10 000 000 (domena publiczna) w odwzorowaniu PL-1992,
+uproszczony z tolerancją 3 km.
 
 ## Scope
 
@@ -60,22 +62,31 @@ lub hasła, kod generujący kody QR dla urządzeń (APP-45).
 5. Dla każdej pary kolorów tekstu i tła użytej w księdze podany jest
    współczynnik kontrastu WCAG, zgodny z obliczeniem ze wzoru WCAG 2.x.
 6. Kod QR na naklejce daje się odczytać i zawiera adres przykładowy
-   (`zbarimg` na wyrenderowanym PNG).
+   (biblioteka jsQR na wyrenderowanym PNG; `zbarimg` na tej maszynie kończy
+   się błędem).
 7. Znak nie używa orła, biało-czerwonej belki ani granatu portalu; księga
    pokazuje go obok miejsca na znak dane.gov.pl.
 8. Oświadczenie o użyciu AI obejmuje materiały marki.
+9. Serce i błyskawica w symbolu są rzeczywistym wycięciem (tło prześwituje),
+   a nie białą plamą: znak działa na każdym jednolitym tle.
 
 ## Verification
 
 - Polecenia z punktów 1-3 i 6 oraz przegląd wyrenderowanych stron księgi
   znaku (każda strona obejrzana po wygenerowaniu).
-- Bramka repozytorium: `fvm flutter analyze`, `fvm flutter test`,
+- Bramka repozytorium (`validation.commands` w `.ai/agentic.config.json`):
+  `python3 -B scripts/check-portal-source.py`,
+  `docker compose --profile tools config --quiet`,
+  `docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed --noinput --keepdb`,
   `python3 -B .ai/scripts/check_project_copy.py`,
   `python3 -B .ai/scripts/check_client_config.py`.
 - QA: zmiana obejmuje tylko dokumenty i zasoby, więc `skip-qa`.
 - Ograniczenia dowodu: kolizje nazwy sprawdzone tylko wyszukiwaniem w sieci
   (bez UPRP i EUIPO); wartości CMYK w księdze są orientacyjne, bez próby
-  drukarskiej.
+  drukarskiej; kontur Polski porównany z jednym źródłem (Natural Earth),
+  bez porównania z danymi urzędowymi; pliki powstały z lokalnego skryptu,
+  który nie jest częścią repozytorium, więc źródłem do dalszych zmian są
+  pliki SVG.
 
 ## Progress
 
