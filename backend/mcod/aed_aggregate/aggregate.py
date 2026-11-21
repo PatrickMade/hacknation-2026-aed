@@ -96,10 +96,14 @@ def deduplicate(records):
             provider_ids.setdefault(id(match), record['aed_id'])
         for key in source_keys(record):
             by_key[key] = match
+    used = set()
     for record in result:
-        # Stable identity: UUIDv5 of the smallest namespaced source key, whatever the input order.
+        # Stable identity: UUIDv5 of the smallest namespaced source key, whatever the input order. A provider id
+        # is kept only while unique in the report (validate.py rejects repeated ids, case-insensitive).
         first = min(source_keys(record))
-        record['aed_id'] = provider_ids.get(id(record)) or aed_id('{}:{}'.format(*first))
+        provider = provider_ids.get(id(record))
+        record['aed_id'] = provider if provider and provider.lower() not in used else aed_id('{}:{}'.format(*first))
+        used.add(record['aed_id'].lower())
         record['quality_flags'].sort()
     return sorted(result, key=lambda r: r['aed_id'])
 

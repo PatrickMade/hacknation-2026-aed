@@ -231,7 +231,8 @@ PUBLISHED_TAG = 'zgodny ze standardem AED'
 
 def published_records():
     """Records of the newest published CSV resource of each dataset tagged PUBLISHED_TAG (e.g. by the provider
-    wizard, APP-43). Each publication is a full snapshot, so older resources of the same dataset are ignored.
+    wizard, APP-43). Each publication is a full snapshot, so older CSV resources of the same dataset are ignored;
+    resources in other formats (a PDF, a link) neither count nor hide the CSV.
 
     A file is used only when it passes validate.py as a whole and every record names the publishing institution
     as its source (`source_id` = `dysponent:<institution slug>`); its cells are parsed with the profile's own field
@@ -249,12 +250,14 @@ def published_records():
     for resource in resources:
         if resource.dataset_id in seen_datasets:
             continue
-        seen_datasets.add(resource.dataset_id)
         main = resource.files.filter(is_main=True).first()
+        if main is None or not (main.file.name or '').lower().endswith('.csv'):
+            continue
+        seen_datasets.add(resource.dataset_id)
         try:
             with main.file.open('rb') as handle:
                 content = handle.read()
-        except (AttributeError, ValueError, OSError):  # no main file, empty FileField, missing media file
+        except (ValueError, OSError):  # missing media file
             skipped.append(resource.pk)
             continue
         with tempfile.NamedTemporaryFile(suffix='.csv') as temp:

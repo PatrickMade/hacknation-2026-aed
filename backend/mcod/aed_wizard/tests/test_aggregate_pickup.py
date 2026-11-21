@@ -1,4 +1,5 @@
 """A wizard publication reaches the AED report on the next refresh (APP-43, 2026-11-21)."""
+import copy
 import datetime
 import os
 import shutil
@@ -66,6 +67,32 @@ class AggregatePickupTests(TestCase):
         report = from_wizard(refresh.build(published)["report"])
         self.assertEqual({record["operational_status"] for record in report}, {"out_of_service"})
         self.assertTrue(all("conflicting_sources" not in record["quality_flags"] for record in report))
+
+    def test_a_newer_non_csv_resource_does_not_hide_the_provider_file(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from mcod.resources.models import Resource, ResourceFile
+
+        publication = self.publish(wizard_file())
+        pdf = Resource.objects.create(title="Instrukcja", description="Instrukcja PDF.", dataset=publication.dataset,
+                                      status="published", created_by=self.user, modified_by=self.user,
+                                      has_dynamic_data=False, has_high_value_data=False,
+                                      has_high_value_data_from_ec_list=False, has_research_data=False,
+                                      contains_protected_data=False, data_date=datetime.date(2026, 11, 21))
+        manual = SimpleUploadedFile("instrukcja.pdf", b"%PDF-1.4", content_type="application/pdf")
+        ResourceFile.objects.create(resource=pdf, is_main=True, file=manual)
+        published, skipped = sources.published_records()
+        self.assertEqual((len(published), skipped), (2, []))
+
+    def test_a_repeated_provider_id_falls_back_so_the_report_stays_valid(self):
+        self.publish(wizard_file())
+        published, _ = sources.published_records()
+        moved = copy.deepcopy(published[0])
+        moved["source_records"][0]["source_id"] = "dysponent:jury-marki"
+        moved["latitude"], moved["longitude"] = 52.3267, 21.1076  # another municipality, not merged
+        built = refresh.build(published + [moved])
+        ids = [record["aed_id"].lower() for record in built["report"]]
+        self.assertEqual(len(ids), len(set(ids)))
+        self.assertIn(published[0]["aed_id"].lower(), ids)
 
     def test_foreign_source_and_missing_file_are_skipped_not_fatal(self):
         conversion = wizard_file()
