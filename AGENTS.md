@@ -31,7 +31,7 @@ README.md is in Polish and defines the complete local setup.
 | Frontend and UI | `frontend/package.json`, `frontend/angular.json`, changed components | Preserve portal design/content/layout outside explicitly scoped AED work; verify web flows in a browser |
 | Local runtime | `compose.yaml`, `.env.example`, `README.md` | Loopback-only ports; local proxy; telemetry off; never use production credentials |
 | Source and licence | `UPSTREAM.md`, `LICENSE`, `NOTICE.upstream.txt`, `local/upstream-files.json` | Preserve notices/GPLv3 and document dated changes; update the source verifier only for intentional modifications |
-| Tests | `backend/mcod/core/tests/test_jury_seed.py`, upstream tests | Run targeted Django tests in Compose; actual upstream versions are pinned in its locks |
+| Tests | `backend/mcod/core/tests/test_jury_seed.py`, `backend/mcod/aed_aggregate/tests/`, upstream tests | Run targeted Django tests in Compose; actual upstream versions are pinned in its locks |
 | Harness, tracker, hooks | `.ai/agentic.config.json`, `SDLC.md`, `.ai/trackers/linear-adapter.md`, `docs/AGENT-SKILL-CATALOG.md` | Never edit installed skill copies |
 
 ## Validation gate
@@ -41,7 +41,7 @@ Run in order (the list lives in `validation.commands` of
 
 - `python3 -B scripts/check-portal-source.py`
 - `docker compose --profile tools config --quiet`
-- `docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed --noinput --keepdb`
+- `docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed mcod.aed_aggregate --noinput --keepdb`
 - `python3 -B .ai/scripts/check_project_copy.py`
 - `python3 -B .ai/scripts/check_client_config.py`
 

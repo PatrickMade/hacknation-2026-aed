@@ -19,6 +19,7 @@ Oficjalny plik README.txt jest zachowany jako NOTICE.upstream.txt, a LICENCE.txt
 - frontend/proxy.local.conf.json: lokalny serwer flag zamiast produkcyjnego.
 - frontend/src/app/app.config.ts: lokalne adresy flag, puste identyfikatory telemetrii.
 - frontend/src/app/app.module.ts: wyłączenie Sentry i Matomo.
+- backend/mcod/aed_aggregate/ (nowa aplikacja), backend/data/aed/ (datowane kopie źródeł AED) i jedna linia INSTALLED_APPS w backend/mcod/settings/jury.py: raport zbiorczy AED (APP-46). Pliki upstream bez zmian. Dane w backend/data/aed/sources/ mają licencje swoich źródeł, nie GPL v3.0 (backend/data/aed/sources/LICENSES.md).
 - frontend/src/app/services/leflet.service.ts (poprawka działania, 2026-11-21): statyczny import ESM `leaflet` zamiast `require('leaflet')`, którego builder esbuild nie obsługuje w przeglądarce; bez tej zmiany zakładka Mapa zasobu i mapa regionów są puste. Bez zmian wyglądu.
 - Pliki w katalogu głównym, local/ i scripts/: Compose, konfiguracja lokalna, generowanie env, instrukcja startu, kontrola źródeł i testy. Dotychczasowy szkielet Flutter zostaje zastąpiony portalem.
 
