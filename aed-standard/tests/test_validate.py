@@ -96,12 +96,17 @@ class ValidatorTests(unittest.TestCase):
         ok = self.run_csv(self.altered({"operator_name": "nieustalony", "quality_flags": flagged,
                                         "source_records": report_source}, omit=("operator_regon",)))
         self.assertEqual(ok.returncode, 0, ok.stderr)
+        derived = self.run_csv(self.altered({"operator_name": "Szkoła Podstawowa nr 1",
+                                             "quality_flags": '["operator_from_location"]',
+                                             "source_records": report_source}, omit=("operator_regon",)))
+        self.assertEqual(derived.returncode, 0, derived.stderr)
         cases = [
             ({"operator_name": "nieustalony", "source_records": report_source},
              "wymaga flagi operator_unconfirmed"),
             ({"operator_name": "nieustalony", "quality_flags": flagged, "source_records": own_source},
              "publikacja dysponenta"),
             ({"quality_flags": flagged, "source_records": own_source}, "publikacja dysponenta"),
+            ({"quality_flags": '["operator_from_location"]', "source_records": own_source}, "publikacja dysponenta"),
         ]
         for changes, message in cases:
             with self.subTest(changes=changes):

@@ -35,8 +35,16 @@ def add_flag(record, flag):
         record['quality_flags'].append(flag)
 
 
+UNKNOWN_VALUES = (None, '', 'unknown', standard.SCHEMA['x-operatorUnconfirmed']['placeholder'])
+DERIVED_OPERATOR_FLAGS = (standard.SCHEMA['x-operatorUnconfirmed']['flag'], 'operator_from_location')
+OPERATOR_FIELDS = ('operator_name', 'operator_regon')
+
+
 def merge(target, other):
-    """Fold `other` into `target`: union of provenance, conflicting values flagged, never overwritten."""
+    """Fold `other` into `target`: union of provenance, conflicting values flagged, never overwritten.
+    A confirmed dysponent (a `dysponent:` source) supplies operator_name/operator_regon and clears the flags of a
+    derived or unconfirmed operator."""
+    provider = other if from_provider(other) else (target if from_provider(target) else None)
     known = source_keys(target)
     target['source_records'].extend(s for s in other['source_records']
                                     if (s['source_id'], s['source_record_id']) not in known)
@@ -45,13 +53,19 @@ def merge(target, other):
     for field in standard.FIELDS:
         if field in ('aed_id', 'source_records', 'quality_flags', 'retrieved_at', 'updated_at'):
             continue
+        if provider is not None and field in OPERATOR_FIELDS:
+            if provider is other and other.get(field) not in UNKNOWN_VALUES:
+                target[field] = other[field]
+            continue
         mine, theirs = target.get(field), other.get(field)
-        if mine in (None, '', 'unknown') and theirs not in (None, '', 'unknown'):
+        if mine in UNKNOWN_VALUES and theirs not in UNKNOWN_VALUES:
             target[field] = theirs
             for source in other['source_records']:
                 source.setdefault('field_provenance', {})[field] = 'wartość przyjęta z tego źródła: pierwsze niepuste'
-        elif theirs not in (None, '', 'unknown') and mine != theirs and field not in ('latitude', 'longitude'):
+        elif theirs not in UNKNOWN_VALUES and mine != theirs and field not in ('latitude', 'longitude'):
             add_flag(target, 'conflicting_sources')
+    if provider is not None:
+        target['quality_flags'] = [flag for flag in target['quality_flags'] if flag not in DERIVED_OPERATOR_FLAGS]
     target['retrieved_at'] = max(target['retrieved_at'], other['retrieved_at'])
     target['updated_at'] = max(target['updated_at'], other['updated_at'])
 

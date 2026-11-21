@@ -44,13 +44,23 @@ L8 on a running main (2026-11-21):
    covers OSM.
 3. **Category.** Report and OSM datasets get the category with code `HEAL`
    ("Zdrowie"), as the wizard does.
-4. **Operator.** Municipal records: `operator_name` = `nieustalony`, quality
-   flag `operator_unconfirmed`, city office in
-   `source_records[].publisher_name`. OSM records: `operator` tag kept as a
-   candidate (else `nieustalony`), flag `operator_unconfirmed` on all.
-   `aed-standard/validate.py` (one rule set, used by the wizard): the
-   placeholder requires the flag; a record with a `dysponent:` source must not
-   use the placeholder or the flag.
+4. **Operator** (changed 2026-11-21 ~23:2x UTC by Patryk and the mentor: no
+   "nieustalony" in the official report). Municipal records: `operator_name` =
+   the institution named in the source's location text (Krosno/Marki
+   `Lokalizacja`, Legionowo `nazwa`); where the source names none (Przemyśl has
+   only a device label) the publishing city office; always with the quality flag
+   `operator_from_location`; city office in `source_records[].publisher_name`.
+   Nothing beyond the source text is derived. OSM records: `operator` tag kept as
+   a candidate (else `nieustalony`), flag `operator_unconfirmed` on all.
+   `aed-standard/validate.py` (one rule set, used by the wizard): the placeholder
+   requires `operator_unconfirmed`; a record with a `dysponent:` source must not
+   use the placeholder, `operator_unconfirmed` or `operator_from_location`.
+   A merged record with a confirmed dysponent takes that dysponent's
+   `operator_name`/`operator_regon` and drops the derived-operator flags.
+   Demo: `seed_aed_demo` creates 4 fictional institutions labelled
+   "(dane demonstracyjne)" (hospital, school, sports centre, company) that publish
+   3 fictional records each through `mcod.aed_wizard.publish.publish`
+   (`source_id` `dysponent:<slug>`), so confirmed dysponenci > 0 in the demo.
 5. **Data scope.** aed-standard gets optional `operator_regon` (9 or 14 digits,
    GUS check digit) in schema, field dictionary xlsx, template, example,
    mappings and validator tests (44 fields). The gmina check uses exact PRG
@@ -65,7 +75,7 @@ L8 on a running main (2026-11-21):
 
 - Confirming real operators or REGON numbers.
 - New sources, live OSM download, changes to portal design.
-- Changing L6's counters (data contract change reported to the coordinator).
+- Changing L6's counters (L6 follow-up; fields told to L6 directly).
 
 ## Acceptance
 
@@ -74,7 +84,8 @@ L8 on a running main (2026-11-21):
 | C1 | Live fetch used when the API answers; snapshot when it fails; origin and time recorded per source | `test_compliance` (mocked HTTP) |
 | C2 | OSM resource in its own dataset with ODbL text; report dataset text links OSM and no longer claims OSM | `test_compliance` publish test |
 | C3 | Report and OSM datasets have category HEAL | `test_compliance` publish test |
-| C4 | Municipal records: placeholder + flag + publisher_name; validator rejects placeholder/flag for `dysponent:` sources | `test_compliance`, `aed-standard/tests/test_validate.py` |
+| C4 | Municipal records: location institution + `operator_from_location` + publisher_name, no placeholder; validator rejects placeholder/derived flags for `dysponent:` sources; confirmed dysponent wins a merge | `test_compliance`, `aed-standard/tests/test_validate.py` |
+| C8 | 4 demo dysponenci publish 12 records through the wizard path and reach the report as confirmed operators | `test_compliance` |
 | C5 | `operator_regon` in all aed-standard artefacts, check digit enforced | `aed-standard/tests` (contract + validator) |
 | C6 | PRG gmina check: all 24 Legionowo points get terc 1408011; a point outside its gmina is withheld | `test_compliance` |
 | C7 | `aed-beat` keeps only AED schedule entries | `test_app_config` |

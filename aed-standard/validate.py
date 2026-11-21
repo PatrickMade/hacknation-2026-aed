@@ -107,7 +107,8 @@ def operator_rules(row, schema):
     sources = row.get("source_records") if isinstance(row.get("source_records"), list) else []
     own = any(isinstance(s, dict) and str(s.get("source_id", "")).startswith(rule["forbiddenSourcePrefix"])
               for s in sources)
-    if own and (unconfirmed or row.get("operator_name") == rule["placeholder"]):
+    derived = "operator_from_location" in flags
+    if own and (unconfirmed or derived or row.get("operator_name") == rule["placeholder"]):
         errors.append("operator_name: publikacja dysponenta musi wskazać potwierdzonego dysponenta")
     return errors
 

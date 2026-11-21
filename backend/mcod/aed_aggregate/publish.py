@@ -7,6 +7,7 @@ from django.core.files.base import ContentFile
 from django.db import transaction
 
 from mcod.aed_aggregate import sources, standard
+from mcod.categories.models import Category
 from mcod.datasets.models import Dataset
 from mcod.organizations.models import Organization
 from mcod.resources.models import Resource, ResourceFile
@@ -17,21 +18,40 @@ logger = logging.getLogger('mcod')
 
 OPERATOR = {'slug': 'aed-operator-portalu', 'title': 'Ministerstwo Cyfryzacji - operator portalu (instancja lokalna)'}
 REPORT_EXT = 'aed-raport-zbiorczy'
+OSM_EXT = 'aed-osm-polska'
+HEALTH_CATEGORY = 'HEAL'  # "Zdrowie", same category as the provider wizard
 TAGS = ('AED', 'defibrylator', 'raport zbiorczy')
+PORTAL_DATASET_URL = '/pl/dataset/{}'
 REPORT_NOTES = (
     'Raport zbiorczy AED: jeden zbiór rekordów o automatycznych defibrylatorach zewnętrznych (AED) z zasobów '
-    'dysponentów opublikowanych w dane.gov.pl, sprowadzonych do wzorcowego zakresu danych AED (aed-standard), '
-    'zwalidowanych i zdeduplikowanych. Każdy rekord wskazuje dysponenta (operator_name) i pochodzenie '
-    '(source_records: zbiór, zasób, klucz rekordu, data pobrania, licencja). Flagi jakości (quality_flags) '
-    'oznaczają m.in. zamienione osie współrzędnych, punkty poza gminą dysponenta, niepełny TERYT i kandydatów '
-    'na duplikaty. Status działania, dostępność i godziny są "unknown", bo źródła ich nie potwierdzają. '
-    'Wzór publikacji: raport zbiorczy DGA (dane.gov.pl, zbiór 4354). Instancja demonstracyjna HackNation 2026.'
+    'opublikowanych w dane.gov.pl, sprowadzonych do wzorcowego zakresu danych AED (aed-standard), '
+    'zwalidowanych i zdeduplikowanych. Pochodzenie każdego rekordu jest w source_records (zbiór, zasób, klucz '
+    'rekordu, wydawca danych publisher_name, czas pobrania, licencja). Źródła miejskie podają tylko wydawcę '
+    'danych, nie dysponenta: takie rekordy mają operator_name "nieustalony" i flagę operator_unconfirmed, dopóki '
+    'dysponent nie opublikuje ich sam (kreator dysponenta). Gmina (terc) pochodzi z granic PRG. Flagi jakości '
+    '(quality_flags) oznaczają też zamienione osie, punkty poza gminą dysponenta i kandydatów na duplikaty. '
+    'Status działania, dostępność i godziny są "unknown", bo źródła ich nie potwierdzają. Odświeżanie: zadanie '
+    'Celery codziennie o 03:30 UTC (usługa aed-beat) i polecenie aed_refresh; każde odświeżenie pobiera źródła '
+    'na żywo z api.dane.gov.pl, a przy braku dostępu używa datowanej kopii. Punkty AED z OpenStreetMap są '
+    'osobnym zbiorem na licencji ODbL 1.0: {osm_url}. Wzór publikacji: raport zbiorczy DGA (dane.gov.pl, zbiór '
+    '4354). Instancja demonstracyjna HackNation 2026.\n\nOstatnie odświeżenie: {refresh}'
 )
 REPORT_LICENCE_NOTE = (
     'Zasoby "Raport zbiorczy AED" (CSV, GeoJSON): CC BY 4.0, z zachowaniem warunków źródeł: Urząd Miasta Krosna, '
-    'Urząd Miejski w Przemyślu, Urząd Miasta Legionowo (CC0 1.0), Urząd Miasta Marki (CC BY 4.0). '
-    'Zasób "Punkty AED z OpenStreetMap - Polska" NIE jest objęty CC BY 4.0: obowiązuje ODbL 1.0 '
-    '(https://opendatacommons.org/licenses/odbl/1-0/), © OpenStreetMap contributors.'
+    'Urząd Miejski w Przemyślu, Urząd Miasta Legionowo (CC0 1.0), Urząd Miasta Marki (CC BY 4.0). Zbiór nie '
+    'zawiera danych z OpenStreetMap.'
+)
+OSM_NOTES = (
+    'Punkty emergency=defibrillator z OpenStreetMap dla Polski (eksport krajowy OpenAEDMap {source}), w wzorcowym '
+    'zakresie danych AED, bez telefonów, e-maili i danych autorów edycji. Baza danych na licencji Open Database '
+    'License 1.0 (ODbL 1.0, https://opendatacommons.org/licenses/odbl/1-0/), © OpenStreetMap contributors; '
+    'udostępniając bazę pochodną, zachowaj ODbL i to uznanie autorstwa. Tag operator jest tylko kandydatem, dlatego '
+    'każdy rekord ma flagę operator_unconfirmed. Zbiór porównawczy do raportu zbiorczego AED: {report_url}.'
+)
+OSM_LICENCE_NOTE = (
+    'Licencja bazy danych: Open Database License 1.0 (ODbL 1.0), https://opendatacommons.org/licenses/odbl/1-0/. '
+    'Uznanie autorstwa: © OpenStreetMap contributors. Portal nie ma wyboru ODbL: obowiązuje ten opis, nie '
+    'CC BY 4.0.'
 )
 
 
@@ -62,7 +82,7 @@ def empty_cell_sign(user):
     return sign
 
 
-def upsert_dataset(ext_ident, organization, user, **fields):
+def upsert_dataset(ext_ident, organization, user, category=None, **fields):
     dataset = Dataset.raw.filter(ext_ident=ext_ident).first()
     if dataset is None:
         dataset = Dataset(ext_ident=ext_ident, created_by=user)
@@ -74,6 +94,8 @@ def upsert_dataset(ext_ident, organization, user, **fields):
         setattr(dataset, key, value)
     dataset.save()
     dataset.tags.set(tags())
+    if category:
+        dataset.categories.set(Category.objects.filter(code=category))
     return dataset
 
 
@@ -172,19 +194,19 @@ def operator_organization(user):
     return organization
 
 
-def publish_sources(user, process=True):
-    """Each municipal snapshot as a dataset of its seeded institution, in its original layout."""
-    retrieved = sources.retrieved_at()
+def publish_sources(user, loaded, process=True):
+    """Each municipal source as a dataset of its seeded institution, in its original layout: the live file when
+    api.dane.gov.pl answered, else the committed snapshot (`loaded` from sources.load_sources())."""
     datasets = []
-    for source in sources.SOURCES:
+    for item in loaded:
+        source, meta = item['source'], item['meta']
         organization = Organization.objects.filter(slug='jury-' + source['slug']).first()
         if organization is None:
             raise RefreshError('Brak instytucji jury-{}: najpierw uruchom seed_jury.'.format(source['slug']))
-        meta = sources.source_meta(source)
         original = meta['dataset']
         url = 'https://dane.gov.pl/pl/dataset/{}'.format(source['dataset_id'])
-        notes = '{}\n\nKopia lokalna zbioru {} z dane.gov.pl ({}), pobrana {} UTC. Instytucja: {}.'.format(
-            original.get('notes') or original['title'], source['dataset_id'], url, retrieved,
+        notes = '{}\n\nKopia lokalna zbioru {} z dane.gov.pl ({}): {}. Instytucja: {}.'.format(
+            original.get('notes') or original['title'], source['dataset_id'], url, sources.origin_note(item),
             meta['institution']['title'])
         cc_by = original.get('license_name') == 'CC BY 4.0'
         dataset = upsert_dataset(
@@ -195,12 +217,13 @@ def publish_sources(user, process=True):
         )
         resource = meta['resource']
         data_date = datetime.date.fromisoformat(resource['data_date'])
-        description = '{} Oryginalny układ pliku, bez zmian. Źródło: {} (pobrano {} UTC).'.format(
-            resource.get('description') or resource['title'], resource['file_url'] or resource['link'], retrieved)
+        description = '{} Oryginalny układ pliku, bez zmian. Źródło: {} ({}).'.format(
+            resource.get('description') or resource['title'], resource['file_url'] or resource['link'],
+            sources.origin_note(item))
         if source['file']:
-            content = (sources.DATA_DIR / source['slug'] / source['file']).read_bytes()
             upsert_resource('aed-src-res-{}'.format(source['resource_id']), dataset, user, resource['title'],
-                            description, data_date, filename=source['file'], content=content, process=process)
+                            description, data_date, filename=source['file'], content=item['content'],
+                            process=process)
         else:
             upsert_resource('aed-src-res-{}'.format(source['resource_id']), dataset, user, resource['title'],
                             description + ' Źródło nie udostępnia anonimowego eksportu rekordów AED.',
@@ -209,14 +232,34 @@ def publish_sources(user, process=True):
     return datasets
 
 
-def publish_report(user, report_csv, report_geojson, osm_csv, process=True):
+def refresh_summary(loaded, when):
+    parts = ['{} ({}): {}'.format(item['meta']['institution']['title'], item['source']['dataset_id'],
+                                  'na żywo z api.dane.gov.pl' if item['origin'] == 'live'
+                                  else 'kopia z {}'.format(item['retrieved_at']))
+             for item in loaded]
+    return '{} UTC. Źródła: {}.'.format(when, '; '.join(parts))
+
+
+def publish_report(user, report_csv, report_geojson, osm_csv, loaded, process=True):
+    """The report (CC BY 4.0, official sources only) and OSM as its own ODbL dataset, linked both ways."""
     organization = operator_organization(user)
-    today = datetime.date.fromisoformat(sources.retrieved_at()[:10])
-    dataset = upsert_dataset(
-        REPORT_EXT, organization, user, title='Raport zbiorczy AED', notes=REPORT_NOTES,
-        update_frequency='daily', license_condition_source=True,
-        license_condition_custom_description=REPORT_LICENCE_NOTE,
+    today = datetime.date.fromisoformat(sources.now_utc()[:10])
+    osm_dataset = upsert_dataset(
+        OSM_EXT, organization, user, category=HEALTH_CATEGORY,
+        title='Punkty AED z OpenStreetMap - Polska (ODbL 1.0)', notes='-', update_frequency='irregular',
+        license_condition_source=True, license_condition_custom_description=OSM_LICENCE_NOTE,
+        license_condition_db_or_copyrighted=OSM_LICENCE_NOTE,
     )
+    dataset = upsert_dataset(
+        REPORT_EXT, organization, user, category=HEALTH_CATEGORY, title='Raport zbiorczy AED',
+        notes=REPORT_NOTES.format(osm_url=PORTAL_DATASET_URL.format(osm_dataset.pk),
+                                  refresh=refresh_summary(loaded, sources.now_utc())),
+        update_frequency='daily', license_condition_source=True,
+        license_condition_custom_description=REPORT_LICENCE_NOTE, license_condition_db_or_copyrighted=None,
+    )
+    osm_dataset.notes = OSM_NOTES.format(source=sources.OSM_SOURCE_URL,
+                                         report_url=PORTAL_DATASET_URL.format(dataset.pk))
+    osm_dataset.save()
     common = ('Rekordy w wzorcowym zakresie danych AED (aed-standard/schema.json), zwalidowane przez '
               'aed-standard/validate.py. Kolumny source_records i quality_flags zawierają tablice JSON.')
     resources = [
@@ -226,12 +269,9 @@ def publish_report(user, report_csv, report_geojson, osm_csv, process=True):
         upsert_resource('aed-raport-geojson', dataset, user, 'Raport zbiorczy AED (GeoJSON)',
                         common + ' Rekordy z CSV, które mają współrzędne, z geometrią Point (WGS84). Licencja CC BY 4.0.', today,
                         filename='raport_zbiorczy_aed.geojson', content=report_geojson, process=process),
-        upsert_resource('aed-osm-csv', dataset, user, 'Punkty AED z OpenStreetMap - Polska (ODbL 1.0)',
-                        'Punkty emergency=defibrillator z OpenStreetMap dla Polski (eksport OpenAEDMap {}), '
-                        'w wzorcowym zakresie danych AED, bez telefonów, e-maili i danych autorów edycji. '
-                        'Licencja ODbL 1.0 (https://opendatacommons.org/licenses/odbl/1-0/), '
-                        '© OpenStreetMap contributors. Zasób porównawczy: tag operator nie potwierdza '
-                        'dysponenta, nie jest częścią raportu na CC BY 4.0.'.format(sources.OSM_SOURCE_URL),
+        upsert_resource('aed-osm-csv', osm_dataset, user, 'Punkty AED z OpenStreetMap - Polska (ODbL 1.0)',
+                        common + ' Licencja ODbL 1.0 (https://opendatacommons.org/licenses/odbl/1-0/), '
+                        '© OpenStreetMap contributors. Tag operator nie potwierdza dysponenta.',
                         today, filename='osm_aed_polska.csv', content=osm_csv, geo=True, process=process),
     ]
-    return dataset, resources
+    return dataset, osm_dataset, resources

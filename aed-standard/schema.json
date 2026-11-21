@@ -382,7 +382,7 @@
       "name": "operator_name",
       "title": "Dysponent urządzenia",
       "type": "string",
-      "description": "Instytucja odpowiedzialna za urządzenie i odbiór zgłoszeń o nim. Wymagana; potwierdź u dysponenta. Nie kopiuj automatycznie wydawcy zbioru lub właściciela budynku. W raporcie zbiorczym rekord z nieustalonym dysponentem ma wartość \"nieustalony\" i flagę operator_unconfirmed; publikacja dysponenta nie może jej użyć.",
+      "description": "Instytucja odpowiedzialna za urządzenie i odbiór zgłoszeń o nim. Wymagana; potwierdź u dysponenta. Nie kopiuj automatycznie wydawcy zbioru lub właściciela budynku. W raporcie zbiorczym ze źródeł zewnętrznych nazwa przejęta z opisu lokalizacji ma flagę operator_from_location, a nieznany dysponent wartość \"nieustalony\" z flagą operator_unconfirmed; publikacja dysponenta nie może użyć żadnej z nich.",
       "x-requirement": "R",
       "example": "Fikcyjna Instytucja Przykładowa",
       "constraints": {
@@ -583,7 +583,8 @@
     "geocoded",
     "teryt_incomplete",
     "conflicting_sources",
-    "operator_unconfirmed"
+    "operator_unconfirmed",
+    "operator_from_location"
   ],
   "x-sourceRecord": {
     "required": [

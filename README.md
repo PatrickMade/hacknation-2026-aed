@@ -25,15 +25,16 @@ docker compose run --rm manage python manage.py migrate --noinput
 docker compose run --rm manage python manage.py seed_jury
 docker compose run --rm manage python manage.py collectstatic --noinput
 docker compose run --rm manage python manage.py search_index --rebuild -f
+docker compose run --rm manage python manage.py seed_aed_demo
 docker compose run --rm manage python manage.py aed_refresh
-docker compose up -d admin api cms celery frontend nginx
+docker compose up -d admin api cms celery aed-beat frontend nginx
 ```
 
 Generator tworzy `.env` z losowymi hasłami i kluczami, z uprawnieniami 0600. Można zamiast tego skopiować `.env.example` do `.env` i samodzielnie wypełnić puste wartości. `.env` jest ignorowany przez Git i nie trafia do kontekstu budowy. Nie publikuj jego zawartości. Nie używaj haseł ani kluczy z rzeczywistych kont. Hasła odczytaj lokalnie z `.env` w edytorze.
 
 Seed wymaga wszystkich 15 haseł przed zapisem. Można go uruchamiać ponownie: zachowuje identyfikatory kont i instytucji, ustawia hasła zgodnie z `.env` oraz odtwarza przypisania kont demo. Nie uruchamiaj go na bazie produkcyjnej. Nie ładuje kont ani przykładowego zbioru z upstream `basic_data.json`.
 
-`aed_refresh` (po `seed_jury`) wczytuje datowane kopie pięciu zbiorów AED z dane.gov.pl (`backend/data/aed/sources/`) jako zbiory instytucji demo, mapuje je do wzorcowego zakresu `aed-standard/`, waliduje i deduplikuje, a potem publikuje zbiór „Raport zbiorczy AED” instytucji operatora portalu: CSV z podglądem mapy, GeoJSON oraz osobny zasób punktów AED z OpenStreetMap na licencji ODbL 1.0. Polecenie można uruchamiać ponownie; zmienione pliki zastępują poprzednie wersje tych samych zasobów. Tę samą aktualizację wykonuje zadanie Celery `mcod.aed_aggregate.tasks.aed_refresh_task` (harmonogram dzienny wymaga procesu celery beat, którego lokalny Compose nie uruchamia).
+`aed_refresh` (po `seed_jury`) pobiera pięć zbiorów AED na żywo z publicznego API dane.gov.pl (tylko odczyt); gdy API nie odpowiada, używa datowanych kopii z `backend/data/aed/sources/` i zapisuje, które źródło i kiedy zostało użyte (wynik polecenia, opis zbioru, `source_records`). Zbiory źródłowe trafiają do instytucji demo, rekordy są mapowane do wzorcowego zakresu `aed-standard/`, walidowane i deduplikowane, a gmina (`terc`) wynika z granic PRG. Polecenie publikuje zbiór „Raport zbiorczy AED” instytucji operatora portalu (kategoria Zdrowie, CSV z podglądem mapy i GeoJSON, CC BY 4.0) oraz osobny zbiór punktów AED z OpenStreetMap (ODbL 1.0). `--offline` pomija API. `seed_aed_demo` (przed `aed_refresh`) tworzy cztery fikcyjne instytucje oznaczone „(dane demonstracyjne)” (szpital, szkoła, centrum sportu, spółka), które publikują po trzy fikcyjne rekordy AED tą samą ścieżką co kreator dysponenta; pokazują przepływ „dysponent publikuje dane, raport zbiorczy je przejmuje” i nie wskazują rzeczywistych AED. Rekordy źródeł miejskich nie nazywają dysponenta: `operator_name` to instytucja z opisu lokalizacji (flaga `operator_from_location`), a urząd miasta jest wydawcą danych (`source_records[].publisher_name`). Polecenie można uruchamiać ponownie; zmienione pliki zastępują poprzednie wersje tych samych zasobów. Usługa `aed-beat` uruchamia codziennie o 03:30 UTC zadanie Celery `mcod.aed_aggregate.tasks.aed_refresh_task` (tylko zadania AED, bez okresowych zadań portalu).
 
 Frontend kompiluje się po starcie kontenera. Postęp: `docker compose logs -f frontend`. Gotowość sprawdzisz przez `curl -f http://localhost:4200/` oraz `curl -f http://localhost:4200/api/1.4/institutions`.
 

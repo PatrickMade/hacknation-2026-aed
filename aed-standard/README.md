@@ -33,10 +33,12 @@ państwowy standard ani potwierdzony rejestr sprawnych urządzeń.
    Publikacja dysponenta (`source_id` zaczyna się od `dysponent:`) zawsze
    wskazuje potwierdzonego dysponenta; walidator odrzuca w niej wartość
    `nieustalony` i flagę `operator_unconfirmed`. Wyjątek dotyczy wyłącznie
-   raportu zbiorczego ze źródeł zewnętrznych: rekord bez potwierdzonego
-   dysponenta ma `operator_name` = `nieustalony`, flagę
-   `operator_unconfirmed`, a wydawcę danych źródłowych w
-   `source_records[].publisher_name`. Opcjonalny `operator_regon` (9 lub 14
+   raportu zbiorczego ze źródeł zewnętrznych: gdy źródło nazywa instytucję
+   w opisie lokalizacji, `operator_name` przejmuje tę nazwę z flagą
+   `operator_from_location` (to nie jest potwierdzenie dysponenta); gdy nie
+   nazywa żadnej, pozostaje wydawca z tą samą flagą; nieznany dysponent bez
+   żadnej nazwy ma `nieustalony` i flagę `operator_unconfirmed`. Wydawca
+   danych źródłowych jest w `source_records[].publisher_name`. Opcjonalny `operator_regon` (9 lub 14
    cyfr z cyfrą kontrolną GUS) jednoznacznie identyfikuje dysponenta.
 4. Nieznane wartości opcjonalne pozostaw puste. `unknown` jest dozwolone
    tylko w określonych słownikach; nie oznacza `false`, `working` ani `24/7`.
