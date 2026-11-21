@@ -25,8 +25,8 @@ zawiera znaczniki dla marki, stanu prototypu i dostępu do repozytorium.
 - Teksty wersji 1: nazwa i hasło "Mapa Serc", repozytorium publiczne, link
   HackTribe, aktualny stan modułów, wiersze oświadczenia AI dla modułów.
   Konspekt prezentacji zastępują źródła slajdów (plik usunięty).
-- Nagranie demo MP4 do 2 minut w `submission/` (osobny commit lub PR, gdy
-  działa instancja integracyjna).
+- Nagranie demo MP4 do 2 minut w `submission/` oraz okładka projektu
+  HackTribe 800 x 600 px.
 
 Non-goals: scenariusz wystąpienia i pytania jury (dopiero po awansie do
 pierwszej piątki), edycja formularza HackTribe, pliki marki, kod modułów.
@@ -63,6 +63,7 @@ na formę bezosobową (zasada zespołu jednoosobowego).
 2. [x] Zrzuty ekranu z lokalnej instancji integracyjnej.
 3. [x] Slajdy HTML, skrypt PDF, PDF.
 4. [x] Aktualizacja tekstów wersji 1, `akceptacja.md`.
-5. [ ] Bramka, PR, niezależny przegląd, merge (pierwszy PDF).
+5. [ ] Bramka, PR, niezależny przegląd, merge.
 6. [x] Zrzut strony akcji z licznikami i mapą (PR #6, head 01804b1).
-7. [ ] Nagranie demo MP4.
+7. [x] Nagranie demo MP4 (100,8 s) i zrzuty z instancji uruchomionej z `main`.
+8. [x] Okładka HackTribe 800 x 600; kontrola axe-core nowych stron AED.

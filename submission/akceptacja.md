@@ -4,8 +4,7 @@ Każdy punkt akceptuje autor po własnym sprawdzeniu. Zaznacz `[x]` i wpisz
 uwagi albo "OK". Punkt z uwagami wraca do poprawy przed wysłaniem
 zgłoszenia.
 
-Stan na 2026-11-21, 20:20 UTC. Punkty zależne od niescalonych jeszcze
-pull requestów są oznaczone numerem PR.
+Stan na 2026-11-21, 22:05 UTC. Wszystkie sprawdzane elementy są w gałęzi `main`.
 
 ## 1. Demo lokalne
 
@@ -22,7 +21,7 @@ Uruchomienie według `README.md` (sekcja "Uruchomienie od zera"), potem:
       z błędami bez logowania.
 - [ ] 1.6 Karta urządzenia i "Zgłoś problem": zgłoszenie widzi tylko
       dysponent urządzenia, e-mail w MailHog.
-- [ ] 1.7 Strona akcji `/pl/aed` (PR #6): liczniki i mapa pokrycia gmin,
+- [ ] 1.7 Strona akcji `/pl/aed`: liczniki i mapa pokrycia gmin,
       także na telefonie.
 - [ ] 1.8 "Najbliższy AED" w zakładce PoCoTo.
 
@@ -34,15 +33,15 @@ Uwagi:
 
 - [ ] 2.1 Treść slajdów zgodna z prototypem i opisem.
 - [ ] 2.2 Zrzuty ekranu aktualne, w tym strona akcji z licznikami i mapą.
-- [ ] 2.3 Slajd 10: wynik kontroli dostępności nowych stron AED zamiast
-      znacznika "do uzupełnienia" (po przeglądzie integracyjnym).
+- [ ] 2.3 Slajd 10: wynik automatycznej kontroli dostępności (axe-core)
+      nowych stron AED, w tym jedno naruszenie w kreatorze.
 - [ ] 2.4 Rozmiar do 10 MB, co najmniej 5 slajdów.
 
 Uwagi:
 
 ## 3. Księga znaku
 
-`brand/ksiega-znaku-mapa-serc.pdf` (PR #10)
+`brand/ksiega-znaku-mapa-serc.pdf`
 
 - [ ] 3.1 Kolorystyka, pole ochronne, minimalna wielkość, niedozwolone
       użycia, opis koncepcji w 3-5 zdaniach.
@@ -73,7 +72,7 @@ Uwagi:
 
 ## 6. Nagranie demo
 
-`submission/` (plik MP4, do 2 minut)
+`submission/mapa-serc-demo.mp4` (1 min 41 s, bez dźwięku, z napisami)
 
 - [ ] 6.1 Nagranie pokazuje kroki dysponenta i odbiorcy danych.
 - [ ] 6.2 Długość do 2 minut; brak haseł i prywatnych danych na ekranie.
@@ -84,6 +83,7 @@ Uwagi:
 
 - [ ] 7.1 Treść klauzuli RODO w formularzu "Zgłoś problem" (strona
       urządzenia `/pl/aed/<aed_id>`).
-- [ ] 7.2 Okres przechowywania danych zgłaszającego.
+- [ ] 7.2 Okres przechowywania danych zgłaszającego: imię lub podpis
+      i kontakt są usuwane 30 dni po oznaczeniu zgłoszenia jako rozwiązane.
 
 Uwagi:

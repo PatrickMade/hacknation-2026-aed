@@ -190,7 +190,7 @@ Udana konwersja do JSON nie oznacza poprawnych danych.</pre>
     <tr><td>Formaty maszynowo czytelne</td><td>CSV (UTF-8, RFC 4180), GeoJSON, JSON z API <code>/1.4</code>, słownik XLSX; bez PDF i DOC jako formatu danych</td></tr>
     <tr><td>Dane z wielu źródeł w jednym zbiorze</td><td>Raport zbiorczy AED z 5 zbiorów, z pochodzeniem i licencją każdego rekordu; OSM jako osobny zasób ODbL</td></tr>
     <tr><td>Aktualność</td><td>Częstotliwość „codziennie”, data danych w metadanych, odświeżanie komendą lub zadaniem Celery</td></tr>
-    <tr><td>WCAG i responsywność</td><td>Nowe strony AED w komponentach portalu, układ od 360 px (slajdy 9 i 11). Kontrola dostępności: [do uzupełnienia po przeglądzie integracyjnym]</td></tr>
+    <tr><td>WCAG i responsywność</td><td>Nowe strony AED w komponentach portalu, układ od 360 px (slajdy 9 i 11). Automatyczna kontrola axe-core (WCAG 2.0-2.2 A i AA): 0 naruszeń na stronie akcji, karcie urządzenia z formularzem i w walidatorze; 1 w kreatorze (linki do szablonu mniejsze niż 24 px)</td></tr>
     <tr><td>Uruchomienie przez jury</td><td>Jedna konfiguracja Docker Compose, konta demo z seeda, instrukcja w <code>README.md</code></td></tr>
   </table>
   <div class="stopka"><img src="img/brand/mapa-serc-symbol-kolor.svg" alt=""><span>10</span></div>
@@ -204,7 +204,7 @@ Udana konwersja do JSON nie oznacza poprawnych danych.</pre>
     <figure><img src="img/zrzuty/akcja-mobile-liczniki.jpg" alt="Liczniki strony akcji na telefonie"><figcaption>Telefon (360 px): liczniki.</figcaption></figure>
     <figure><img src="img/zrzuty/akcja-mobile-mapa.jpg" alt="Mapa luk w danych na telefonie"><figcaption>Telefon: mapa luk w danych.</figcaption></figure>
   </div>
-  <p class="maly">Liczniki i mapa czytają dane raportu zbiorczego i zasobu OSM. Przycisk „Udostępnij swoje AED” prowadzi do kreatora. Strona akcji: w przeglądzie (PR #6).</p>
+  <p class="maly">Liczniki i mapa czytają dane raportu zbiorczego i zasobu OSM. Przycisk „Udostępnij swoje AED” prowadzi do kreatora.</p>
   <div class="stopka"><img src="img/brand/mapa-serc-symbol-kolor.svg" alt=""><span>11</span></div>
 </section>
 
@@ -222,7 +222,7 @@ Udana konwersja do JSON nie oznacza poprawnych danych.</pre>
       <li>Walidator nie sprawdza rejestru TERYT, pełnej gramatyki <code>opening_hours</code> ani danych osobowych w dowolnym tekście.</li>
       <li>Deduplikacja wskazuje kandydatów; ten sam adres nie dowodzi tego samego urządzenia.</li>
       <li>Mapa portalu czyta CSV; GeoJSON tylko do pobrania.</li>
-      <li>E-maile w demo trafiają do lokalnej skrzynki testowej (MailHog).</li>
+      <li>E-maile w demo trafiają do lokalnej skrzynki testowej (MailHog); formularz zgłoszeń nie ma limitu liczby zgłoszeń.</li>
     </ul>
   </div>
   <p class="maly">Pełna lista: submission/ograniczenia.md</p>

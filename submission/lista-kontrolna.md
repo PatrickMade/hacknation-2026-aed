@@ -1,6 +1,6 @@
 # Lista kontrolna zgłoszenia
 
-Lista robocza. Stan na 2026-11-21, 20:20 UTC. Termin finalnego zgłoszenia
+Lista robocza. Stan na 2026-11-21, 22:05 UTC. Termin finalnego zgłoszenia
 w HackTribe: **2026-11-22, 10:00 UTC (11:00 czasu polskiego, CET)**. Po
 terminie nie można zmieniać rozwiązania.
 
@@ -13,20 +13,21 @@ Wymagania z pełnej treści zadania, pkt 2-5.
 
 | # | Rezultat | Wymaganie | Właściciel (obszar prac) | Status | Gdzie |
 |---|---|---|---|---|---|
-| 1 | Tytuł i szczegółowy opis | Tytuł i szczegółowy opis projektu | Pakiet zgłoszenia | gotowe; aktualizacja stanu po scaleniu modułów | `submission/opis-projektu.md` |
-| 2 | Prezentacja | PDF do 10 MB, co najmniej 5 slajdów z dowodami wymagań technicznych (zrzuty ekranu), funkcjonalności, kroki użytkownika, ograniczenia | Pakiet zgłoszenia | gotowe: 14 slajdów; aktualizacja statusów po scaleniu PR #6 i PR #10 | `submission/mapa-serc-prezentacja.pdf`, źródła w `submission/prezentacja/` |
-| 3 | Działający prototyp | Zbieranie danych AED z wielu źródeł do jednego maszynowo czytelnego zbioru w dane.gov.pl | Portal, raport zbiorczy, kreator, walidator, zgłoszenia i "Najbliższy AED" (w `main`); strona akcji (PR #6) | wszystko poza stroną akcji gotowe; strona akcji w przeglądzie | repozytorium, `README.md` |
+| 1 | Tytuł i szczegółowy opis | Tytuł i szczegółowy opis projektu | Pakiet zgłoszenia | gotowe | `submission/opis-projektu.md` |
+| 2 | Prezentacja | PDF do 10 MB, co najmniej 5 slajdów z dowodami wymagań technicznych (zrzuty ekranu), funkcjonalności, kroki użytkownika, ograniczenia | Pakiet zgłoszenia | gotowe: 14 slajdów | `submission/mapa-serc-prezentacja.pdf`, źródła w `submission/prezentacja/` |
+| 3 | Działający prototyp | Zbieranie danych AED z wielu źródeł do jednego maszynowo czytelnego zbioru w dane.gov.pl | Portal, raport zbiorczy, kreator, walidator, zgłoszenia, "Najbliższy AED" i strona akcji | gotowe, w `main` | repozytorium, `README.md` |
 | 4 | Wzorcowy zakres danych | Tabela w formacie XLSX | Wzorcowy zakres danych | gotowe | `aed-standard/field-dictionary.xlsx` |
-| 5 | Kod źródłowy | Kod źródłowy rozwiązania | Wszystkie obszary | gotowe: repozytorium publiczne; moduły w przeglądzie | https://github.com/PatrickMade/hacknation-2026-aed |
-| 6 | Nazwa akcji, hasło, logo, księga znaku | Logo w .jpg, .png, .pdf i formacie otwartym (np. .svg); księga znaku PDF: kolorystyka, pole ochronne, minimalna wielkość, niedozwolone użycia, opis koncepcji w 3-5 zdaniach | Marka akcji "Mapa Serc" (PR #10) | w przeglądzie | `brand/` po scaleniu |
-| 7 | Oświadczenie o użyciu AI | Zakres wykorzystania AI (regulamin zadania, par. 2 ust. 8) | Pakiet zgłoszenia | gotowe; aktualizacja po scaleniu modułów | `submission/oswiadczenie-ai.md` |
+| 5 | Kod źródłowy | Kod źródłowy rozwiązania | Wszystkie obszary | gotowe: repozytorium publiczne | https://github.com/PatrickMade/hacknation-2026-aed |
+| 6 | Nazwa akcji, hasło, logo, księga znaku | Logo w .jpg, .png, .pdf i formacie otwartym (np. .svg); księga znaku PDF: kolorystyka, pole ochronne, minimalna wielkość, niedozwolone użycia, opis koncepcji w 3-5 zdaniach | Marka akcji "Mapa Serc" | gotowe | `brand/` |
+| 7 | Oświadczenie o użyciu AI | Zakres wykorzystania AI (regulamin zadania, par. 2 ust. 8) | Pakiet zgłoszenia | gotowe; przegląd końcowy autora do wykonania | `submission/oswiadczenie-ai.md` |
 
 ## Elementy uzupełniające
 
 | Element | Status | Uwagi |
 |---|---|---|
 | Lista ograniczeń | gotowe | `submission/ograniczenia.md`; skrót na slajdzie 12 |
-| Nagranie demo | do zrobienia | Plik MP4 do 2 minut w `submission/`, materiał dodatkowy w HackTribe; bez serwisów wideo |
+| Nagranie demo | gotowe | `submission/mapa-serc-demo.mp4`: 1 min 41 s, 2,2 MB, bez dźwięku, z napisami; materiał dodatkowy w HackTribe |
+| Okładka HackTribe | gotowe do akceptacji | `submission/mapa-serc-okladka-hacktribe.png` (800 x 600 px) |
 | Lista akceptacji autora | gotowe do akceptacji | `submission/akceptacja.md` |
 
 ## Pola formularza HackTribe
@@ -43,8 +44,8 @@ Projekt: https://hacknation2026.hacktribe.co/mapa-serc/
 
 ## Kontrola przed wysłaniem
 
-- [ ] Pull requesty modułów AED i marki scalone; `main` przechodzi bramkę
-      walidacji.
+- [x] Pull requesty modułów AED i marki scalone.
+- [ ] `main` przechodzi bramkę walidacji po ostatnim scaleniu.
 - [ ] Prototyp uruchomiony od zera według `README.md`; demo przechodzi
       kroki z `akceptacja.md`.
 - [ ] PDF prezentacji ma co najmniej 5 slajdów i najwyżej 10 MB
@@ -53,7 +54,8 @@ Projekt: https://hacknation2026.hacktribe.co/mapa-serc/
       sekcjami (`brand/`).
 - [ ] Opis, ograniczenia, oświadczenie AI i slajdy odpowiadają scalonemu
       stanowi: `grep -rin -E "do uzupełnienia|do wykonania|w realizacji|w przeglądzie" submission/*.md submission/prezentacja/slajdy.html`
-      nie zwraca wyników poza tą listą.
+      nie zwraca wyników poza tą listą (pozostaje przegląd końcowy autora
+      w `oswiadczenie-ai.md` do czasu akceptacji).
 - [ ] Teksty w pierwszej osobie liczby pojedynczej lub bezosobowo.
 - [ ] Wszystkie linki w zgłoszeniu działają.
 - [ ] Repozytorium nie zawiera haseł ani prywatnych danych; informacje

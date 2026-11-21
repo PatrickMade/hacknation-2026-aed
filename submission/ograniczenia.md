@@ -64,14 +64,22 @@ Stan na 2026-11-21.
 18. Publiczny formularz zgłoszeń nie ma limitu liczby zgłoszeń z jednego
     źródła ani ochrony przed automatami. Przed wdrożeniem trzeba je dodać.
 19. Treść klauzuli RODO w formularzu i okres przechowywania danych
-    zgłaszającego to propozycje prototypu. Wymagają potwierdzenia przez
-    administratora danych przed użyciem poza demo. Dane zgłaszających nie
-    są usuwane automatycznie po zamknięciu sprawy.
+    zgłaszającego (usunięcie 30 dni po rozwiązaniu zgłoszenia) to propozycje
+    prototypu. Wymagają potwierdzenia przez administratora danych przed
+    użyciem poza demo. Usuwanie wykonuje zadanie okresowe, którego lokalna
+    instancja nie uruchamia sama; kopia zgłoszenia wysłana e-mailem do
+    dysponenta pozostaje poza portalem.
 
 ## Dostępność i zakres zmian
 
 20. Wymagania WCAG 2.2 AA i responsywności (od 360 px) dotyczą nowych stron
     AED. Pozostała część portalu jest bez zmian i poza zakresem audytu.
+    Automatyczna kontrola axe-core (reguły WCAG 2.0-2.2 A i AA) nie wykazała
+    naruszeń na stronie akcji, karcie urządzenia z formularzem
+    i w publicznym walidatorze. W pierwszym kroku kreatora wykazała jedno:
+    trzy linki do pobrania szablonu są mniejsze niż 24 px (kryterium 2.5.8).
+    Kontrola automatyczna obejmuje tylko część kryteriów; nie wykonano testu
+    z czytnikiem ekranu.
 21. Kod portalu pochodzi z oficjalnego wydania (backend 2.62.3, frontend
     3.5.2) na licencji GPLv3. Zmiany i moduły AED podlegają tej samej
     licencji (`LICENSE`, `UPSTREAM.md`). Datowane kopie danych źródłowych

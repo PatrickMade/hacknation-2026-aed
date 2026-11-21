@@ -145,8 +145,7 @@ w repozytorium.
 
 ## Stan prototypu
 
-Stan na 2026-11-21, 20:20 UTC. "W przeglądzie" oznacza pull request
-czekający na przegląd i scalenie do `main`.
+Stan na 2026-11-21, 22:05 UTC: wszystkie elementy są w gałęzi `main`.
 
 | Element | Stan |
 |---|---|
@@ -154,9 +153,10 @@ czekający na przegląd i scalenie do `main`.
 | Lokalny portal dane.gov.pl z kontami | gotowy, w `main` |
 | Agregator i raport zbiorczy AED | gotowy, w `main` |
 | Kreator dysponenta i walidator | gotowy, w `main` |
-| Strona akcji i mapa pokrycia | w przeglądzie (PR #6) |
+| Strona akcji i mapa pokrycia | gotowe, w `main` |
 | Zgłoszenia problemów, QR, "Najbliższy AED" | gotowe, w `main` |
-| Nazwa, hasło, logo, księga znaku | w przeglądzie (PR #10) |
+| Nazwa, hasło, logo, księga znaku (`brand/`) | gotowe, w `main` |
+| Prezentacja PDF i nagranie demo (`submission/`) | gotowe |
 
 Ograniczenia: `ograniczenia.md`. Użycie AI: `oswiadczenie-ai.md`.
 

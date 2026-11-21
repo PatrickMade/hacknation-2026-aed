@@ -31,5 +31,9 @@ urządzeniem demo. Przeglądarka sterowana skryptem otwierała strony
 w oknie 1440 x 900 px (telefon: 360 x 800 px). Pliki są przycięte
 i zapisane jako JPEG. Nie zawierają haseł ani danych osobowych.
 
+Nagranie `../mapa-serc-demo.mp4` powstało tak samo: skrypt przeglądarki
+przeszedł kroki dysponenta i odbiorcy danych w oknie 1280 x 720 px,
+z napisami na dole ekranu. Zgłoszenia widoczne w nagraniu są testowe.
+
 Kopie plików znaku w `img/brand/` pochodzą z katalogu `brand/` (księga
 znaku Mapa Serc). Po zmianie znaku skopiuj je ponownie.
