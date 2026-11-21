@@ -123,3 +123,17 @@ of the namespaced source key, so it is stable across runs.
 - `docker compose run --rm manage python manage.py test mcod.aed_aggregate --noinput --keepdb`
 - Local run: `seed_jury`, `aed_refresh`, API calls, portal page screenshot.
 - Project validation gate (`AGENTS.md`).
+
+## Follow-up APP-52 (2026-11-21): register the app's AppConfig
+
+Django 2.2 does not pick an app's `AppConfig` automatically (that started in
+3.2). Without `default_app_config` in `mcod/aed_aggregate/__init__.py`,
+`AedAggregateConfig.ready()` never ran, so the daily beat entry
+`aed-refresh-daily` from outcome 8 was never registered. The package now sets
+`default_app_config` with the upstream `is_django_ver_lt(3, 2)` pattern.
+
+| # | Criterion | Check |
+|---|---|---|
+| F1 | The loaded app config is `AedAggregateConfig` and `aed-refresh-daily` (task `mcod.aed_aggregate.tasks.aed_refresh_task`) is in `mcod.celeryapp.app.conf.beat_schedule`, routed to the `periodic` queue like upstream beat tasks | `mcod.aed_aggregate.tests.test_app_config` (fails before the fix) |
+
+Non-goals: a celery beat service in compose; changes to the refresh itself.
