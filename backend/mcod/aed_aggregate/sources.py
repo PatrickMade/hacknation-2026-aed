@@ -232,11 +232,10 @@ EMAIL = re.compile(r'[^\s@]+@[^\s@]+\.[^\s@]+')
 
 
 def has_phone(value):
-    """A 9-12 digit run that is not opening hours, a date, a coordinate or a postcode."""
-    for match in PHONE_CANDIDATE.finditer(value or ''):
-        text = match.group()
-        digits = re.sub(r'\D', '', text)
-        if 9 <= len(digits) <= 12 and not HOURS.search(text) and not re.search(r'\d\.\d{4,}', text):
+    """9+ digits in one run, after removing opening hours; dates, coordinates and postcodes stay below that."""
+    text = HOURS.sub(' ', value or '')
+    for match in PHONE_CANDIDATE.finditer(text):
+        if len(re.sub(r'\D', '', match.group())) >= 9 and not re.search(r'\d\.\d{4,}', match.group()):
             return True
     return False
 

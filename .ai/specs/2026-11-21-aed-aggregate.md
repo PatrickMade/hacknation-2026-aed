@@ -99,6 +99,8 @@ of the namespaced source key, so it is stable across runs.
 - Residual risk: the portal derives the dataset licence (CC BY 4.0) for all its
   resources, including the ODbL OSM resource; only the resource title,
   description and licence note state ODbL.
+- Committed snapshots in `backend/data/aed/sources/` keep their source licences (CC0 1.0, CC BY 4.0, OSM ODbL 1.0)
+  and are outside the repository's GPL v3.0 (`LICENSES.md` there, README, UPSTREAM.md).
 - Krosno/Marki addresses are split with a conservative pattern; an address
   that does not match stays only in `original_values`.
 - Operating status, access, hours and verification stay `unknown`: the sources
