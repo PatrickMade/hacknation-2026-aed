@@ -68,7 +68,7 @@ prezentacji, strony akcji i tekstów zgłoszenia.
 
 ## Progress
 
-- [ ] 1. Strony "Hasła" i "Plakat dla dysponentów" w księdze znaku, wersja 1.1
-- [ ] 2. Wzór plakatu w `brand/plakat/` (SVG, PDF, PNG)
-- [ ] 3. `brand/README.md`
-- [ ] 4. Bramka walidacji i PR
+- [x] 1. Strony "Hasła" i "Plakat dla dysponentów" w księdze znaku, wersja 1.1 - 74479d9
+- [x] 2. Wzór plakatu w `brand/plakat/` (SVG, PDF, PNG) - 74479d9
+- [x] 3. `brand/README.md` - 74479d9
+- [x] 4. Bramka walidacji i PR (cztery polecenia lokalnie; test portalu i cała bramka w kontroli CI na PR)
