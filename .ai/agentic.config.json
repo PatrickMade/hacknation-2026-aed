@@ -106,7 +106,7 @@
       "risk-high"
     ]
   },
-  "qaGate": true,
+  "qaGate": false,
   "paths": {
     "runs": ".ai/runs",
     "analysis": ".ai/analysis",

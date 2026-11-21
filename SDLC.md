@@ -157,6 +157,8 @@ One label lives outside this taxonomy: `do-not-close`, applied by humans to issu
 
 ## The QA gate
 
+This project sets `qaGate: false`: its QA is web QA in a browser (the jury prototype is the web build), not iOS/Android device QA, so the merge gate needs no device verdicts.
+
 The one hard rule of this process: **a PR that needs QA merges only when its head-pinned QA verdict records pass for iOS and for Android on the current head, even when every other check is green.** The records decide (`qa_freshness.py check`, enforced by `.ai/scripts/merge_gate.py`); the labels `qa-approved` and `qa-failed` are their visible state, not a separate gate. `apptrick-check-merge-readiness` classifies such a PR as blocked; `apptrick-merge` refuses to merge it.
 
 - Apply `needs-qa` to UI changes, new features, and other user-facing behavior that needs manual exercise.
