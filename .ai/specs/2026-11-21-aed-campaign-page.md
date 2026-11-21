@@ -15,9 +15,9 @@ Nowa trasa `/pl/aed` w istniejącym układzie `MainLayoutComponent` (nagłówek,
 - CTA „Udostępnij swoje AED” do panelu dostawcy (`https://admin.mcod.local/`, w którym L5 dodaje „Dodaj dane AED”).
 
 ## Kontrakt danych (publiczne API portalu, bez wewnętrznych modułów L4)
-1. `GET /api/1.4/datasets?q=Raport zbiorczy AED` - zbiór, którego tytuł zawiera „Raport zbiorczy AED” (bez rozróżniania wielkości liter).
+1. `GET /api/search?q=Raport zbiorczy AED&model[terms]=dataset&per_page=10` (istniejące `DatasetService.getAll`) - zbiór, którego tytuł zawiera „Raport zbiorczy AED” (bez rozróżniania wielkości liter).
 2. `GET /api/1.4/datasets/:id/resources` - zasób oficjalny: tytuł bez „OSM”/„OpenStreetMap”, format CSV; zasób OSM: tytuł zawiera „OSM” lub „OpenStreetMap”.
-3. `GET /api/1.4/resources/:id/data?per_page=100&page=n` - wiersze; nazwy kolumn z `meta.headers_map`. Kolumny oficjalne: `terc`, `operator_name`, `latitude`, `longitude` (standard `aed-standard/`). OSM: `latitude`/`longitude` (albo `lat`/`lon`); gminę punktu OSM wyznacza strona przez punkt w wielokącie gminy. Okno wyników Elasticsearch portalu wynosi 40000 wierszy.
+3. `GET /api/1.4/resources/:id/data?per_page=100&page=n` - wiersze; nazwy kolumn z `meta.headers_map`. Kolumny oficjalne: `terc`, `operator_name`, `latitude`, `longitude` (standard `aed-standard/`). OSM: `latitude`/`longitude` (albo `lat`/`lon`); gminę punktu OSM wyznacza strona przez punkt w wielokącie gminy. Okno wyników Elasticsearch portalu wynosi 40000 wierszy; gdy zasób ma ich więcej, strona pokazuje komunikat, że liczby mogą być zaniżone. Wartość `terc` z 6 cyframi (liczba bez wiodącego zera) jest uzupełniana do 7 cyfr.
 4. Brak zbioru lub zasobu: strona pokazuje stan „Raport zbiorczy nie jest jeszcze opublikowany” zamiast zer udających dane.
 
 Granice gmin: PRG (GUGiK, dane bez opłat, pobrane 2026-11-21), uproszczone do statycznego GeoJSON w `frontend/src/assets/aed/gminy.geojson` z polami `terc` (JPT_KOD_JE) i `name`. Atrybucja na stronie.
@@ -47,4 +47,6 @@ Agregacja (L4), kreator dysponenta (L5), zgłoszenia (L7), finalne pliki logo z 
 3. [x] RED: test obliczeń pokrycia (4 asercje nie przechodzą na zaślepce).
 4. [x] GREEN: serwis danych, obliczenia, komponent strony, trasa.
 5. [x] Przeglądarka: stan pusty na prawdziwym API; dane przez lokalną atrapę trzech endpointów (rekordy ze scrape gov.pl i Przemyśla, punkty OSM z migawki L4): desktop, 360 px bez przewijania w poziomie, klawiatura z widocznym fokusem. Weryfikacja na prawdziwym raporcie L4 po jego publikacji.
-6. [ ] UPSTREAM.md, kontrola źródeł, pełna bramka, PR po scaleniu #3.
+6. [x] UPSTREAM.md, kontrola źródeł, pełna bramka, PR #6 po scaleniu #3.
+7. [x] Poprawki po review: linki wewnątrz strony przewijają do sekcji i przenoszą fokus (portal ma `<base href="/">`), komunikat o limicie 40000 wierszy, `terc` bez wiodącego zera, brak mapy po opuszczeniu strony w trakcie ładowania Leaflet.
+8. [ ] Niezależny review nowego head, CI, QA w przeglądarce, merge gate (kolejność 6).

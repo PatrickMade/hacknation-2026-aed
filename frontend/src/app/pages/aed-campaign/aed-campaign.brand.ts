@@ -4,7 +4,6 @@
  * When L3's final files land in brand/ on main, replace `mark` with the final symbol.
  */
 export const AED_CAMPAIGN_BRAND = {
-  isPlaceholder: false,
   name: 'Mapa Serc',
   slogan: 'Wszystkie AED pod ręką.',
   dysponentLine: 'Lista AED w szufladzie nikogo nie uratuje.',

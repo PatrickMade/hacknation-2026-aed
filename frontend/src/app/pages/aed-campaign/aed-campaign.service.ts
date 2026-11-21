@@ -18,6 +18,8 @@ export interface AedReportData {
   datasetId: string;
   datasetSlug: string;
   dataDate: string | null;
+  /** True when a resource has more rows than the portal returns (MAX_ROWS). */
+  truncated: boolean;
   records: AedOfficialRecord[];
   osmPoints: AedPoint[];
 }
@@ -97,13 +99,14 @@ export class AedCampaignService {
         }
         const osm = resources.find((item) => isOsmResource(item.attributes?.title));
         return forkJoin({
-          records: this.getRows(official.id),
-          osmRows: osm ? this.getRows(osm.id) : of([] as Row[]),
+          official: this.getRows(official.id),
+          osm: osm ? this.getRows(osm.id) : of({ rows: [] as Row[], truncated: false }),
         }).pipe(
-          map(({ records, osmRows }) => ({
+          map(({ official: { rows: records, truncated }, osm: { rows: osmRows, truncated: osmTruncated } }) => ({
             datasetId: String(dataset.id),
             datasetSlug: dataset.attributes?.slug,
             dataDate: official.attributes?.data_date || dataset.attributes?.modified || null,
+            truncated: truncated || osmTruncated,
             records: records.map((row) => ({
               terc: row['terc'],
               operatorName: row['operator_name'],
@@ -123,7 +126,7 @@ export class AedCampaignService {
   }
 
   /** Reads every row of a tabular resource, page by page, with column names from `meta.headers_map`. */
-  private getRows(resourceId: string): Observable<Row[]> {
+  private getRows(resourceId: string): Observable<{ rows: Row[]; truncated: boolean }> {
     const page = (number: number) =>
       this.datasetService.getResourceData(resourceId, { page: String(number), per_page: String(PAGE_SIZE) });
 
@@ -134,10 +137,12 @@ export class AedCampaignService {
         return from(rest).pipe(
           mergeMap((number) => page(number), PARALLEL_REQUESTS),
           toArray(),
-          map((responses) => [first, ...responses]),
+          map((responses) => ({
+            rows: [first, ...responses].flatMap((response) => this.toRows(response)),
+            truncated: (first?.meta?.count || 0) > MAX_ROWS,
+          })),
         );
       }),
-      map((responses) => responses.flatMap((response) => this.toRows(response))),
     );
   }
 

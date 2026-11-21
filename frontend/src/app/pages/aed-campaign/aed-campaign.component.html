@@ -13,9 +13,6 @@
         }
       </svg>
       <div>
-        @if (brand.isPlaceholder) {
-          <p class="aed-campaign__placeholder">Wersja robocza: nazwa, slogan i znak akcji czekają na decyzję.</p>
-        }
         <h1 id="aed-campaign-title" class="heading heading--md mb-2">{{ brand.name }}</h1>
         <p class="aed-campaign__slogan">{{ brand.slogan }}</p>
         <p class="aed-campaign__lead">
@@ -23,20 +20,23 @@
           trzeba szybko wiedzieć, gdzie jest najbliższe urządzenie. Mapa Serc pokazuje, gdzie w Polsce są AED znane z
           oficjalnych danych i w których gminach tych danych jeszcze brakuje.
         </p>
-        <a class="btn btn-primary btn-lg" href="#aed-campaign-stats">Zobacz, ile AED już widać</a>
+        <a class="btn btn-primary btn-lg" href="#" (click)="scrollToSection($event, 'aed-campaign-stats')"
+          >Zobacz, ile AED już widać</a
+        >
         <p class="aed-campaign__hero-link">
-          Masz AED w swojej instytucji? <a href="#aed-campaign-join">Udostępnij dane o nim</a>.
+          Masz AED w swojej instytucji?
+          <a href="#" (click)="scrollToSection($event, 'aed-campaign-join')">Udostępnij dane o nim</a>.
         </p>
       </div>
     </div>
 
     <!-- Counters -->
     <section class="aed-campaign__section" aria-labelledby="aed-campaign-stats">
-      <h2 id="aed-campaign-stats" class="heading heading--sm">Ile AED już widać</h2>
+      <h2 id="aed-campaign-stats" class="heading heading--sm" tabindex="-1">Ile AED już widać</h2>
       <div aria-live="polite">
         @switch (state) {
           @case ('loading') {
-            <p>Wczytuję dane…</p>
+            <p>Trwa wczytywanie danych…</p>
           }
           @case ('error') {
             <p class="aed-campaign__notice">Nie udało się wczytać danych. Odśwież stronę za chwilę.</p>
@@ -47,6 +47,12 @@
             </p>
           }
           @case ('ready') {
+            @if (report.truncated) {
+              <p class="aed-campaign__notice">
+                Portal udostępnia stronie najwyżej 40 000 wierszy jednego zasobu. Część danych pominięto, więc liczby
+                mogą być zaniżone.
+              </p>
+            }
             <dl class="aed-campaign__counters">
               <div class="aed-campaign__counter">
                 <dt>Instytucje, które udostępniły dane o AED</dt>
@@ -196,7 +202,7 @@
 
     <!-- For dysponenci -->
     <section class="aed-campaign__section aed-campaign__join" aria-labelledby="aed-campaign-join">
-      <h2 id="aed-campaign-join" class="heading heading--sm">Masz AED w swojej instytucji?</h2>
+      <h2 id="aed-campaign-join" class="heading heading--sm" tabindex="-1">Masz AED w swojej instytucji?</h2>
       <p class="aed-campaign__slogan">{{ brand.dysponentLine }}</p>
       <ol class="aed-campaign__steps">
         <li>Zaloguj się do panelu dostawcy jako pełnomocnik lub edytor swojej instytucji.</li>

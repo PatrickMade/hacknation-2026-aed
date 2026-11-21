@@ -43,12 +43,15 @@ export interface CoverageSummary {
 
 /**
  * Returns the 7-digit gmina TERC code. Parts of an urban-rural gmina (type 4 and 5) map to the gmina (type 3).
+ * A 6-digit value is a code that lost its leading zero.
  */
 export function normalizeTerc(value: unknown): string | null {
   if (value === null || value === undefined) {
     return null;
   }
-  const digits = String(value).trim();
+  // A numeric cell drops the leading zero of voivodeship codes 02-08 (e.g. 201011 for 0201011).
+  const text = String(value).trim();
+  const digits = /^\d{6}$/.test(text) ? '0' + text : text;
   if (!/^\d{7}$/.test(digits)) {
     return null;
   }

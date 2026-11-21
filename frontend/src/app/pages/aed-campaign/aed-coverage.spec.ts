@@ -28,6 +28,8 @@ describe('normalizeTerc', () => {
     expect(normalizeTerc('1408011')).toBe('1408011');
     expect(normalizeTerc(' 0201044 ')).toBe('0201043');
     expect(normalizeTerc('0201045')).toBe('0201043');
+    expect(normalizeTerc('201044')).toBe('0201043');
+    expect(normalizeTerc(201011)).toBe('0201011');
     expect(normalizeTerc('14')).toBeNull();
     expect(normalizeTerc(null)).toBeNull();
   });

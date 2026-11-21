@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -65,11 +65,13 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
   private map: LeafletMap;
   private gminy: GminaFeature[] = [];
   private subscription: Subscription;
+  private destroyed = false;
 
   constructor(
     private aedCampaignService: AedCampaignService,
     private changeDetector: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private platformId: object,
+    @Inject(DOCUMENT) private document: Document,
   ) {}
 
   ngAfterViewInit(): void {
@@ -103,8 +105,22 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroyed = true;
     this.subscription?.unsubscribe();
     this.map?.remove();
+  }
+
+  /**
+   * In-page link: the portal sets <base href="/">, so a plain "#id" link would open the home page.
+   * Scrolls to the section and moves focus to its heading, like the header skip links.
+   */
+  scrollToSection(event: Event, headingId: string): void {
+    event.preventDefault();
+    const heading = this.document.getElementById(headingId);
+    if (heading) {
+      heading.scrollIntoView({ block: 'start' });
+      heading.focus({ preventScroll: true });
+    }
   }
 
   fmt(value: number): string {
@@ -128,6 +144,9 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
       return;
     }
     const leaflet = await import('leaflet');
+    if (this.destroyed) {
+      return;
+    }
     const L = leaflet.default ?? (leaflet as unknown as typeof leaflet.default);
     this.map = L.map(this.mapRef.nativeElement, {
       preferCanvas: true,
