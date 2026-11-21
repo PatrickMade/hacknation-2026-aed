@@ -114,6 +114,8 @@ class AedReportsTests(TestCase):
         self.assertEqual(self.api.simulate_post(
             '/aed/devices/{}/reports'.format(self.device.aed_id), body='{', headers={'Content-Type': 'application/json'},
         ).status_code, 400)
+        too_big = self.post_report(description='x' * (17 * 1024))
+        self.assertEqual(too_big.status_code, 413)
         self.assertFalse(AedIncidentReport.objects.exists())
 
     def test_panel_shows_reports_only_to_the_responsible_institution(self):

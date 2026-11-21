@@ -7,6 +7,8 @@ from . import qr
 from .models import AedIncidentReport
 from .services import create_report, get_device
 
+MAX_REPORT_BODY = 16 * 1024  # a report is a few KB; refuse larger public bodies before reading them
+
 
 def _json(resp, status, payload):
     resp.status = status
@@ -45,8 +47,14 @@ class DeviceView:
 class DeviceReportsView:
     def on_post(self, req, resp, aed_id, **kwargs):
         device = _device_or_404(aed_id)
+        too_big = {'errors': {'body': ['Zgłoszenie jest za duże.']}}
+        if (req.content_length or 0) > MAX_REPORT_BODY:
+            return _json(resp, falcon.HTTP_413, too_big)
+        body = req.bounded_stream.read(MAX_REPORT_BODY + 1)  # also bounds chunked bodies without a length
+        if len(body) > MAX_REPORT_BODY:
+            return _json(resp, falcon.HTTP_413, too_big)
         try:
-            data = json.loads(req.bounded_stream.read().decode('utf-8') or '{}')
+            data = json.loads(body.decode('utf-8') or '{}')
         except (ValueError, UnicodeDecodeError):
             data = None
         if not isinstance(data, dict):

@@ -48,6 +48,7 @@ Strona w istniejącym układzie portalu (nagłówek i stopka bez zmian), kompone
 - Urządzenie bez współrzędnych: strona bez linku do mapy.
 - Instytucja bez e-maila: e-mail tylko do kont instytucji; brak adresów → brak wysyłki, log.
 - Spam: brak limitu zapytań w prototypie (ograniczenie).
+- Treść POST powyżej 16 KB: 413 bez odczytu całości.
 - Zawieszony SMTP: `EMAIL_TIMEOUT = 10` s; zgłoszenie jest już zapisane.
 - Zgoda RODO: API przyjmuje wyłącznie JSON `true`.
 - Strona korzysta z proxy `/api` serwera frontendu z Compose; budowa produkcyjna frontendu jest poza zakresem.
