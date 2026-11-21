@@ -1,0 +1,1072 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "enum": [
+        1
+      ]
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9a-f]{32}$(?![\\s\\S])"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^tsk_[0-9a-f]{32}$(?![\\s\\S])"
+    },
+    "report_key": {
+      "type": "string",
+      "pattern": "^rpt_[0-9a-f]{32}$(?![\\s\\S])"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000000
+    },
+    "run_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^run_[0-9a-f]{32}$(?![\\s\\S])"
+      },
+      "maxItems": 1024,
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "boundary": {
+      "enum": [
+        "verified_delivery",
+        "partial_checkpoint"
+      ]
+    },
+    "outcome": {
+      "enum": [
+        "completed",
+        "blocked",
+        "aborted",
+        "partial",
+        "no_action"
+      ]
+    },
+    "classification": {
+      "type": "object",
+      "properties": {
+        "task_type": {
+          "enum": [
+            "feature",
+            "bugfix",
+            "harness",
+            "documentation",
+            "research",
+            "estimation",
+            "review",
+            "maintenance"
+          ]
+        },
+        "reuse": {
+          "enum": [
+            "greenfield",
+            "existing",
+            "mixed",
+            "unknown"
+          ]
+        },
+        "scope_change": {
+          "enum": [
+            "none",
+            "changed",
+            "unknown"
+          ]
+        }
+      },
+      "required": [
+        "task_type"
+      ],
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "expected_sources": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "covered_sources": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "missing_sources": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "duplicate_sources": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^src_[0-9a-f]{32}$(?![\\s\\S])"
+          },
+          "maxItems": 2048,
+          "uniqueItems": true
+        },
+        "missing_source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^src_[0-9a-f]{32}$(?![\\s\\S])"
+          },
+          "maxItems": 2048,
+          "uniqueItems": true
+        },
+        "executor_inventory_complete": {
+          "type": "boolean"
+        },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "calendar": {
+              "enum": [
+                "complete",
+                "partial",
+                "unavailable"
+              ]
+            },
+            "delivery": {
+              "enum": [
+                "complete",
+                "partial",
+                "unavailable"
+              ]
+            },
+            "actor_activity": {
+              "enum": [
+                "complete",
+                "partial",
+                "unavailable"
+              ]
+            },
+            "usage": {
+              "enum": [
+                "complete",
+                "partial",
+                "unavailable"
+              ]
+            },
+            "cost": {
+              "enum": [
+                "complete",
+                "partial",
+                "unavailable"
+              ]
+            }
+          },
+          "required": [
+            "calendar",
+            "delivery",
+            "actor_activity",
+            "usage",
+            "cost"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "expected_sources",
+        "covered_sources",
+        "missing_sources",
+        "duplicate_sources",
+        "source_ids",
+        "missing_source_ids",
+        "executor_inventory_complete",
+        "metrics"
+      ],
+      "additionalProperties": false
+    },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "attempt_id": {
+            "type": "string",
+            "pattern": "^atm_[0-9a-f]{32}$(?![\\s\\S])"
+          },
+          "actor_id": {
+            "type": "string",
+            "pattern": "^act_[0-9a-f]{32}$(?![\\s\\S])"
+          },
+          "run_id": {
+            "type": "string",
+            "pattern": "^run_[0-9a-f]{32}$(?![\\s\\S])"
+          },
+          "role": {
+            "enum": [
+              "coordinator",
+              "implementer",
+              "reviewer",
+              "browser",
+              "qa",
+              "researcher",
+              "reporter"
+            ]
+          },
+          "model": {
+            "anyOf": [
+              {
+                "enum": [
+                  "claude-opus-5-5",
+                  "gpt-6.1-sol",
+                  "gpt-6-astra"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "requested_reasoning": {
+            "anyOf": [
+              {
+                "enum": [
+                  "minimal",
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra",
+                  "none"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "runtime_reported_reasoning": {
+            "anyOf": [
+              {
+                "enum": [
+                  "minimal",
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra",
+                  "none"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "provider_confirmed_reasoning": {
+            "anyOf": [
+              {
+                "enum": [
+                  "minimal",
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra",
+                  "none"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$(?![\\s\\S])",
+            "maxLength": 32
+          },
+          "end": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$(?![\\s\\S])",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "basis": {
+            "enum": [
+              "observed",
+              "reconstructed",
+              "unavailable"
+            ]
+          },
+          "source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^src_[0-9a-f]{32}$(?![\\s\\S])"
+            },
+            "maxItems": 64,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "attempt_id",
+          "actor_id",
+          "run_id",
+          "role",
+          "model",
+          "requested_reasoning",
+          "runtime_reported_reasoning",
+          "provider_confirmed_reasoning",
+          "start",
+          "end",
+          "basis",
+          "source_ids"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 2048
+    },
+    "intervals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "interval_id": {
+            "type": "string",
+            "pattern": "^int_[0-9a-f]{32}$(?![\\s\\S])"
+          },
+          "actor_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^act_[0-9a-f]{32}$(?![\\s\\S])"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scope": {
+            "enum": [
+              "actor",
+              "task"
+            ]
+          },
+          "phase": {
+            "enum": [
+              "intake",
+              "diagnosis",
+              "specification",
+              "planning",
+              "implementation",
+              "correction",
+              "validation",
+              "review",
+              "browser",
+              "qa",
+              "e2e",
+              "finalisation"
+            ]
+          },
+          "state": {
+            "enum": [
+              "active",
+              "technical_wait",
+              "human_block",
+              "suspended",
+              "unknown"
+            ]
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$(?![\\s\\S])",
+            "maxLength": 32
+          },
+          "end": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$(?![\\s\\S])",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "basis": {
+            "enum": [
+              "observed",
+              "reconstructed",
+              "unavailable"
+            ]
+          },
+          "source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^src_[0-9a-f]{32}$(?![\\s\\S])"
+            },
+            "maxItems": 64,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "interval_id",
+          "actor_id",
+          "scope",
+          "phase",
+          "state",
+          "start",
+          "end",
+          "basis",
+          "source_ids"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 2048
+    },
+    "rounds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "round_id": {
+            "type": "string",
+            "pattern": "^rnd_[0-9a-f]{32}$(?![\\s\\S])"
+          },
+          "number": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "kind": {
+            "enum": [
+              "review",
+              "validation",
+              "browser",
+              "qa",
+              "e2e"
+            ]
+          },
+          "candidate_sha": {
+            "type": "string",
+            "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$(?![\\s\\S])"
+          },
+          "result": {
+            "enum": [
+              "passed",
+              "failed",
+              "changes_requested",
+              "pending",
+              "not_applicable"
+            ]
+          },
+          "source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^src_[0-9a-f]{32}$(?![\\s\\S])"
+            },
+            "maxItems": 64,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "round_id",
+          "number",
+          "kind",
+          "candidate_sha",
+          "result",
+          "source_ids"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 2048
+    },
+    "usage": {
+      "type": "object",
+      "properties": {
+        "requests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "request_id": {
+                "type": "string",
+                "pattern": "^req_[0-9a-f]{32}$(?![\\s\\S])"
+              },
+              "attempt_id": {
+                "type": "string",
+                "pattern": "^atm_[0-9a-f]{32}$(?![\\s\\S])"
+              },
+              "provider": {
+                "enum": [
+                  "anthropic",
+                  "openai"
+                ]
+              },
+              "model": {
+                "enum": [
+                  "claude-opus-5-5",
+                  "gpt-6.1-sol",
+                  "gpt-6-astra"
+                ]
+              },
+              "buckets": {
+                "type": "object",
+                "properties": {
+                  "input_uncached": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "cache_read": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "cache_write_5m": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "cache_write_1h": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "output": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "input_uncached",
+                  "cache_read",
+                  "cache_write_5m",
+                  "cache_write_1h",
+                  "output"
+                ],
+                "additionalProperties": false
+              },
+              "thinking_output_subset": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "final": {
+                "type": "boolean"
+              },
+              "basis": {
+                "enum": [
+                  "observed",
+                  "reconstructed",
+                  "unavailable"
+                ]
+              },
+              "source_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^src_[0-9a-f]{32}$(?![\\s\\S])"
+                },
+                "maxItems": 64,
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "request_id",
+              "attempt_id",
+              "provider",
+              "model",
+              "buckets",
+              "thinking_output_subset",
+              "final",
+              "basis",
+              "source_ids"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 4096
+        },
+        "completeness": {
+          "enum": [
+            "complete",
+            "partial",
+            "unavailable"
+          ]
+        }
+      },
+      "required": [
+        "requests",
+        "completeness"
+      ],
+      "additionalProperties": false
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "calendar_ms": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "delivery_ms": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actor_activity_ms": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "technical_wait_ms": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "human_block_ms": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "suspension_ms": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "calendar_ms",
+        "delivery_ms",
+        "actor_activity_ms",
+        "technical_wait_ms",
+        "human_block_ms",
+        "suspension_ms"
+      ],
+      "additionalProperties": false
+    },
+    "cost": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "api_equivalent"
+          ]
+        },
+        "total": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$(?![\\s\\S])",
+              "maxLength": 40
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "known_subtotal": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$(?![\\s\\S])",
+              "maxLength": 40
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "enum": [
+                "USD",
+                "EUR",
+                "GBP",
+                "PLN"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pricing_revision": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^prc_[0-9a-f]{32}$(?![\\s\\S])"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "completeness": {
+          "enum": [
+            "complete",
+            "partial",
+            "unavailable"
+          ]
+        },
+        "applied_rates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "model": {
+                "enum": [
+                  "claude-opus-5-5",
+                  "gpt-6.1-sol",
+                  "gpt-6-astra"
+                ]
+              },
+              "bucket": {
+                "enum": [
+                  "input_uncached",
+                  "cache_read",
+                  "cache_write_5m",
+                  "cache_write_1h",
+                  "output"
+                ]
+              },
+              "rate_per_unit": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$(?![\\s\\S])",
+                "maxLength": 40
+              },
+              "service_tier": {
+                "enum": [
+                  "standard",
+                  "priority",
+                  "batch",
+                  "flex"
+                ]
+              },
+              "context_bracket": {
+                "enum": [
+                  "standard",
+                  "long"
+                ]
+              },
+              "source_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^src_[0-9a-f]{32}$(?![\\s\\S])"
+                },
+                "maxItems": 64,
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "model",
+              "bucket",
+              "rate_per_unit",
+              "service_tier",
+              "context_bracket",
+              "source_ids"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 128
+        }
+      },
+      "required": [
+        "kind",
+        "total",
+        "known_subtotal",
+        "currency",
+        "pricing_revision",
+        "completeness"
+      ],
+      "additionalProperties": false
+    },
+    "estimation_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^est_[0-9a-f]{32}$(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reporting_overhead": {
+      "type": "object",
+      "properties": {
+        "time_ms": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "usage": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "input_uncached": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "cache_read": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "cache_write_5m": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "cache_write_1h": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "output": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "input_uncached",
+                "cache_read",
+                "cache_write_5m",
+                "cache_write_1h",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "time_ms",
+        "usage"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "project_id",
+    "task_id",
+    "report_key",
+    "revision",
+    "run_ids",
+    "boundary",
+    "outcome",
+    "classification",
+    "coverage",
+    "attempts",
+    "intervals",
+    "rounds",
+    "usage",
+    "metrics",
+    "cost"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:they:task-metrics:report:1",
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "pattern": "^prj_[0-9a-f]{32}$(?![\\s\\S])"
+        },
+        "task_id": {
+          "type": "string",
+          "pattern": "^tsk_[0-9a-f]{32}$(?![\\s\\S])"
+        },
+        "report_key": {
+          "type": "string",
+          "pattern": "^rpt_[0-9a-f]{32}$(?![\\s\\S])"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        }
+      },
+      "required": [
+        "project_id",
+        "task_id",
+        "report_key",
+        "revision"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,34 @@
+#!/bin/sh
+# Harness pre-push hook, installed at .ai/hooks/pre-push (git config core.hooksPath .ai/hooks).
+# 1. Verify .ai/scripts/push_guard.py against its pin in .ai/client-config.json, then run it on Git's ref lines:
+#    one push of the task's own branch to the configured repository.
+# 2. With gitleaks installed, scan the pushed commits and the index (config .ai/hooks/gitleaks.toml);
+#    without gitleaks, warn and continue.
+set -eu
+TASK_ROOT=$(git rev-parse --show-toplevel)
+cd "$TASK_ROOT"
+GUARD=.ai/scripts/push_guard.py
+if ! python3 -I -c '
+import hashlib, json, sys
+pinned = json.load(open(".ai/client-config.json"))["files"][sys.argv[1]]
+sys.exit(hashlib.sha256(open(sys.argv[1], "rb").read()).hexdigest() != pinned)
+' "$GUARD" 2>/dev/null; then
+  echo "pre-push: $GUARD is missing or differs from .ai/client-config.json; push refused" >&2
+  exit 1
+fi
+REFS=$(cat)
+printf '%s\n' "$REFS" | python3 -B "$GUARD" "$1" "$2"
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "pre-push: gitleaks is not installed; the secret scan was skipped" >&2
+  exit 0
+fi
+# The guard allowed exactly one line: <local ref> <local sha> <remote ref> <remote sha>.
+LOCAL_SHA=$(printf '%s\n' "$REFS" | awk '{print $2}')
+REMOTE_SHA=$(printf '%s\n' "$REFS" | awk '{print $4}')
+if [ "$REMOTE_SHA" != 0000000000000000000000000000000000000000 ] && git cat-file -e "$REMOTE_SHA^{commit}" 2>/dev/null; then
+  RANGE="$REMOTE_SHA..$LOCAL_SHA"
+else
+  RANGE="$LOCAL_SHA --not --remotes=origin"  # a new branch: every commit origin does not have yet
+fi
+gitleaks git --redact --no-banner --log-level warn --config .ai/hooks/gitleaks.toml --log-opts="$RANGE" .
+gitleaks git --staged --redact --no-banner --log-level warn --config .ai/hooks/gitleaks.toml .

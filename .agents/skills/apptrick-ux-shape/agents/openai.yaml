@@ -1,0 +1,6 @@
+interface:
+  display_name: "Shape Useful Features (apptrick-ux-shape)"
+  short_description: "Shape simple, valuable AI product features"
+  default_prompt: "Use $apptrick-ux-shape to turn this product idea into a simple, valuable, development-ready feature."
+policy:
+  allow_implicit_invocation: false

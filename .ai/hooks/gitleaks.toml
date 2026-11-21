@@ -1,0 +1,10 @@
+# gitleaks configuration of the harness pre-push hook (installed at .ai/hooks/gitleaks.toml).
+# The default rules apply. The one allowlist entry covers the false positives of the edition lock: JSON lines
+# that map a file path (with a slash) to a SHA-256 hex digest, as in .ai/apptrick-skills.lock.json.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "SHA-256 digests keyed by a file path in harness lock files"
+regexTarget = "line"
+regexes = ['''^\s*"[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)+": "[0-9a-f]{64}",?$''']
