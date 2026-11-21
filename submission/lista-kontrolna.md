@@ -54,8 +54,9 @@ Projekt: https://hacknation2026.hacktribe.co/mapa-serc/
       sekcjami (`brand/`).
 - [ ] Opis, ograniczenia, oświadczenie AI i slajdy odpowiadają scalonemu
       stanowi: `grep -rin -E "do uzupełnienia|do wykonania|w realizacji|w przeglądzie" submission/*.md submission/prezentacja/slajdy.html`
-      nie zwraca wyników poza tą listą (pozostaje przegląd końcowy autora
-      w `oswiadczenie-ai.md` do czasu akceptacji).
+      nie zwraca wyników poza tą listą (do czasu akceptacji pozostają
+      w `oswiadczenie-ai.md` przegląd końcowy autora i cztery wiersze
+      o akceptacji działania w demo).
 - [ ] Teksty w pierwszej osobie liczby pojedynczej lub bezosobowo.
 - [ ] Wszystkie linki w zgłoszeniu działają.
 - [ ] Repozytorium nie zawiera haseł ani prywatnych danych; informacje

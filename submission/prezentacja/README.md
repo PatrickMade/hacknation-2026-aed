@@ -5,7 +5,6 @@
 | `slajdy.html` | Treść slajdów, jeden `<section>` na slajd (1280 x 720 px) |
 | `styl.css` | Układ i kolory akcji Mapa Serc (`brand/tokens.css`) |
 | `img/zrzuty/` | Zrzuty ekranu z lokalnej instancji portalu (JPEG) |
-| `img/brand/` | Znak, symbol i naklejka QR akcji, kopie plików z `brand/` |
 | `fonts/` | Krój Figtree z licencją SIL Open Font License 1.1 (`OFL.txt`) |
 | `okladka.html` | Okładka projektu w HackTribe, 800 x 600 px |
 | `build-pdf.py` | Budowa `../mapa-serc-prezentacja.pdf` i `../mapa-serc-okladka-hacktribe.png` |
@@ -35,5 +34,6 @@ Nagranie `../mapa-serc-demo.mp4` powstało tak samo: skrypt przeglądarki
 przeszedł kroki dysponenta i odbiorcy danych w oknie 1280 x 720 px,
 z napisami na dole ekranu. Zgłoszenia widoczne w nagraniu są testowe.
 
-Kopie plików znaku w `img/brand/` pochodzą z katalogu `brand/` (księga
-znaku Mapa Serc). Po zmianie znaku skopiuj je ponownie.
+Znak, symbol i naklejkę QR slajdy biorą wprost z katalogu `brand/`.
+Układ slajdów nie przycina zrzutów: każdy obraz ma szerokość ramki
+i wysokość z własnych proporcji.
