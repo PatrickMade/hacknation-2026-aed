@@ -74,6 +74,22 @@ describe('computeCoverage', () => {
     expect(result.gaps).toBe(1);
   });
 
+  it('assigns gminy from coordinates when the report has no terc column', () => {
+    const withoutTerc = [
+      { terc: null, operatorName: 'Gmina Miejska Krosno', lat: 49.7, lon: 22.8 },
+      { terc: null, operatorName: 'Gmina Miejska Krosno', lat: 49.6, lon: 22.7 },
+      { terc: null, operatorName: 'Urząd Miasta Legionowo', lat: 52.4, lon: 20.9 },
+      { terc: null, operatorName: 'Urząd Miasta Legionowo', lat: null, lon: null },
+    ];
+    const result = computeCoverage(withoutTerc, [], gminy);
+
+    expect(result.records).toBe(4);
+    expect(result.operators).toBe(2);
+    expect(result.gminyCovered).toBe(2);
+    expect(result.gminy.get('1861011').officialCount).toBe(2);
+    expect(result.gminy.get('1408011').officialCount).toBe(1);
+  });
+
   it('returns no covered gminy without records', () => {
     const result = computeCoverage([], [], gminy);
 

@@ -108,7 +108,8 @@ export class AedCampaignService {
             dataDate: official.attributes?.data_date || dataset.attributes?.modified || null,
             truncated: truncated || osmTruncated,
             records: records.map((row) => ({
-              terc: row['terc'],
+              // Optional: the raport zbiorczy has no terc column, so the gmina usually comes from coordinates.
+              terc: row['terc'] ?? null,
               operatorName: row['operator_name'],
               lat: toNumber(row['latitude']),
               lon: toNumber(row['longitude']),
