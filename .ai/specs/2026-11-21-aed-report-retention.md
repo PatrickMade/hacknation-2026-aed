@@ -34,3 +34,6 @@ MODIFIED
 1. Test RED retencji; pola, migracja, logika statusu, usuwanie, komenda, zadanie Celery (GREEN).
 2. Klauzula w UI i README; weryfikacja w przeglądarce.
 3. Pełny gate, review, PR, merge.
+
+## Poprawka: kolejka zadania (APP-53)
+Wpis harmonogramu `aed-reporter-data-retention` działa na kolejce `periodic` (`options.queue`), jak `aed-refresh-daily` po APP-52. Reguła upstream `backend/mcod/tests/test_celery.py` wymaga dla zadań celery beat kolejki innej niż `default`. Lokalny worker Compose działa bez `-Q` i konsumuje wszystkie kolejki z `CELERY_TASK_QUEUES`, więc zadanie wcześniej też się wykonywało; zmiana dotyczy zgodności z konwencją portalu. Weryfikacja: test Django sprawdzający nazwę zadania i kolejkę wpisu (RED bez opcji, GREEN z nią), pełny gate.
