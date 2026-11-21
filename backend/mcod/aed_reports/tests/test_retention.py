@@ -73,3 +73,14 @@ class RetentionTests(TestCase):
         form = ReportForm({'type': 'closed', 'description': 'x', 'reporter_name': ''})
         self.assertFalse(form.is_valid())
         self.assertIn('reporter_name', form.errors)
+
+
+class BeatScheduleTests(TestCase):
+    def test_retention_runs_daily_on_the_periodic_queue(self):
+        from mcod.aed_reports.tasks import TASK_NAME
+        from mcod.celeryapp import app
+
+        entry = app.conf.beat_schedule['aed-reporter-data-retention']
+        self.assertEqual(entry['task'], TASK_NAME)
+        # Upstream rule (mcod/tests/test_celery.py): beat tasks never use the default queue (APP-53).
+        self.assertEqual(entry.get('options', {}).get('queue'), 'periodic')
