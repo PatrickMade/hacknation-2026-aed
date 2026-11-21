@@ -1,0 +1,107 @@
+/* Prezentacja zgłoszenia Mapa Serc. Kolory: brand/tokens.css (księga znaku). */
+@font-face {
+  font-family: "Figtree";
+  src: url("fonts/Figtree.ttf") format("truetype");
+  font-weight: 300 900;
+}
+
+:root {
+  --zielen: #087F45;
+  --ciemna: #0B2E20;
+  --jasna: #DDF3E6;
+  --bialy: #FFFFFF;
+  --szary: #4A5B53;
+}
+
+@page { size: 1280px 720px; margin: 0; }
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bialy);
+  color: var(--ciemna);
+  font-family: "Figtree", system-ui, sans-serif;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.slajd {
+  position: relative;
+  width: 1280px;
+  height: 720px;
+  overflow: hidden;
+  padding: 48px 64px 56px;
+  page-break-after: always;
+  break-after: page;
+  display: flex;
+  flex-direction: column;
+}
+.slajd:last-child { page-break-after: auto; break-after: auto; }
+
+.slajd h1 { font-size: 40px; line-height: 1.1; margin: 0 0 20px; font-weight: 800; }
+.slajd h2 { font-size: 22px; margin: 0 0 8px; font-weight: 700; color: var(--zielen); }
+.slajd p, .slajd li { font-size: 19px; line-height: 1.4; }
+.slajd ul, .slajd ol { margin: 0; padding-left: 24px; }
+.slajd li + li { margin-top: 6px; }
+.maly { font-size: 15px !important; color: var(--szary); }
+
+.stopka {
+  position: absolute;
+  left: 64px; right: 64px; bottom: 18px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px; color: var(--szary);
+}
+.stopka img { height: 22px; }
+
+.siatka { display: grid; gap: 28px; flex: 1; min-height: 0; }
+.dwie { grid-template-columns: 1fr 1fr; }
+.tekst-obraz { grid-template-columns: 5fr 7fr; }
+.obraz-tekst { grid-template-columns: 7fr 5fr; }
+.trzy { grid-template-columns: repeat(3, 1fr); }
+
+figure { margin: 0; display: flex; flex-direction: column; min-height: 0; }
+figure img {
+  display: block; max-width: 100%; max-height: 100%; object-fit: contain; object-position: top left;
+  border: 1px solid #C9D6CF; border-radius: 6px; box-shadow: 0 2px 8px rgba(11, 46, 32, .12);
+  min-height: 0;
+}
+figcaption { font-size: 14px; color: var(--szary); margin-top: 6px; }
+
+.liczba { font-size: 56px; font-weight: 800; color: var(--zielen); line-height: 1; }
+.karta { background: var(--jasna); border-radius: 10px; padding: 20px 22px; }
+.karta p { margin: 8px 0 0; }
+
+.tytul { background: var(--jasna); justify-content: center; }
+.tytul .logo { width: 560px; }
+.tytul p.pod { font-size: 26px; font-weight: 600; margin: 28px 0 8px; }
+
+.ciemny { background: var(--ciemna); color: var(--bialy); }
+.ciemny h1, .ciemny h2 { color: var(--bialy); }
+.ciemny .stopka { color: #B9D3C4; }
+
+.przeplyw { display: flex; align-items: stretch; gap: 10px; margin: 8px 0 24px; }
+.przeplyw .krok {
+  flex: 1; background: var(--jasna); border-radius: 10px; padding: 14px 14px;
+  font-size: 16px; line-height: 1.3; border-top: 5px solid var(--zielen);
+}
+.przeplyw .krok b { display: block; font-size: 18px; margin-bottom: 4px; }
+.przeplyw .strz { align-self: center; font-size: 26px; color: var(--zielen); font-weight: 800; }
+
+pre {
+  margin: 0; background: #0F1F18; color: #E7F3EC; border-radius: 8px; padding: 16px 18px;
+  font: 14px/1.45 ui-monospace, "SF Mono", Menlo, Consolas, monospace; white-space: pre-wrap;
+}
+
+table { border-collapse: collapse; width: 100%; font-size: 16px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #C9D6CF; vertical-align: top; }
+th { background: var(--jasna); }
+
+.mobilne { display: flex; gap: 20px; justify-content: center; min-height: 0; }
+.mobilne img { height: 520px; width: auto; max-height: none; }
+
+.duzy li, .duzy p { font-size: 22px; line-height: 1.45; }
+.duzy li + li { margin-top: 10px; }
+.duzy table { font-size: 18px; }
+.duzy th, .duzy td { padding: 11px 12px; }

@@ -131,6 +131,6 @@ Klauzula pod formularzem (wzór do weryfikacji prawnej): administratorem danych 
 
 ## Licencja i użycie AI
 
-Portal i nasze modyfikacje są udostępniane na GNU GPL v3.0. Wyjątek: datowane kopie danych źródłowych w `backend/data/aed/sources/` nie są objęte GPL v3.0; zachowują licencje źródeł (CC0 1.0, CC BY 4.0, OpenStreetMap: ODbL 1.0), opisane w `backend/data/aed/sources/LICENSES.md`. Zobacz `LICENSE`, `NOTICE.upstream.txt` i `UPSTREAM.md` z wersjami, sumami archiwów i listą zmian. Zachowano oryginalne notices i licencje zależności.
+Portal i modyfikacje w tym repozytorium są udostępniane na GNU GPL v3.0. Wyjątek: datowane kopie danych źródłowych w `backend/data/aed/sources/` nie są objęte GPL v3.0; zachowują licencje źródeł (CC0 1.0, CC BY 4.0, OpenStreetMap: ODbL 1.0), opisane w `backend/data/aed/sources/LICENSES.md`. Zobacz `LICENSE`, `NOTICE.upstream.txt` i `UPSTREAM.md` z wersjami, sumami archiwów i listą zmian. Zachowano oryginalne notices i licencje zależności.
 
 AI wspierało analizę, konfigurację lokalną, seed kont, agregator raportu zbiorczego AED (mapowanie, deduplikacja, publikacja), kod kreatora AED i walidatora, moduł zgłoszeń AED z koderem QR, testy i dokumentację tej wersji. Oficjalny kod portalu pochodzi z dystrybucji dane.gov.pl. Zakres użycia AI należy aktualizować w materiałach zgłoszenia zgodnie z regulaminem HackNation §2 ust. 8; końcowy rezultat wymaga przeglądu i odpowiedzialności zespołu.

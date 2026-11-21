@@ -2,12 +2,16 @@
 
 ## Tytuł
 
-**Misja AED - jeden standard danych o defibrylatorach w dane.gov.pl**
+**Mapa Serc - jeden standard danych o defibrylatorach AED w dane.gov.pl**
 
 Zadanie: "Misja AED - Dane na ratunek" (Ministerstwo Cyfryzacji, Departament
 Zarządzania Danymi). Zespół jednoosobowy.
 
-Nazwa i hasło akcji dla dysponentów: **[do uzupełnienia po wyborze marki]**.
+Nazwa i hasło akcji: **Mapa Serc - „Wszystkie AED pod ręką.”** Zdanie dla
+dysponentów: „Lista AED w szufladzie nikogo nie uratuje.”
+
+Kod: https://github.com/PatrickMade/hacknation-2026-aed (repozytorium
+publiczne). Projekt w HackTribe: https://hacknation2026.hacktribe.co/mapa-serc/
 
 ## Krótki opis
 
@@ -77,7 +81,7 @@ i prowadzi do jego zbioru źródłowego.
    pobrania oraz punkty AED z OSM jako osobny zasób na licencji ODbL.
    Odświeżanie: zadanie okresowe w tle, w demo uruchamiane ręcznie.
 5. **Strona akcji w portalu**: kampania, liczniki (dysponenci, rekordy AED,
-   gminy z danymi na tle 2477 gmin), mapa pokrycia gmin z lukami ("OSM zna
+   gminy z danymi na tle 2479 gmin), mapa pokrycia gmin z lukami ("OSM zna
    AED, wpisu urzędowego brak") i przycisk prowadzący do kreatora.
 6. **Zgłoszenie problemu do konkretnego dysponenta**: kod QR na naklejce przy
    AED prowadzi do wpisu urządzenia i formularza "Zgłoś problem" (zamknięty,
@@ -85,7 +89,7 @@ i prowadzi do jego zbioru źródłowego.
    zgłaszającego jest opcjonalny i wymaga wyraźnej zgody (RODO). Zgłoszenie
    trafia do panelu właściwego dysponenta ze statusem nowe, w trakcie,
    rozwiązane.
-7. **"Najbliższy AED"**: wpis w zakładce Aplikacje portalu, oparty na
+7. **"Najbliższy AED"**: wpis w zakładce PoCoTo portalu, oparty na
    istniejącym filtrze odległości mapy portalu i raporcie zbiorczym.
 
 ### Kroki użytkownika
@@ -123,7 +127,9 @@ i prowadzi do jego zbioru źródłowego.
   "© OpenStreetMap contributors".
 - Mapa portalu: kolumny `longitude`, `latitude`, `name` przypisane do ról
   `l`, `b`, `label`.
-- Nowe strony AED: WCAG 2.2 na poziomie AA, układ responsywny od 360 px.
+- Nowe strony AED: projektowane pod WCAG 2.2 na poziomie AA, układ
+  responsywny od 360 px. Wynik automatycznej kontroli i znane naruszenie
+  (rozmiar trzech linków w kreatorze) opisuje `ograniczenia.md`.
 
 ## Architektura i technologie
 
@@ -133,26 +139,26 @@ nginx oraz frontend Angular z mapą Leaflet. Całość uruchamia jedna
 konfiguracja Docker Compose z danymi startowymi: instytucje dysponentów
 i konta o różnych rolach (administrator, edytorzy instytucji, zwykły
 użytkownik). Moduły AED to nowe aplikacje Django w backendzie i nowe trasy
-we frontendzie portalu. Walidacja w portalu ma korzystać z tego samego schematu
-i walidatora co pakiet `aed-standard/` (w realizacji).
+we frontendzie portalu. Walidacja w portalu korzysta z tego samego schematu
+i walidatora co pakiet `aed-standard/`.
 
 Jury uruchamia prototyp lokalnie z kodu. Instrukcja: `README.md`
-w repozytorium [do uzupełnienia po scaleniu konfiguracji portalu].
+w repozytorium.
 
 ## Stan prototypu
 
-Stan na 2026-11-21 (wersja 1 opisu, zostanie zaktualizowana po scaleniu
-modułów AED):
+Stan na 2026-11-21, 22:27 UTC: wszystkie elementy są w gałęzi `main`.
 
 | Element | Stan |
 |---|---|
 | Wzorcowy zakres danych `aed-standard/` | gotowy, w `main` |
-| Lokalny portal dane.gov.pl z kontami | gotowy, w przeglądzie |
-| Agregator i raport zbiorczy AED | w realizacji |
-| Kreator dysponenta i walidator | w realizacji |
-| Strona akcji i mapa pokrycia | w realizacji |
-| Zgłoszenia problemów, QR, "Najbliższy AED" | w realizacji |
-| Nazwa, hasło, logo, księga znaku | w realizacji |
+| Lokalny portal dane.gov.pl z kontami | gotowy, w `main` |
+| Agregator i raport zbiorczy AED | gotowy, w `main` |
+| Kreator dysponenta i walidator | gotowy, w `main` |
+| Strona akcji i mapa pokrycia | gotowe, w `main` |
+| Zgłoszenia problemów, QR, "Najbliższy AED" | gotowe, w `main` |
+| Nazwa, hasło, logo, księga znaku (`brand/`) | gotowe, w `main` |
+| Prezentacja PDF i nagranie demo (`submission/`) | gotowe |
 
 Ograniczenia: `ograniczenia.md`. Użycie AI: `oswiadczenie-ai.md`.
 

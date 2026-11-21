@@ -1,7 +1,6 @@
 # Ograniczenia prototypu
 
-Wersja 1 (2026-11-21). Lista zostanie uzupełniona po scaleniu modułów AED
-o ograniczenia stwierdzone w ich testach.
+Stan na 2026-11-21.
 
 ## Środowisko i publikacja
 
@@ -49,9 +48,6 @@ o ograniczenia stwierdzone w ich testach.
     pełnej gramatyki `opening_hours` ani braku danych osobowych w dowolnym
     tekście.
 
-Punkty 13-17 opisują założenia modułów AED, które są w realizacji
-[do uzupełnienia: potwierdzić po scaleniu modułów i ich testach].
-
 13. Deduplikacja wskazuje kandydatów do scalenia. Wspólny adres lub
     współrzędne nie dowodzą, że dwa rekordy opisują to samo urządzenie.
 14. Wbudowana mapa portalu czyta dane tabelaryczne. Zasób GeoJSON jest
@@ -65,12 +61,26 @@ Punkty 13-17 opisują założenia modułów AED, które są w realizacji
     czasu reakcji dysponenta.
 17. Powiadomienia e-mail w demo trafiają do lokalnej skrzynki testowej
     (MailHog), a nie do prawdziwych adresów.
+18. Publiczny formularz zgłoszeń nie ma limitu liczby zgłoszeń z jednego
+    źródła ani ochrony przed automatami. Przed wdrożeniem trzeba je dodać.
+19. Treść klauzuli RODO w formularzu i okres przechowywania danych
+    zgłaszającego (usunięcie 30 dni po rozwiązaniu zgłoszenia) to propozycje
+    prototypu. Wymagają potwierdzenia przez administratora danych przed
+    użyciem poza demo. Usuwanie wykonuje zadanie okresowe, którego lokalna
+    instancja nie uruchamia sama; kopia zgłoszenia wysłana e-mailem do
+    dysponenta pozostaje poza portalem.
 
 ## Dostępność i zakres zmian
 
-18. Wymagania WCAG 2.2 AA i responsywności (od 360 px) dotyczą nowych stron
+20. Wymagania WCAG 2.2 AA i responsywności (od 360 px) dotyczą nowych stron
     AED. Pozostała część portalu jest bez zmian i poza zakresem audytu.
-19. Kod portalu pochodzi z oficjalnego wydania (backend 2.62.3, frontend
+    Automatyczna kontrola axe-core (reguły WCAG 2.0-2.2 A i AA) nie wykazała
+    naruszeń na stronie akcji, karcie urządzenia z formularzem
+    i w publicznym walidatorze. W pierwszym kroku kreatora wykazała jedno:
+    trzy linki do pobrania szablonu są mniejsze niż 24 px (kryterium 2.5.8).
+    Kontrola automatyczna obejmuje tylko część kryteriów; nie wykonano testu
+    z czytnikiem ekranu.
+21. Kod portalu pochodzi z oficjalnego wydania (backend 2.62.3, frontend
     3.5.2) na licencji GPLv3. Zmiany i moduły AED podlegają tej samej
-    licencji [do uzupełnienia: plik licencji i opis zmian po scaleniu
-    konfiguracji portalu].
+    licencji (`LICENSE`, `UPSTREAM.md`). Datowane kopie danych źródłowych
+    zachowują licencje źródeł (CC0 1.0, CC BY 4.0, ODbL 1.0).
