@@ -1,10 +1,12 @@
 """Report intake and dysponent notification (APP-45, 2026-11-21)."""
+import datetime
 import logging
 import uuid
 
 from django import forms
 from django.conf import settings
 from django.core.mail import send_mail
+from django.utils import timezone
 
 from .models import AedDevice, AedIncidentReport
 
@@ -79,3 +81,16 @@ def notify_dysponent(report):
         )
     except Exception:  # the report is stored; a mail failure must not lose it
         logger.exception('AED report %s: notification email failed', report.pk)
+
+
+RETENTION_DAYS = 30
+
+
+def purge_reporter_data(days=RETENTION_DAYS):
+    """Remove reporter name and contact from reports resolved more than `days` ago; return how many."""
+    now = timezone.now()
+    return AedIncidentReport.objects.filter(
+        status=AedIncidentReport.STATUS_RESOLVED,
+        resolved_at__lte=now - datetime.timedelta(days=days),
+        personal_data_removed_at__isnull=True,
+    ).update(reporter_name='', contact='', consent=False, personal_data_removed_at=now)
