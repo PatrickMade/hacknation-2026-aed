@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: validation gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read the Flutter version from .fvmrc
+        id: fvm
+        run: echo "flutter=$(jq -r .flutter .fvmrc)" >> "$GITHUB_OUTPUT"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm.outputs.flutter }}
+          channel: stable
+          cache: true
+
+      # The gate commands call `fvm flutter ...`; this shim runs them on the pinned SDK installed above.
+      - name: Provide fvm
+        run: |
+          mkdir -p "$RUNNER_TEMP/bin"
+          printf '#!/bin/sh\nexec "$@"\n' > "$RUNNER_TEMP/bin/fvm"
+          chmod +x "$RUNNER_TEMP/bin/fvm"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+      - run: flutter pub get
+
+      - name: Run validation.commands from .ai/agentic.config.json
+        run: |
+          jq -r '.validation.commands[]' .ai/agentic.config.json | while IFS= read -r cmd; do
+            echo "::group::$cmd"
+            sh -c "$cmd" < /dev/null
+            echo "::endgroup::"
+          done
