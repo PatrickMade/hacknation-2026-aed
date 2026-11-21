@@ -42,7 +42,7 @@ class AedIncidentReportAdmin(OrganizationScopedAdmin):
 class AedDeviceAdmin(OrganizationScopedAdmin):
     list_display = ('name', 'aed_id', 'locality', 'organization', 'operational_status')
     search_fields = ('name', 'aed_id', 'locality', 'street')
-    list_filter = ('organization',)
+    list_filter = (('organization', admin.RelatedOnlyFieldListFilter),)
     readonly_fields = ('qr_code', 'page')
 
     def has_change_permission(self, request, obj=None):

@@ -1,7 +1,9 @@
 """AED incident reports: public API, dysponent scoping, email and QR (APP-45, 2026-11-21)."""
 import hashlib
 import os
+import tempfile
 import uuid
+from unittest.mock import patch
 
 import falcon
 from django.core import mail
@@ -95,7 +97,15 @@ class AedReportsTests(TestCase):
         response = self.post_report(contact='jan@example.org')
         self.assertEqual(response.status_code, 400)
         self.assertIn('consent', response.json['errors'])
+        for not_true in ('no', '0', 'true', 1):
+            self.assertEqual(self.post_report(contact='jan@example.org', consent=not_true).status_code, 400, not_true)
         self.assertFalse(AedIncidentReport.objects.exists())
+
+    def test_mail_failure_keeps_the_report(self):
+        with patch('mcod.aed_reports.services.send_mail', side_effect=OSError('smtp down')):
+            response = self.post_report()
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(AedIncidentReport.objects.filter(pk=response.json['data']['id']).exists())
 
     def test_invalid_fields_are_rejected(self):
         response = self.post_report(type='other', description='', reporter_name='')
@@ -126,6 +136,12 @@ class AedReportsTests(TestCase):
         self.assertNotContains(listing, 'AED test')
         self.assertIn(other.get(change, secure=True).status_code, (302, 403, 404))
         self.assertEqual(AedIncidentReport.objects.get(pk=report_id).dysponent_note, 'Sprawdzamy')
+        device_change = '/aed_reports/aeddevice/{}/change/'.format(self.device.pk)
+        self.assertEqual(own.get(device_change, secure=True).status_code, 200)
+        self.assertIn(other.get(device_change, secure=True).status_code, (302, 403, 404))
+        devices = other.get('/aed_reports/aeddevice/', secure=True)
+        self.assertNotContains(devices, 'AED test')
+        self.assertNotContains(devices, self.org_a.title)  # institution filter lists only visible ones
 
     def test_qr_svg_encodes_the_device_page(self):
         response = self.api.simulate_get('/aed/devices/{}/qr.svg'.format(self.device.aed_id))
@@ -165,3 +181,17 @@ class AedReportsTests(TestCase):
         showcase = Showcase.objects.get(title='Najbliższy AED')
         self.assertEqual(showcase.url, 'https://mcod.local/pl/dataset/1/resource/3/map')
         self.assertEqual(showcase.status, 'published')
+
+    def test_load_devices_rejects_invalid_values_without_writes(self):
+        make_org('jury-demo', self.root)
+        rows = open(DEMO_CSV, encoding='utf-8').read().splitlines()
+        header = rows[0].split(',')
+        for column, value in (('latitude', 'nan'), ('postcode', '0' * 11)):
+            cells = rows[1].split(',')
+            cells[header.index(column)] = value
+            with tempfile.NamedTemporaryFile('w', suffix='.csv', encoding='utf-8', delete=False) as handle:
+                handle.write('\n'.join([rows[0], ','.join(cells)]) + '\n')
+            self.addCleanup(os.remove, handle.name)
+            with self.assertRaises(CommandError):
+                call_command('load_aed_devices', handle.name, organization='jury-demo', verbosity=0)
+        self.assertEqual(AedDevice.objects.filter(organization__slug='jury-demo').count(), 0)

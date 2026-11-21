@@ -27,7 +27,7 @@ Oficjalny plik README.txt jest zachowany jako NOTICE.upstream.txt, a LICENCE.txt
 - frontend/src/app/app-routing.module.ts i frontend/src/app/pages/aed-device/ (2026-11-21, APP-45): trasa /pl/aed/<aed_id> ze stroną urządzenia i formularzem zgłoszenia.
 - Pliki w katalogu głównym, local/ i scripts/: Compose, konfiguracja lokalna, generowanie env, instrukcja startu, kontrola źródeł i testy. Dotychczasowy szkielet Flutter zostaje zastąpiony portalem.
 
-Nie zmieniamy szablonów, stylów, treści ani layoutu portalu. Pusta baza po migracjach nie zawiera produkcyjnych stron CMS. Seed nie ładuje upstream basic_data.json ani jego kont z publicznie znanymi hasłami.
+Poza obszarami AED opisanymi wyżej nie zmieniamy szablonów, stylów, treści ani layoutu portalu. Pusta baza po migracjach nie zawiera produkcyjnych stron CMS. Seed nie ładuje upstream basic_data.json ani jego kont z publicznie znanymi hasłami.
 
 ## Kontrola sekretów w źródłach upstream
 

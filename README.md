@@ -119,13 +119,13 @@ Plik każdego dysponenta musi mieć układ standardu i przejść jego walidator;
 | Adres | Zastosowanie |
 |---|---|
 | https://mcod.local/pl/aed/5b0c3c1e-6f0e-4a57-9d4e-2f1a3b7c8d01 | Strona urządzenia demo z przyciskiem „Zgłoś problem” (adres z kodu QR) |
-| https://api.mcod.local/aed/devices/<aed_id>/qr.svg | Kod QR strony urządzenia do naklejki |
+| `https://api.mcod.local/aed/devices/<aed_id>/qr.svg` | Kod QR strony urządzenia do naklejki |
 | https://admin.mcod.local/aed_reports/aedincidentreport/ | Zgłoszenia w panelu: tylko konta instytucji odpowiedzialnej za urządzenie, statusy nowe / w trakcie / rozwiązane |
 | http://localhost:8025/ | E-mail o nowym zgłoszeniu do adresu instytucji i jej kont |
 
 Wpis „Najbliższy AED” w sekcji PoCoTo wskazuje mapę zasobu zbioru „Raport zbiorczy AED” z filtrem odległości. Uruchom go po opublikowaniu tego zbioru: `docker compose run --rm manage python manage.py seed_aed_showcase` (albo z `--url <adres mapy>`).
 
-Ograniczenia prototypu: brak limitu zgłoszeń z jednego adresu, brak automatycznego usuwania danych zgłaszających po zamknięciu sprawy, treść klauzuli RODO wymaga akceptacji prawnej.
+Ograniczenia prototypu: strona urządzenia wywołuje API przez lokalny proxy `/api` serwera frontendu (konfiguracja Compose), a nieznany identyfikator pokazuje komunikat na stronie zamiast przekierowania na stronę 404 portalu; brak limitu zgłoszeń z jednego adresu, brak automatycznego usuwania danych zgłaszających po zamknięciu sprawy, treść klauzuli RODO wymaga akceptacji prawnej.
 
 ## Licencja i użycie AI
 

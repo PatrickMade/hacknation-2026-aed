@@ -19,6 +19,7 @@ else:
     EMAIL_FILE_PATH = "/tmp/app-messages"
 
 NO_REPLY_EMAIL = "no-reply@mcod.local"
+EMAIL_TIMEOUT = 10  # AED report mail is sent in the request; never hang it (APP-45)
 
 ELASTICSEARCH_DSL_INDEX_SETTINGS = {
     "number_of_shards": 1,

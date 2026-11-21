@@ -4,6 +4,7 @@ The file is expected to pass aed-standard/validate.py; this command only reads t
 fields the report flow needs and upserts devices by aed_id.
 """
 import csv
+import math
 import uuid
 
 from django.core.management.base import BaseCommand, CommandError
@@ -17,7 +18,12 @@ TEXT_FIELDS = ('name', 'location_kind', 'locality', 'street_type', 'street', 'ho
 
 
 def _float(value):
-    return float(value) if value not in (None, '') else None
+    if value in (None, ''):
+        return None
+    number = float(value)
+    if not math.isfinite(number):
+        raise ValueError(value)
+    return number
 
 
 class Command(BaseCommand):
@@ -49,6 +55,10 @@ class Command(BaseCommand):
             except ValueError:
                 raise CommandError('Line {}: latitude/longitude must be numbers'.format(line))
             defaults = {field: (row.get(field) or '').strip() for field in TEXT_FIELDS}
+            for field, value in defaults.items():
+                limit = AedDevice._meta.get_field(field).max_length
+                if limit and len(value) > limit:
+                    raise CommandError('Line {}: {} longer than {} characters'.format(line, field, limit))
             defaults.update(coords, organization=org)
             devices.append((aed_id, defaults))
         with transaction.atomic():

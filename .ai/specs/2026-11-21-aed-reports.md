@@ -26,7 +26,7 @@ ADDED
 - WHEN ktoś otwiera `/pl/aed/<aed_id>` znanego urządzenia THEN widzi nazwę, adres, opis lokalizacji, dostęp, godziny, dysponenta i przycisk "Zgłoś problem".
 - WHEN wysyła poprawny formularz THEN API zwraca 201 z numerem zgłoszenia, zgłoszenie ma status "nowe", a do skrzynki instytucji trafia e-mail.
 - WHEN podaje kontakt bez zgody RODO THEN API zwraca 400 z błędem pola `consent`; nic nie jest zapisane.
-- WHEN `aed_id` nie istnieje albo nie jest UUID THEN strona i API zwracają 404.
+- WHEN `aed_id` nie istnieje albo nie jest UUID THEN API zwraca 404, a strona pokazuje komunikat „Nie znaleziono urządzenia AED” (bez przekierowania na stronę 404 portalu).
 - WHEN pełnomocnik lub edytor instytucji otwiera panel THEN widzi tylko zgłoszenia urządzeń swojej instytucji i może zmienić status (nowe, w trakcie, rozwiązane).
 - WHEN ktoś pobiera `/aed/devices/<aed_id>/qr.svg` THEN dostaje SVG z kodem QR adresu strony urządzenia.
 - WHEN operator uruchamia `seed_aed_showcase` THEN w Aplikacjach jest wpis "Najbliższy AED".
@@ -48,6 +48,9 @@ Strona w istniejącym układzie portalu (nagłówek i stopka bez zmian), kompone
 - Urządzenie bez współrzędnych: strona bez linku do mapy.
 - Instytucja bez e-maila: e-mail tylko do kont instytucji; brak adresów → brak wysyłki, log.
 - Spam: brak limitu zapytań w prototypie (ograniczenie).
+- Zawieszony SMTP: `EMAIL_TIMEOUT = 10` s; zgłoszenie jest już zapisane.
+- Zgoda RODO: API przyjmuje wyłącznie JSON `true`.
+- Strona korzysta z proxy `/api` serwera frontendu z Compose; budowa produkcyjna frontendu jest poza zakresem.
 
 ## 📝 Risks & Impact Review
 Nowy publiczny endpoint zapisujący dane osobowe; ryzyko ograniczone do lokalnego demo. Wspólne pliki: jedna linia w `INSTALLED_APPS`, wpis w menu panelu, trasy w `mcod/routes.py` i w routingu frontendu (konflikty rozwiązuje późniejszy PR rebase'em). Zmiany w plikach upstream wymagają aktualizacji weryfikatora źródeł (`local/upstream-files.json`) zgodnie z AGENTS.md.

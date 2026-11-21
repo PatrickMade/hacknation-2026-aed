@@ -22,7 +22,8 @@ class ReportForm(forms.ModelForm):
 
     def clean(self):
         cleaned = super().clean()
-        if cleaned.get('contact') and not cleaned.get('consent'):
+        # GDPR consent must be an explicit JSON true; strings such as "no" would pass a CheckboxInput.
+        if cleaned.get('contact') and self.data.get('consent') is not True:
             self.add_error('consent', 'Podanie kontaktu wymaga zgody na przetwarzanie danych osobowych.')
         if not cleaned.get('contact'):
             cleaned['consent'] = False
