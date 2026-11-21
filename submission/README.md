@@ -7,6 +7,7 @@ w HackTribe: https://hacknation2026.hacktribe.co/mapa-serc/
 | Plik | Zawartość |
 |---|---|
 | [mapa-serc-prezentacja.pdf](mapa-serc-prezentacja.pdf) | Prezentacja zgłoszenia (PDF, 14 slajdów) |
+| [mapa-serc-okladka-hacktribe.png](mapa-serc-okladka-hacktribe.png) | Okładka projektu w HackTribe (800 x 600 px) |
 | [prezentacja/](prezentacja/) | Źródła slajdów: HTML, CSS, zrzuty ekranu, znak, krój pisma i skrypt budujący PDF |
 | [opis-projektu.md](opis-projektu.md) | Tytuł, krótki i szczegółowy opis, kroki użytkownika, teksty do formularza HackTribe |
 | [oswiadczenie-ai.md](oswiadczenie-ai.md) | Zakres wykorzystania AI według obszarów (regulamin zadania, par. 2 ust. 8) |
@@ -24,5 +25,6 @@ python3 -B submission/prezentacja/build-pdf.py
 ```
 
 Skrypt drukuje `prezentacja/slajdy.html` przez Chrome lub Chromium bez
-interfejsu i sprawdza limit 10 MB oraz liczbę slajdów. Szczegóły:
+interfejsu, sprawdza limit 10 MB oraz liczbę slajdów i zapisuje okładkę
+HackTribe z `prezentacja/okladka.html`. Szczegóły:
 [prezentacja/README.md](prezentacja/README.md).

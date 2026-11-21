@@ -7,7 +7,8 @@
 | `img/zrzuty/` | Zrzuty ekranu z lokalnej instancji portalu (JPEG) |
 | `img/brand/` | Znak, symbol i naklejka QR akcji, kopie plików z `brand/` |
 | `fonts/` | Krój Figtree z licencją SIL Open Font License 1.1 (`OFL.txt`) |
-| `build-pdf.py` | Budowa `../mapa-serc-prezentacja.pdf` |
+| `okladka.html` | Okładka projektu w HackTribe, 800 x 600 px |
+| `build-pdf.py` | Budowa `../mapa-serc-prezentacja.pdf` i `../mapa-serc-okladka-hacktribe.png` |
 
 ## Budowa
 
