@@ -226,6 +226,43 @@ def official_records():
     return records
 
 
+PUBLISHED_TAG = 'zgodny ze standardem AED'
+
+
+def published_records():
+    """Records of CSV resources published in the portal in datasets tagged PUBLISHED_TAG (e.g. by the
+    provider wizard, APP-43). They are already in profile form: each file must pass validate.py as a
+    whole, and its cells are parsed with the profile's own field rules; invalid files are skipped."""
+    import tempfile
+
+    from mcod.aed_aggregate import standard
+    from mcod.resources.models import Resource
+
+    records = []
+    resources = Resource.objects.filter(
+        status='published', dataset__status='published', dataset__tags__name=PUBLISHED_TAG,
+    ).distinct().order_by('pk')
+    for resource in resources:
+        main = resource.files.filter(is_main=True).first()
+        if main is None or not main.file:
+            continue
+        with main.file.open('rb') as handle:
+            content = handle.read()
+        with tempfile.NamedTemporaryFile(suffix='.csv') as temp:
+            temp.write(content)
+            temp.flush()
+            if standard.file_errors(temp.name):
+                continue
+        for row in csv.DictReader(io.StringIO(content.decode('utf-8'), newline='')):
+            record = {}
+            for name, value in row.items():
+                parsed = standard.validator.scalar(value, standard.FIELD_DEFS[name])
+                if parsed is not None:
+                    record[name] = parsed
+            records.append(record)
+    return records
+
+
 PHONE_CANDIDATE = re.compile(r'\+?\d[\d\s().-]{7,}\d')
 HOURS = re.compile(r'\d{1,2}[.:]\d{2}\s*-\s*\d{1,2}[.:]\d{2}')
 EMAIL = re.compile(r'[^\s@]+@[^\s@]+\.[^\s@]+')

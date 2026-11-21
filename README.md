@@ -91,19 +91,19 @@ docker compose up -d
 - `frontend/`: oficjalny Angular, lokalny proxy, Sentry i Matomo wyłączone.
 - `compose.yaml`: PostgreSQL, Elasticsearch, Redis, RabbitMQ, Fuseki, MailHog, flagi, aplikacje i nginx.
 - `local/`, `scripts/`: konfiguracja i sprawdzenie pochodzenia źródeł.
-- `backend/mcod/aed_wizard/`: kreator „Dodaj dane AED” w panelu dostawcy (`https://admin.mcod.local/aed/kreator/`, konta pełnomocnika i edytora instytucji) oraz publiczny walidator „Sprawdź swój plik” (`https://admin.mcod.local/aed/sprawdz-plik/`). Reguły zgodności pochodzą z `aed-standard/validate.py`. Testy: `docker compose run --rm manage python manage.py test mcod.aed_wizard --noinput --keepdb`.
+- `backend/mcod/aed_wizard/`: kreator „Dodaj dane AED” w panelu dostawcy (`https://admin.mcod.local/aed/kreator/`, konta pełnomocnika i edytora instytucji) oraz publiczny walidator „Sprawdź swój plik” (`https://admin.mcod.local/aed/sprawdz-plik/`). Reguły zgodności pochodzą z `aed-standard/validate.py`. Testy kreatora są częścią bramki poniżej (`mcod.aed_wizard`).
 
 Po budowie obrazów i przygotowaniu usług/bazy z instrukcji startu uruchom bramkę w tej kolejności:
 
 ```sh
 python3 -B scripts/check-portal-source.py
 docker compose --profile tools config --quiet
-docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed mcod.aed_aggregate --noinput --keepdb
+docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed mcod.aed_aggregate mcod.aed_wizard --noinput --keepdb
 python3 -B .ai/scripts/check_project_copy.py
 python3 -B .ai/scripts/check_client_config.py
 ```
 
-Test obejmuje seed, ponowienie, brak hasła, logowanie edytorów i odmowę dostępu do obcej instytucji oraz panelu dla zwykłego użytkownika. Testy `mcod.aed_aggregate` sprawdzają mapowanie źródeł AED do wzorcowego zakresu, deduplikację, pochodzenie rekordów, walidację przez `aed-standard/validate.py` oraz publikację zasobów raportu. Nie jest to pełny zestaw testów całego portalu.
+Test obejmuje seed, ponowienie, brak hasła, logowanie edytorów i odmowę dostępu do obcej instytucji oraz panelu dla zwykłego użytkownika. Testy `mcod.aed_aggregate` sprawdzają mapowanie źródeł AED do wzorcowego zakresu, deduplikację, pochodzenie rekordów, walidację przez `aed-standard/validate.py` oraz publikację zasobów raportu. Testy `mcod.aed_wizard` sprawdzają mapowanie plików dysponentów do standardu, raport walidacji, publikację przez konto instytucji, publiczny walidator oraz to, że opublikowany zasób trafia do raportu zbiorczego po odświeżeniu. Nie jest to pełny zestaw testów całego portalu.
 
 ## Licencja i użycie AI
 

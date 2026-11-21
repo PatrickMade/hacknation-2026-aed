@@ -4,9 +4,12 @@ import tempfile
 from mcod.aed_aggregate import aggregate, publish, sources, standard
 
 
-def build():
-    """Report and OSM files in the AED profile; raises RefreshError when validate.py rejects a file."""
-    report, rejected = aggregate.check(aggregate.deduplicate(sources.official_records()))
+def build(published=()):
+    """Report and OSM files in the AED profile; raises RefreshError when validate.py rejects a file.
+
+    published: records of profile resources already published in the portal (sources.published_records()).
+    """
+    report, rejected = aggregate.check(aggregate.deduplicate(sources.official_records() + list(published)))
     osm, osm_rejected = aggregate.check(sources.osm_records())
     report_csv, _ = standard.to_csv(report)
     osm_csv, _ = standard.to_csv(osm)
@@ -22,7 +25,8 @@ def build():
 
 
 def refresh(process=True):
-    built = build()
+    published = sources.published_records()
+    built = build(published)
     user = publish.bootstrap_user()
     publish.publish_sources(user, process=process)
     dataset, resources = publish.publish_report(user, built['report_csv'], built['report_geojson'], built['osm_csv'],
@@ -31,6 +35,7 @@ def refresh(process=True):
         'dataset_id': dataset.pk,
         'resource_ids': [r.pk for r in resources],
         'records': len(built['report']),
+        'published_records': len(published),
         'rejected': [(r['source_records'][0]['source_record_id'], errors) for r, errors in built['rejected']],
         'osm_records': len(built['osm']),
         'osm_rejected': len(built['osm_rejected']),

@@ -15,6 +15,8 @@ Nowa aplikacja Django `backend/mcod/aed_wizard/` w komponencie admin (admin.mcod
 2. Publiczna strona "Sprawdź swój plik" (`/aed/sprawdz-plik/`, bez logowania): wgranie CSV/XLSX/GeoJSON, raport tym samym walidatorem. CSV jest sprawdzany bajt w bajt; XLSX i GeoJSON są zamieniane na CSV tylko przez kolumny o nazwach pól standardu (GeoJSON Point daje `latitude`/`longitude`). Nic nie jest zapisywane: plik tymczasowy jest usuwany po walidacji, bez cache i bez modelu.
 
 ## Ustalenia
+- Odbiór przez agregator (decyzja koordynatora, 2026-11-21): `backend/mcod/aed_aggregate/sources.py` zyskuje `published_records()`, czytające opublikowane zasoby CSV ze zbiorów oznaczonych słowem kluczowym `zgodny ze standardem AED`. Plik musi przejść `validate.py` w całości, a komórki są parsowane regułami pól profilu; plik niezgodny jest pomijany. `refresh()` przekazuje te rekordy do `build()`, więc przechodzą tę samą deduplikację i kontrolę co źródła miejskie. `build()` bez argumentu nie czyta bazy.
+- Testy `mcod.aed_wizard` wchodzą do bramki `validation.commands` obok `mcod.aed_aggregate`.
 - Logika walidacji pochodzi z `aed-standard/validate.py` i `schema.json`, ładowanych z katalogu `AED_STANDARD_DIR` (Compose montuje `./aed-standard` tylko do odczytu). Kreator nie kopiuje reguł; jego ostrzeżenia są dodatkową diagnostyką.
 - Kształt zasobu dla agregatora L4 (umowa przez standard, nie przez wspólny kod): opublikowany zasób CSV UTF-8, CRLF, nagłówek będący podzbiorem pól profilu w kolejności `schema.json`, przechodzący `validate.py`, w zbiorze instytucji-dysponenta oznaczonym słowem kluczowym `AED`. `source_records[].source_id` = `dysponent:<slug instytucji>`.
 - `aed_id`: wartość UUID ze źródła zostaje; w przeciwnym razie UUID5 z `dysponent:<slug>` i identyfikatora rekordu źródła (stały przy ponownym wgraniu tego samego źródła). Raport mówi, ile identyfikatorów nadano.
@@ -27,14 +29,14 @@ Nowa aplikacja Django `backend/mcod/aed_wizard/` w komponencie admin (admin.mcod
 2. Walidacja: zamienione osie i punkt poza Polską dają błąd walidatora oraz ostrzeżenie o osiach; zamiana osi usuwa błąd; duplikaty i godziny spoza OSM dają ostrzeżenia - testy.
 3. Publikacja: konto pełnomocnika publikuje plik; powstaje zbiór instytucji z kategorią HEAL, tagiem AED, licencją i zasób z plikiem CSV, `data_date`, znakiem zgodności i gotowym schematem tabeli z rolami mapy; druga publikacja używa tego samego zbioru; obca instytucja jest odrzucona - test Django z klientem.
 4. Publiczny walidator: anonimowy POST zwraca raport, nie tworzy obiektów w bazie i nie zostawia pliku tymczasowego walidacji - test.
-5. End to end lokalnie: konto pełnomocnika przechodzi kreator w przeglądarce; zasób jest widoczny w API `/1.4`; agregator L4 odczytuje zasób, gdy jego PR jest dostępny (inaczej raportowane jako niezweryfikowane).
+5. End to end lokalnie: konto pełnomocnika przechodzi kreator w przeglądarce; zasób jest widoczny w API `/1.4`. Rekordy opublikowanego zasobu trafiają do raportu zbiorczego po odświeżeniu - test `test_aggregate_pickup`.
 6. Pełny gate `validation.commands`, niezależny review i merge przez merge gate.
 
 ## Ryzyka i granice
 Ostrzeżenie o duplikatach jest heurystyką; wspólny adres nie dowodzi tego samego urządzenia. Walidator nie sprawdza pełnej gramatyki `opening_hours`. Pobieranie URL jest prostą kontrolą dla lokalnego demo, nie pełną ochroną SSRF.
 
 ## Poza zakresem
-Agregacja i deduplikacja między źródłami (L4), zgłoszenia (L7), strona akcji (L6), zmiany walidatora `aed-standard/`, frontend Angular, wygląd portalu poza nowymi stronami AED.
+Agregacja i deduplikacja między źródłami (L4; poza samym odczytem opublikowanych zasobów), zgłoszenia (L7), strona akcji (L6), zmiany walidatora `aed-standard/`, frontend Angular, wygląd portalu poza nowymi stronami AED.
 
 ## Plan wdrożenia
 1. Spec i plan.
