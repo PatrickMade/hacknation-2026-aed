@@ -4,7 +4,7 @@ Każdy punkt akceptuje autor po własnym sprawdzeniu. Zaznacz `[x]` i wpisz
 uwagi albo "OK". Punkt z uwagami wraca do poprawy przed wysłaniem
 zgłoszenia.
 
-Stan na 2026-11-21, 19:50 UTC. Punkty zależne od niescalonych jeszcze
+Stan na 2026-11-21, 20:20 UTC. Punkty zależne od niescalonych jeszcze
 pull requestów są oznaczone numerem PR.
 
 ## 1. Demo lokalne
@@ -20,11 +20,11 @@ Uruchomienie według `README.md` (sekcja "Uruchomienie od zera"), potem:
       plik Krosna, przypisanie kolumn, raport walidacji, publikacja.
 - [ ] 1.5 Walidator "Sprawdź swój plik" pokazuje błędy pliku
       z błędami bez logowania.
-- [ ] 1.6 Karta urządzenia i "Zgłoś problem" (PR #7): zgłoszenie widzi tylko
+- [ ] 1.6 Karta urządzenia i "Zgłoś problem": zgłoszenie widzi tylko
       dysponent urządzenia, e-mail w MailHog.
 - [ ] 1.7 Strona akcji `/pl/aed` (PR #6): liczniki i mapa pokrycia gmin,
       także na telefonie.
-- [ ] 1.8 "Najbliższy AED" w zakładce PoCoTo (PR #7).
+- [ ] 1.8 "Najbliższy AED" w zakładce PoCoTo.
 
 Uwagi:
 
@@ -33,7 +33,7 @@ Uwagi:
 `submission/mapa-serc-prezentacja.pdf`
 
 - [ ] 2.1 Treść slajdów zgodna z prototypem i opisem.
-- [ ] 2.2 Zrzuty ekranu aktualne (strona akcji z licznikami po PR #6).
+- [ ] 2.2 Zrzuty ekranu aktualne, w tym strona akcji z licznikami i mapą.
 - [ ] 2.3 Slajd 10: wynik kontroli dostępności nowych stron AED zamiast
       znacznika "do uzupełnienia" (po przeglądzie integracyjnym).
 - [ ] 2.4 Rozmiar do 10 MB, co najmniej 5 slajdów.

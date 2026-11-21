@@ -64,4 +64,5 @@ na formę bezosobową (zasada zespołu jednoosobowego).
 3. [x] Slajdy HTML, skrypt PDF, PDF.
 4. [x] Aktualizacja tekstów wersji 1, `akceptacja.md`.
 5. [ ] Bramka, PR, niezależny przegląd, merge (pierwszy PDF).
-6. [ ] Nagranie demo MP4 i zrzut strony akcji z licznikami.
+6. [x] Zrzut strony akcji z licznikami i mapą (PR #6, head 01804b1).
+7. [ ] Nagranie demo MP4.

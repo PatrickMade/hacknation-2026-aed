@@ -81,7 +81,7 @@ i prowadzi do jego zbioru źródłowego.
    pobrania oraz punkty AED z OSM jako osobny zasób na licencji ODbL.
    Odświeżanie: zadanie okresowe w tle, w demo uruchamiane ręcznie.
 5. **Strona akcji w portalu**: kampania, liczniki (dysponenci, rekordy AED,
-   gminy z danymi na tle 2477 gmin), mapa pokrycia gmin z lukami ("OSM zna
+   gminy z danymi na tle 2479 gmin), mapa pokrycia gmin z lukami ("OSM zna
    AED, wpisu urzędowego brak") i przycisk prowadzący do kreatora.
 6. **Zgłoszenie problemu do konkretnego dysponenta**: kod QR na naklejce przy
    AED prowadzi do wpisu urządzenia i formularza "Zgłoś problem" (zamknięty,
@@ -145,7 +145,7 @@ w repozytorium.
 
 ## Stan prototypu
 
-Stan na 2026-11-21, 19:50 UTC. "W przeglądzie" oznacza pull request
+Stan na 2026-11-21, 20:20 UTC. "W przeglądzie" oznacza pull request
 czekający na przegląd i scalenie do `main`.
 
 | Element | Stan |
@@ -155,7 +155,7 @@ czekający na przegląd i scalenie do `main`.
 | Agregator i raport zbiorczy AED | gotowy, w `main` |
 | Kreator dysponenta i walidator | gotowy, w `main` |
 | Strona akcji i mapa pokrycia | w przeglądzie (PR #6) |
-| Zgłoszenia problemów, QR, "Najbliższy AED" | w przeglądzie (PR #7) |
+| Zgłoszenia problemów, QR, "Najbliższy AED" | gotowe, w `main` |
 | Nazwa, hasło, logo, księga znaku | w przeglądzie (PR #10) |
 
 Ograniczenia: `ograniczenia.md`. Użycie AI: `oswiadczenie-ai.md`.
