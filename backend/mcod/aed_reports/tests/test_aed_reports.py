@@ -110,7 +110,8 @@ class AedReportsTests(TestCase):
     def test_invalid_fields_are_rejected(self):
         response = self.post_report(type='other', description='', reporter_name='')
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(set(response.json['errors']), {'type', 'description', 'reporter_name'})
+        # The name is optional since APP-60: only type and description are reported.
+        self.assertEqual(set(response.json['errors']), {'type', 'description'})
         self.assertEqual(self.api.simulate_post(
             '/aed/devices/{}/reports'.format(self.device.aed_id), body='{', headers={'Content-Type': 'application/json'},
         ).status_code, 400)
