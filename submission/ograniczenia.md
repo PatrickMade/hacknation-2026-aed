@@ -61,12 +61,18 @@ Stan na 2026-11-21.
     czasu reakcji dysponenta.
 17. Powiadomienia e-mail w demo trafiają do lokalnej skrzynki testowej
     (MailHog), a nie do prawdziwych adresów.
+18. Publiczny formularz zgłoszeń nie ma limitu liczby zgłoszeń z jednego
+    źródła ani ochrony przed automatami. Przed wdrożeniem trzeba je dodać.
+19. Treść klauzuli RODO w formularzu i okres przechowywania danych
+    zgłaszającego to propozycje prototypu. Wymagają potwierdzenia przez
+    administratora danych przed użyciem poza demo. Dane zgłaszających nie
+    są usuwane automatycznie po zamknięciu sprawy.
 
 ## Dostępność i zakres zmian
 
-18. Wymagania WCAG 2.2 AA i responsywności (od 360 px) dotyczą nowych stron
+20. Wymagania WCAG 2.2 AA i responsywności (od 360 px) dotyczą nowych stron
     AED. Pozostała część portalu jest bez zmian i poza zakresem audytu.
-19. Kod portalu pochodzi z oficjalnego wydania (backend 2.62.3, frontend
+21. Kod portalu pochodzi z oficjalnego wydania (backend 2.62.3, frontend
     3.5.2) na licencji GPLv3. Zmiany i moduły AED podlegają tej samej
     licencji (`LICENSE`, `UPSTREAM.md`). Datowane kopie danych źródłowych
     zachowują licencje źródeł (CC0 1.0, CC BY 4.0, ODbL 1.0).

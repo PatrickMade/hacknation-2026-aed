@@ -79,3 +79,11 @@ Uwagi:
 - [ ] 6.2 Długość do 2 minut; brak haseł i prywatnych danych na ekranie.
 
 Uwagi:
+
+## 7. Zgłoszenia AED: decyzje do potwierdzenia
+
+- [ ] 7.1 Treść klauzuli RODO w formularzu "Zgłoś problem" (strona
+      urządzenia `/pl/aed/<aed_id>`).
+- [ ] 7.2 Okres przechowywania danych zgłaszającego.
+
+Uwagi:
