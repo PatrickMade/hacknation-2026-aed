@@ -85,6 +85,9 @@ class JurySeedTests(TestCase):
         handler = logging.Handler(level=logging.DEBUG)
         handler.emit = records.append
         signals = logging.getLogger('signals')
+        # Force DEBUG so the test cannot pass vacuously under settings that log signals at INFO.
+        self.addCleanup(signals.setLevel, signals.level)
+        signals.setLevel(logging.DEBUG)
         level = signals.level
         signals.addHandler(handler)
         self.addCleanup(signals.removeHandler, handler)

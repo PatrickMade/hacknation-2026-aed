@@ -8,7 +8,7 @@ Co zawiera ta wersja:
 - **Kreator „Dodaj dane AED” i walidator „Sprawdź swój plik”** (`backend/mcod/aed_wizard/`): dysponent w panelu dostawcy wgrywa plik CSV, XLSX lub GeoJSON, przypisuje kolumny do pól standardu, czyta raport walidacji i publikuje zasób. Walidator działa bez logowania i niczego nie zapisuje.
 - **Raport zbiorczy AED** (`backend/mcod/aed_aggregate/`): pięć zbiorów AED z dane.gov.pl zmapowanych do standardu, zwalidowanych i zdeduplikowanych. Zasoby: CSV z podglądem na mapie portalu, GeoJSON oraz osobny zasób punktów AED z OpenStreetMap na licencji ODbL 1.0.
 - **Zgłoszenia AED i kody QR** (`backend/mcod/aed_reports/`): kod QR przy urządzeniu prowadzi do jego strony z formularzem „Zgłoś problem”. Zgłoszenie trafia do panelu i na adres e-mail właściwego dysponenta.
-- **Strona akcji „Mapa Serc”** (`/pl/aed`): liczniki, mapa pokrycia gmin z lukami („OSM zna AED, wpisu urzędowego brak”) i przejście do kreatora. W zakładce PoCoTo jest wpis „Najbliższy AED”.
+- **Strona akcji „Mapa Serc”** (`/pl/aed`): liczniki, mapa pokrycia gmin z lukami (gminy, w których OpenStreetMap zna AED, a brak oficjalnych danych) i przejście do kreatora. W zakładce PoCoTo jest wpis „Najbliższy AED”.
 - **Znak akcji** (`brand/`): logo, naklejka z kodem QR i księga znaku.
 
 Wygląd, treści i układ portalu poza obszarami AED pozostają bez zmian. Baza startuje bez kopii produkcyjnej i bez treści CMS, więc endpointy stron CMS (np. strony głównej i klauzuli RODO) odpowiadają 404. Lista instytucji, zbiory, API i panel korzystają z lokalnej bazy.
@@ -108,7 +108,7 @@ Wymaga uruchomienia z sekcji wyżej, wpisu w pliku hosts i załadowania urządze
 2. **Raport zbiorczy**: w portalu Dane, zbiór „Raport zbiorczy AED”. Zasoby CSV, GeoJSON i OSM; zakładka Mapa zasobu CSV pokazuje punkty. Te same rekordy zwraca API `https://api.mcod.local/1.4/resources/<id zasobu CSV>/data`.
 3. **Walidator bez logowania** https://admin.mcod.local/aed/sprawdz-plik/: wgraj np. `backend/data/aed/sources/marki/Defibrylator_GminaMiastoMarki_1.csv` i przeczytaj raport zgodności ze standardem.
 4. **Kreator dysponenta**: zaloguj się na https://admin.mcod.local/login/ jako `krosno.agent@mcod.local`, wybierz „Dodaj dane AED”, wgraj `backend/data/aed/sources/krosno/Defibrylator_jAmxQcp.csv`, przypisz kolumny, sprawdź raport walidacji i opublikuj. Rekordy trafią do raportu zbiorczego po kolejnym `aed_refresh`.
-5. **Zgłoszenie z kodu QR**: otwórz https://mcod.local/pl/aed/5b0c3c1e-6f0e-4a57-9d4e-2f1a3b7c8d01 i wyślij „Zgłoś problem”. Zgłoszenie widać w panelu tylko po zalogowaniu jako `demo.agent@mcod.local` (https://admin.mcod.local/aed_reports/aedincidentreport/), a wiadomość e-mail w MailHog (http://localhost:8025/).
+5. **Zgłoszenie z kodu QR**: otwórz https://mcod.local/pl/aed/5b0c3c1e-6f0e-4a57-9d4e-2f1a3b7c8d01 i wyślij „Zgłoś problem”. Zgłoszenie widzą w panelu (https://admin.mcod.local/aed_reports/aedincidentreport/) konta instytucji „Dysponent demonstracyjny” (`demo.agent@mcod.local`, `demo.editor@mcod.local`) oraz konta administratorów; konta innych instytucji go nie widzą. Wiadomość e-mail jest w MailHog (http://localhost:8025/).
 6. **Najbliższy AED**: w portalu PoCoTo, wpis „Najbliższy AED” prowadzi do mapy raportu z filtrem odległości.
 
 ## Zatrzymanie i kolejne uruchomienie
@@ -156,7 +156,7 @@ Plik każdego dysponenta musi mieć układ standardu i przejść jego walidator;
 |---|---|
 | https://mcod.local/pl/aed/5b0c3c1e-6f0e-4a57-9d4e-2f1a3b7c8d01 | Strona urządzenia demo z przyciskiem „Zgłoś problem” (adres z kodu QR) |
 | `https://api.mcod.local/aed/devices/<aed_id>/qr.svg` | Kod QR strony urządzenia do naklejki |
-| https://admin.mcod.local/aed_reports/aedincidentreport/ | Zgłoszenia w panelu: tylko konta instytucji odpowiedzialnej za urządzenie, statusy nowe / w trakcie / rozwiązane |
+| https://admin.mcod.local/aed_reports/aedincidentreport/ | Zgłoszenia w panelu: konta instytucji odpowiedzialnej za urządzenie oraz administratorzy portalu, statusy nowe / w trakcie / rozwiązane |
 | http://localhost:8025/ | E-mail o nowym zgłoszeniu do adresu instytucji i jej kont |
 
 Wpis „Najbliższy AED” w sekcji PoCoTo wskazuje mapę zasobu zbioru „Raport zbiorczy AED” z filtrem odległości. Uruchom go po opublikowaniu tego zbioru: `docker compose run --rm manage python manage.py seed_aed_showcase` (albo z `--url <adres mapy>`).
@@ -169,4 +169,4 @@ Klauzula pod formularzem (wzór do weryfikacji prawnej): administratorem danych 
 
 Portal i modyfikacje w tym repozytorium są udostępniane na GNU GPL v3.0. Wyjątek: datowane kopie danych źródłowych w `backend/data/aed/sources/` nie są objęte GPL v3.0; zachowują licencje źródeł (CC0 1.0, CC BY 4.0, OpenStreetMap: ODbL 1.0), opisane w `backend/data/aed/sources/LICENSES.md`. Zobacz `LICENSE`, `NOTICE.upstream.txt` i `UPSTREAM.md` z wersjami, sumami archiwów i listą zmian. Zachowano oryginalne notices i licencje zależności.
 
-AI (Claude Code i Codex) wspierało analizę zadania i research, konfigurację lokalną, seed kont, wzorcowy zakres danych AED, agregator raportu zbiorczego AED (mapowanie, deduplikacja, publikacja), kreator AED i walidator, moduł zgłoszeń AED z koderem QR, stronę akcji „Mapa Serc” z mapą pokrycia gmin i wpisem „Najbliższy AED”, nazwę, znak, naklejkę i księgę znaku akcji (`brand/`), testy, dokumentację oraz teksty i prezentację zgłoszenia. Oficjalny kod portalu pochodzi z dystrybucji dane.gov.pl i nie został wygenerowany przez AI. Pełny zakres użycia AI oraz podział na pracę AI i decyzje autora opisuje `submission/oswiadczenie-ai.md` (regulamin HackNation §2 ust. 8). Decyzje i odpowiedzialność za końcowy rezultat należą do autora.
+AI (Claude Code i Codex) wspierało analizę zadania i research, zbieranie danych (skrypty pobierające wpisy o AED ze stron urzędów i migawki zbiorów z dane.gov.pl), konfigurację lokalną, seed kont, wzorcowy zakres danych AED, agregator raportu zbiorczego AED (mapowanie, deduplikacja, publikacja), kreator AED i walidator, moduł zgłoszeń AED z koderem QR, stronę akcji „Mapa Serc” z mapą pokrycia gmin i wpisem „Najbliższy AED”, nazwę, znak, naklejkę i księgę znaku akcji (`brand/`), testy, kontrolę jakości (przeglądy w osobnych sesjach AI, kontrola dostępności axe-core), dokumentację oraz teksty i prezentację zgłoszenia. Oficjalny kod portalu pochodzi z dystrybucji dane.gov.pl i nie został wygenerowany przez AI. Pełny zakres użycia AI oraz podział na pracę AI i decyzje autora opisuje `submission/oswiadczenie-ai.md` (regulamin HackNation §2 ust. 8). Decyzje i odpowiedzialność za końcowy rezultat należą do autora.
