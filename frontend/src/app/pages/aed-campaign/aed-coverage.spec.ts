@@ -37,11 +37,11 @@ describe('normalizeTerc', () => {
 
 describe('computeCoverage', () => {
   const records = [
-    { terc: '1465011', operatorName: 'Urząd m.st. Warszawy', lat: 52.2, lon: 21.0 + 0.5 },
-    { terc: '1465011', operatorName: 'Urząd m.st. Warszawy', lat: 52.3, lon: 21.4 },
-    { terc: '1465088', operatorName: 'Szkoła Podstawowa nr 1', lat: 52.5, lon: 21.5 },
-    { terc: '', operatorName: 'Gmina Miejska Legionowo', lat: 52.5, lon: 20.5 },
-    { terc: '', operatorName: 'Bez pozycji', lat: null, lon: null },
+    { terc: '1465011', operatorName: 'Urząd m.st. Warszawy', publishers: [], lat: 52.2, lon: 21.0 + 0.5 },
+    { terc: '1465011', operatorName: 'Urząd m.st. Warszawy', publishers: [], lat: 52.3, lon: 21.4 },
+    { terc: '1465088', operatorName: 'Szkoła Podstawowa nr 1', publishers: [], lat: 52.5, lon: 21.5 },
+    { terc: '', operatorName: 'Gmina Miejska Legionowo', publishers: [], lat: 52.5, lon: 20.5 },
+    { terc: '', operatorName: 'Bez pozycji', publishers: [], lat: null, lon: null },
   ];
   const osm = [
     { lat: 52.5, lon: 21.5 },
@@ -54,7 +54,7 @@ describe('computeCoverage', () => {
     const result = computeCoverage(records, osm, gminy);
 
     expect(result.records).toBe(5);
-    expect(result.operators).toBe(4);
+    expect(result.confirmedOperators).toBe(4);
     expect(result.gminyCovered).toBe(2);
     expect(result.gminyTotal).toBe(3);
   });
@@ -65,7 +65,6 @@ describe('computeCoverage', () => {
 
     expect(warszawa.status).toBe('published');
     expect(warszawa.officialCount).toBe(3);
-    expect(warszawa.operators).toEqual(['Szkoła Podstawowa nr 1', 'Urząd m.st. Warszawy']);
     expect(warszawa.osmCount).toBe(1);
     expect(result.gminy.get('1408011').status).toBe('published');
     expect(result.gminy.get('1861011')).toEqual(
@@ -76,18 +75,55 @@ describe('computeCoverage', () => {
 
   it('assigns gminy from coordinates when the report has no terc column', () => {
     const withoutTerc = [
-      { terc: null, operatorName: 'Gmina Miejska Krosno', lat: 49.7, lon: 22.8 },
-      { terc: null, operatorName: 'Gmina Miejska Krosno', lat: 49.6, lon: 22.7 },
-      { terc: null, operatorName: 'Urząd Miasta Legionowo', lat: 52.4, lon: 20.9 },
-      { terc: null, operatorName: 'Urząd Miasta Legionowo', lat: null, lon: null },
+      { terc: null, operatorName: 'Gmina Miejska Krosno', publishers: [], lat: 49.7, lon: 22.8 },
+      { terc: null, operatorName: 'Gmina Miejska Krosno', publishers: [], lat: 49.6, lon: 22.7 },
+      { terc: null, operatorName: 'Urząd Miasta Legionowo', publishers: [], lat: 52.4, lon: 20.9 },
+      { terc: null, operatorName: 'Urząd Miasta Legionowo', publishers: [], lat: null, lon: null },
     ];
     const result = computeCoverage(withoutTerc, [], gminy);
 
     expect(result.records).toBe(4);
-    expect(result.operators).toBe(2);
+    expect(result.confirmedOperators).toBe(2);
     expect(result.gminyCovered).toBe(2);
     expect(result.gminy.get('1861011').officialCount).toBe(2);
     expect(result.gminy.get('1408011').officialCount).toBe(1);
+  });
+
+  it('counts data publishers and confirmed dysponenci separately (L4 compliance contract)', () => {
+    const compliance = [
+      { terc: '1408011', operatorName: 'nieustalony', publishers: ['Urząd Miasta Legionowo'], lat: 52.4, lon: 20.5 },
+      { terc: '1408011', operatorName: 'nieustalony', publishers: ['Urząd Miasta Legionowo'], lat: 52.5, lon: 20.4 },
+      { terc: '1861011', operatorName: 'nieustalony', publishers: ['Urząd Miasta Krosna'], lat: 49.7, lon: 22.8 },
+      {
+        terc: '1861011',
+        operatorName: 'Szpital Wojewódzki w Krośnie',
+        publishers: ['Urząd Miasta Krosna'],
+        lat: 49.6,
+        lon: 22.7,
+      },
+      { terc: '1465011', operatorName: '', publishers: [], lat: 52.2, lon: 21.5 },
+    ];
+    const result = computeCoverage(compliance, [], gminy);
+
+    expect(result.records).toBe(5);
+    expect(result.publishers).toBe(2);
+    expect(result.confirmedOperators).toBe(1);
+    expect(result.gminy.get('1408011').publishers).toEqual(['Urząd Miasta Legionowo']);
+    expect(result.gminy.get('1861011').publishers).toEqual(['Urząd Miasta Krosna']);
+    expect(result.gminy.get('1465011').publishers).toEqual([]);
+    expect(result.gminyCovered).toBe(3);
+  });
+
+  it('never counts "nieustalony" variants as a confirmed dysponent', () => {
+    const records = ['nieustalony', 'Nieustalony', 'nieustalony (OpenStreetMap)', '  '].map((operatorName) => ({
+      terc: '1408011',
+      operatorName,
+      publishers: [],
+      lat: 52.4,
+      lon: 20.5,
+    }));
+
+    expect(computeCoverage(records, [], gminy).confirmedOperators).toBe(0);
   });
 
   it('returns no covered gminy without records', () => {

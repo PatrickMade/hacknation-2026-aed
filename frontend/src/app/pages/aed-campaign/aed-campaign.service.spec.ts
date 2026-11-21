@@ -66,6 +66,64 @@ describe('AedCampaignService.getReport', () => {
     getResourceData: (id: string, params: Record<string, string>) => tableApi(id === '8' ? osm : official, params),
   };
 
+  it('reads publishers from source_records and finds OSM in its own dataset (L4 compliance contract)', (done) => {
+    const sourceRecords = (publisher: string) =>
+      JSON.stringify([{ source_id: 'dane.gov.pl', publisher_name: publisher, source_url: 'https://example.org' }]);
+    const compliance = [
+      {
+        operator_name: 'nieustalony',
+        terc: '1434011',
+        source_records: sourceRecords('Urząd Miasta Marki'),
+        latitude: 52.32,
+        longitude: 21.11,
+      },
+      {
+        operator_name: 'nieustalony',
+        terc: '1861011',
+        source_records: sourceRecords('Urząd Miasta Krosna'),
+        latitude: 49.69,
+        longitude: 21.77,
+      },
+      { operator_name: 'nieustalony', terc: '1861011', source_records: 'not json', latitude: 49.68, longitude: 21.76 },
+    ];
+    const osmPoints = [{ aed_id: 'osm-1', latitude: 52.2, longitude: 21.0 }];
+    const complianceApi = {
+      getAll: (params: Record<string, string>) =>
+        of({
+          results: /openstreetmap/i.test(params['q'])
+            ? [{ id: '9', attributes: { title: 'Punkty AED z <mark>OpenStreetMap</mark> - Polska (ODbL 1.0)</mark>' } }]
+            : [{ id: '6', attributes: { title: '<mark>Raport</mark> <mark>zbiorczy</mark> <mark>AED</mark>' } }],
+        }),
+      getResourcesList: (datasetId: string) =>
+        of({
+          results:
+            datasetId === '9'
+              ? [{ id: '11', attributes: { title: 'Punkty AED z OpenStreetMap - Polska', format: 'csv' } }]
+              : [
+                  { id: '7', attributes: { title: 'Raport zbiorczy AED (GeoJSON)', format: 'geojson' } },
+                  { id: '6', attributes: { title: 'Raport zbiorczy AED (CSV)', format: 'csv' } },
+                ],
+        }),
+      getResourceData: (id: string, params: Record<string, string>) =>
+        tableApi(id === '11' ? osmPoints : compliance, params),
+    };
+    const service = new AedCampaignService(complianceApi as never, {} as never);
+
+    service.getReport().subscribe({
+      next: (report) => {
+        expect(report.records.map((record) => record.publishers)).toEqual([
+          ['Urząd Miasta Marki'],
+          ['Urząd Miasta Krosna'],
+          [],
+        ]);
+        expect(report.records[0].terc).toBe('1434011');
+        expect(report.osmResourceId).toBe('11');
+        done();
+      },
+      error: (error) => done(error),
+    });
+  });
+
   it('reads every OSM row of a resource larger than the 10000-row window', (done) => {
     const service = new AedCampaignService(datasetService as never, {} as never);
 

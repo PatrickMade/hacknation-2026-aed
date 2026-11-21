@@ -46,8 +46,12 @@
             }
             <dl class="aed-campaign__counters">
               <div class="aed-campaign__counter">
-                <dt>Instytucje, które udostępniły dane o AED</dt>
-                <dd>{{ fmt(summary.operators) }}</dd>
+                <dt>Wydawcy danych o AED</dt>
+                <dd>{{ fmt(summary.publishers) }}</dd>
+              </div>
+              <div class="aed-campaign__counter">
+                <dt>Potwierdzeni dysponenci AED</dt>
+                <dd>{{ fmt(summary.confirmedOperators) }}</dd>
               </div>
               <div class="aed-campaign__counter">
                 <dt>Defibrylatory AED w oficjalnych danych</dt>
@@ -70,8 +74,12 @@
                   report.datasetId + (report.datasetSlug ? ',' + report.datasetSlug : ''),
                 ]"
                 >Raport zbiorczy AED</a
-              >{{ report.dataDate ? ', stan na ' + report.dataDate : '' }}. Przy każdym urządzeniu wskazano instytucję,
-              która za nie odpowiada (dysponenta).
+              >{{ report.dataDate ? ', stan na ' + report.dataDate : '' }}.
+            </p>
+            <p class="aed-campaign__source">
+              Wydawca danych to instytucja, która opublikowała zbiór, na przykład urząd miasta. Dysponent to instytucja,
+              która odpowiada za konkretne urządzenie i przyjmuje zgłoszenia o nim. Dysponent potwierdza to sam, gdy
+              udostępnia dane w panelu dostawcy. Do tego czasu urządzenie ma dysponenta „nieustalonego”.
             </p>
           }
         }
@@ -168,13 +176,13 @@
             @if (publishedGminy.length) {
               <table class="table table-sm aed-campaign__table">
                 <caption class="visually-hidden">
-                  Gminy z oficjalnymi danymi o AED i instytucje, które za nie odpowiadają
+                  Gminy z oficjalnymi danymi o AED i wydawcy tych danych
                 </caption>
                 <thead>
                   <tr>
                     <th scope="col">Gmina</th>
                     <th scope="col" class="text-end">AED</th>
-                    <th scope="col">Instytucje</th>
+                    <th scope="col">Wydawcy danych</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -185,7 +193,7 @@
                     <tr>
                       <th scope="row">{{ gmina.name }}</th>
                       <td class="text-end">{{ gmina.officialCount }}</td>
-                      <td>{{ gmina.operators.join(', ') }}</td>
+                      <td>{{ gmina.publishers.join(', ') }}</td>
                     </tr>
                   }
                 </tbody>

@@ -218,9 +218,9 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
         /[&<>"']/g,
         (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char],
       );
-    const operators = gmina.operators.length
-      ? `<br>Instytucje: ${gmina.operators.slice(0, 5).map(escape).join(', ')}${gmina.operators.length > 5 ? '…' : ''}`
+    const publishers = gmina.publishers.length
+      ? `<br>Wydawcy danych: ${gmina.publishers.slice(0, 5).map(escape).join(', ')}${gmina.publishers.length > 5 ? '…' : ''}`
       : '';
-    return `<strong>${escape(gmina.name)}</strong><br>AED w oficjalnych danych: ${gmina.officialCount}<br>AED w OpenStreetMap: ${gmina.osmCount}${operators}`;
+    return `<strong>${escape(gmina.name)}</strong><br>AED w oficjalnych danych: ${gmina.officialCount}<br>AED w OpenStreetMap: ${gmina.osmCount}${publishers}`;
   }
 }
