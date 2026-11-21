@@ -101,13 +101,13 @@ samemu formatowi. Nie dodajemy samodzielnej usługi ani agregatora.
 
 ### Phase 1: Kontrakt i dane
 
-- [ ] 1.1 Zapisać schemat, słownik XLSX, szablon i fikcyjny przykład.
-- [ ] 1.2 Opisać sześć mapowań i instrukcję publikacji.
+- [x] 1.1 Zapisać schemat, słownik XLSX, szablon i fikcyjny przykład. - bb5906c8c18178bf133e0313cbe3457895b1bae5
+- [x] 1.2 Opisać sześć mapowań i instrukcję publikacji. - bb5906c8c18178bf133e0313cbe3457895b1bae5
 
 ### Phase 2: Walidacja i dostarczenie
 
-- [ ] 2.1 Wykazać RED/GREEN dla walidatora przez publiczne CLI.
-- [ ] 2.2 Uruchomić testy pakietu i skonfigurowane bramki projektu.
+- [x] 2.1 Wykazać RED/GREEN dla walidatora przez publiczne CLI. - bb5906c8c18178bf133e0313cbe3457895b1bae5
+- [x] 2.2 Uruchomić testy pakietu i skonfigurowane bramki projektu. - bb5906c8c18178bf133e0313cbe3457895b1bae5
 - [ ] 2.3 Uzyskać niezależny przegląd i scalić PR przez merge gate.
 
 Testy: `python3 -B -m unittest discover -s aed-standard/tests -v`;
@@ -123,3 +123,26 @@ Bezpośredni odczyt nagłówków Krosna, Marki i Legionowa oraz kluczy GeoJSON
 Przemyśla 2026-11-21 UTC potwierdził opisane mapowania. Kod portalu
 MapsJSONField i TabularData potwierdził komplet `b`, `l`, `label`.
 Linki publiczne i statusy potwierdzenia znajdą się w pakiecie.
+
+Weryfikacja 2026-11-21 UTC na treści bb5906c8c18178bf133e0313cbe3457895b1bae5:
+
+- RED: `python3 -B -m unittest discover -s aed-standard/tests -v`, kod 1:
+  test_example_passes, `AssertionError: 1 != 0`, CLI informuje o braku
+  implementacji. Po dodaniu obsługi CSV i typów: kod 0, jeden test.
+- Drugi RED: zamienione osie i źródło bez license_url kończyły się kodem 0,
+  a test oczekiwał 1. Dodano reguły między polami i kontrolę pochodzenia.
+- GREEN końcowy: ten sam unittest, kod 0, 10 metod z przypadkami błędów;
+  oba jawne wywołania CLI dla przykładu i szablonu: kod 0.
+- `fvm flutter analyze`: kod 0, No issues found.
+- `fvm flutter test`: kod 0, 1 test, All tests passed.
+- `python3 -B .ai/scripts/check_project_copy.py`: kod 0, passed.
+- `python3 -B .ai/scripts/check_client_config.py`: kod 0, passed.
+- `gitleaks dir aed-standard --redact --no-banner` i analogiczna kontrola
+  specyfikacji: kod 0, no leaks found.
+- XLSX sprawdzono strukturalnie: 43 wiersze pól, komplet siedmiu kolumn,
+  zgodność z JSON, brak formuł i błędów komórek. Nie testowano renderowania
+  w Excelu ani publikacji plików w działającym portalu.
+
+Przegląd spójności zakresu w niezależnym kontekście nie znalazł problemów.
+Pełny przegląd PR i merge pozostają krokiem 2.3; wynik zostanie zapisany
+w rekordzie przeglądu i zadaniu, ponieważ scalenie jest czynnością końcową.
