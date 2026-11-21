@@ -3,7 +3,7 @@
 <div class="aed-box">
   <h2>Szablon standardu AED (profil PL {{ standard_version }})</h2>
   <p>Możesz przygotować plik według szablonu albo wgrać dane w dowolnym układzie kolumn. W następnym kroku przypiszesz kolumny do pól standardu.</p>
-  <ul>
+  <ul class="aed-links">
     <li><a href="{% url 'aed_wizard:standard_file' 'template.csv' %}">Pobierz szablon CSV (43 pola)</a></li>
     <li><a href="{% url 'aed_wizard:standard_file' 'field-dictionary.xlsx' %}">Pobierz słownik pól (XLSX)</a></li>
     <li><a href="{% url 'aed_wizard:standard_file' 'example.csv' %}">Pobierz przykładowy rekord (CSV)</a></li>
