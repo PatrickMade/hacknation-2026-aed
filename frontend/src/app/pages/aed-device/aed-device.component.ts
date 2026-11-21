@@ -65,7 +65,7 @@ export class AedDeviceComponent implements OnInit {
   readonly form = this.fb.nonNullable.group({
     type: ['', Validators.required],
     description: ['', [Validators.required, Validators.maxLength(2000)]],
-    reporter_name: ['', [Validators.required, Validators.maxLength(200)]],
+    reporter_name: ['', Validators.maxLength(200)], // optional: no personal data required (APP-60)
     contact: ['', Validators.maxLength(200)],
     consent: [false],
   });
