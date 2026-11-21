@@ -230,37 +230,53 @@ PUBLISHED_TAG = 'zgodny ze standardem AED'
 
 
 def published_records():
-    """Records of CSV resources published in the portal in datasets tagged PUBLISHED_TAG (e.g. by the
-    provider wizard, APP-43). They are already in profile form: each file must pass validate.py as a
-    whole, and its cells are parsed with the profile's own field rules; invalid files are skipped."""
+    """Records of the newest published CSV resource of each dataset tagged PUBLISHED_TAG (e.g. by the provider
+    wizard, APP-43). Each publication is a full snapshot, so older resources of the same dataset are ignored.
+
+    A file is used only when it passes validate.py as a whole and every record names the publishing institution
+    as its source (`source_id` = `dysponent:<institution slug>`); its cells are parsed with the profile's own field
+    rules. Returns (records, skipped resource ids) - unreadable or non-conforming files are skipped, not fatal.
+    """
     import tempfile
 
     from mcod.aed_aggregate import standard
     from mcod.resources.models import Resource
 
-    records = []
+    records, skipped, seen_datasets = [], [], set()
     resources = Resource.objects.filter(
         status='published', dataset__status='published', dataset__tags__name=PUBLISHED_TAG,
-    ).distinct().order_by('pk')
+    ).select_related('dataset__organization').distinct().order_by('-pk')
     for resource in resources:
-        main = resource.files.filter(is_main=True).first()
-        if main is None or not main.file:
+        if resource.dataset_id in seen_datasets:
             continue
-        with main.file.open('rb') as handle:
-            content = handle.read()
+        seen_datasets.add(resource.dataset_id)
+        main = resource.files.filter(is_main=True).first()
+        try:
+            with main.file.open('rb') as handle:
+                content = handle.read()
+        except (AttributeError, ValueError, OSError):  # no main file, empty FileField, missing media file
+            skipped.append(resource.pk)
+            continue
         with tempfile.NamedTemporaryFile(suffix='.csv') as temp:
             temp.write(content)
             temp.flush()
             if standard.file_errors(temp.name):
+                skipped.append(resource.pk)
                 continue
+        own_source = 'dysponent:' + resource.dataset.organization.slug
+        rows = []
         for row in csv.DictReader(io.StringIO(content.decode('utf-8'), newline='')):
             record = {}
             for name, value in row.items():
                 parsed = standard.validator.scalar(value, standard.FIELD_DEFS[name])
                 if parsed is not None:
                     record[name] = parsed
-            records.append(record)
-    return records
+            rows.append(record)
+        if any(s['source_id'] != own_source for record in rows for s in record['source_records']):
+            skipped.append(resource.pk)
+            continue
+        records.extend(rows)
+    return records, skipped
 
 
 PHONE_CANDIDATE = re.compile(r'\+?\d[\d\s().-]{7,}\d')

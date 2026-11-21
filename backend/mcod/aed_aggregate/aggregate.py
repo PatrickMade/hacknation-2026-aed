@@ -56,10 +56,23 @@ def merge(target, other):
     target['updated_at'] = max(target['updated_at'], other['updated_at'])
 
 
+PROVIDER_PREFIX = 'dysponent:'
+
+
+def from_provider(record):
+    """A record published by its dysponent in the profile (e.g. through the wizard) carries their aed_id."""
+    return any(s['source_id'].startswith(PROVIDER_PREFIX) for s in record['source_records'])
+
+
 def deduplicate(records):
-    """Same source identity merges; under 25 m merges only with the same name and address, else duplicate_candidate."""
+    """Same source identity merges; under 25 m merges only with the same name and address, else duplicate_candidate.
+
+    aed_id: the dysponent's own id when a provider record is part of the result (aed-standard: assigned once by
+    the dysponent and kept), else UUIDv5 of the smallest namespaced source key.
+    """
     result = []
     by_key = {}
+    provider_ids = {}
     for record in records:
         record = json.loads(json.dumps(record))  # never mutate the caller's records
         match = next((by_key[key] for key in source_keys(record) if key in by_key), None)
@@ -79,12 +92,14 @@ def deduplicate(records):
             match = record
         else:
             merge(match, record)
+        if from_provider(record) and record.get('aed_id'):
+            provider_ids.setdefault(id(match), record['aed_id'])
         for key in source_keys(record):
             by_key[key] = match
     for record in result:
         # Stable identity: UUIDv5 of the smallest namespaced source key, whatever the input order.
         first = min(source_keys(record))
-        record['aed_id'] = aed_id('{}:{}'.format(*first))
+        record['aed_id'] = provider_ids.get(id(record)) or aed_id('{}:{}'.format(*first))
         record['quality_flags'].sort()
     return sorted(result, key=lambda r: r['aed_id'])
 
