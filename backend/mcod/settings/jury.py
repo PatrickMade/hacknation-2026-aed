@@ -86,3 +86,10 @@ INSTALLED_APPS += ["mcod.aed_aggregate"]  # noqa: F405
 INSTALLED_APPS += ["mcod.aed_wizard"]  # noqa: F405
 AED_STANDARD_DIR = env("AED_STANDARD_DIR", default=str(ROOT_DIR.path("..", "aed-standard")))  # noqa: F405
 SUIT_CONFIG["MENU"][0]["models"].insert(0, {"label": "Dodaj dane AED", "url": "/aed/kreator/", "icon": "icon-heart"})  # noqa: F405
+
+# AED incident reports, QR codes and device registry (APP-45, 2026-11-21).
+INSTALLED_APPS += ["mcod.aed_reports"]  # noqa: F405
+SUIT_CONFIG["MENU"][0]["models"] += [  # noqa: F405
+    {"model": "aed_reports.aedincidentreport", "label": "Zgłoszenia AED", "icon": "icon-bullhorn"},
+    {"model": "aed_reports.aeddevice", "label": "Urządzenia AED", "icon": "icon-map-marker"},
+]
