@@ -138,10 +138,11 @@ def device_fields(row):
 
 
 def resolve_institution(source_records):
-    """Institution responsible for a report row: the first source that names one.
+    """Institution responsible for a report row.
 
-    `dane:dataset:<id>` is the portal dataset `aed-src-<id>` (source snapshots published for the jury-* institutions),
-    `dysponent:<slug>` is the institution that published the file itself. OSM and unknown sources name none.
+    `dysponent:<slug>` (a file the institution published itself, e.g. through the wizard) wins over
+    `dane:dataset:<id>` (the portal dataset `aed-src-<id>` with the official source snapshot of a jury-* institution),
+    so a record merged from both goes to the publishing dysponent. OSM and unknown sources name none.
     """
     from mcod.datasets.models import Dataset
     from mcod.organizations.models import Organization
@@ -150,16 +151,17 @@ def resolve_institution(source_records):
         sources = json.loads(source_records or '[]')
     except ValueError:
         return None
-    for source in sources if isinstance(sources, list) else []:
-        source_id = str(source.get('source_id', '')) if isinstance(source, dict) else ''
+    source_ids = [str(s.get('source_id', '')) for s in sources if isinstance(s, dict)] if isinstance(sources, list) else []
+    for source_id in source_ids:
+        if source_id.startswith('dysponent:'):
+            org = Organization.objects.filter(slug=source_id.split(':', 1)[1]).first()
+            if org is not None:
+                return org
+    for source_id in source_ids:
         if source_id.startswith('dane:dataset:'):
             dataset = Dataset.raw.filter(ext_ident='aed-src-' + source_id.rsplit(':', 1)[1], is_removed=False).first()
             if dataset is not None:
                 return dataset.organization
-        elif source_id.startswith('dysponent:'):
-            org = Organization.objects.filter(slug=source_id.split(':', 1)[1]).first()
-            if org is not None:
-                return org
     return None
 
 

@@ -31,7 +31,8 @@ class SyncRowsTests(TestCase):
     def setUp(self):
         self.root = User.objects.create_superuser(email='root@mcod.local', password=uuid.uuid4().hex)
         self.org = Organization.objects.create(slug='jury-demo', title='Demo', institution_type='other',
-                                               status='published', created_by=self.root, modified_by=self.root)
+                                               status='published', email='demo@mcod.local',
+                                               created_by=self.root, modified_by=self.root)
         self.other = Organization.objects.create(slug='jury-marki', title='Marki', institution_type='local',
                                                  status='published', created_by=self.root, modified_by=self.root)
 
@@ -45,6 +46,19 @@ class SyncRowsTests(TestCase):
         result = sync_report_rows([first])
         self.assertEqual((result['created'], result['updated']), (0, 1))
         self.assertEqual(AedDevice.objects.get(aed_id=first['aed_id']).name, 'AED po zmianie')
+
+    def test_dysponent_publication_wins_over_an_official_source_of_another_institution(self):
+        from mcod.datasets.models import Dataset
+
+        Dataset(ext_ident='aed-src-999', title='Zbiór źródłowy Marek', organization=self.other, status='published',
+                created_by=self.root, modified_by=self.root).save()
+        merged = row('dane:dataset:999')
+        merged['source_records'] = json.dumps([{'source_id': 'dane:dataset:999', 'source_record_id': '7'},
+                                               {'source_id': 'dysponent:jury-demo', 'source_record_id': '7'}])
+        official_only = row('dane:dataset:999')
+        sync_report_rows([merged, official_only])
+        self.assertEqual(AedDevice.objects.get(aed_id=merged['aed_id']).organization, self.org)
+        self.assertEqual(AedDevice.objects.get(aed_id=official_only['aed_id']).organization, self.other)
 
     def test_device_of_another_institution_is_not_reassigned(self):
         taken = AedDevice.objects.create(aed_id=uuid.uuid4(), name='Cudzy', organization=self.other)
@@ -60,7 +74,8 @@ class SyncRowsTests(TestCase):
         self.assertEqual((report.reporter_name, report.contact, report.consent), ('', '', False))
         _, errors = create_report(device, {'type': 'closed', 'description': 'x', 'contact': 'a@example.org'})
         self.assertIn('consent', errors)
-        self.assertTrue(all('Zgłaszający: nie podano' in m.body for m in mail.outbox[:1]))
+        self.assertEqual(len(mail.outbox), 1)  # the refused report sends nothing
+        self.assertIn('Zgłaszający: nie podano', mail.outbox[0].body)
 
 
 class ReportDevicesIntegrationTests(TestCase):

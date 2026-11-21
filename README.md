@@ -156,7 +156,7 @@ Po `aed_refresh` zarejestruj urządzenia ze wszystkich rekordów opublikowanego 
 docker compose run --rm manage python manage.py load_aed_report_devices
 ```
 
-Instytucję odpowiedzialną wskazuje pierwsze rozpoznane źródło rekordu (`source_records`): zbiór źródłowy instytucji demo (`dane:dataset:<id>`) albo plik opublikowany kreatorem (`dysponent:<slug>`). Rekordy bez takiego źródła (np. OSM) są pomijane. Komendę można uruchamiać ponownie.
+Instytucję odpowiedzialną wskazują źródła rekordu (`source_records`): plik opublikowany kreatorem (`dysponent:<slug>`) ma pierwszeństwo, w drugiej kolejności zbiór źródłowy instytucji demo (`dane:dataset:<id>`). Rekordy bez takiego źródła (np. OSM) są pomijane. Komendę można uruchamiać ponownie.
 
 Plik każdego dysponenta musi mieć układ standardu i przejść jego walidator; komenda aktualizuje urządzenia po `aed_id` i odrzuca identyfikator należący do innej instytucji.
 

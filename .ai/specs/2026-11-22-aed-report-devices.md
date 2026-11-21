@@ -6,7 +6,7 @@ Extends: .ai/specs/2026-11-21-aed-reports.md, .ai/specs/2026-11-21-aed-report-re
 Runda 2 jury: strona urządzenia, kod QR i zgłoszenie działają tylko dla pięciu fikcyjnych urządzeń demo. Rekordy opublikowanego „Raportu zbiorczego AED” nie mają strony urządzenia. Koordynator zdecydował też, że formularz zgłoszenia nie może wymagać danych osobowych.
 
 ## Zakres
-1. Komenda `load_aed_report_devices` czyta główny plik CSV opublikowanego zasobu raportu (`ext_ident` `aed-raport-csv`, zbiór „Raport zbiorczy AED”) i dla każdego wiersza aktualizuje lub tworzy `AedDevice` po `aed_id`. Instytucja odpowiedzialna wynika z pierwszego rozpoznanego źródła w `source_records`:
+1. Komenda `load_aed_report_devices` czyta główny plik CSV opublikowanego zasobu raportu (`ext_ident` `aed-raport-csv`, zbiór „Raport zbiorczy AED”) i dla każdego wiersza aktualizuje lub tworzy `AedDevice` po `aed_id`. Instytucja odpowiedzialna wynika ze źródeł w `source_records`; źródło `dysponent:` (plik opublikowany przez samą instytucję) ma pierwszeństwo przed `dane:dataset:`, więc rekord scalony z obu trafia do publikującego dysponenta:
    - `dane:dataset:<id>` - instytucja zbioru portalu z `ext_ident` `aed-src-<id>` (zbiory źródłowe publikowane przez agregator dla instytucji `jury-<slug>`);
    - `dysponent:<slug>` - instytucja o tym slugu (pliki opublikowane kreatorem).
    Wiersze bez rozpoznanej instytucji są pomijane i liczone. Urządzenie przypisane już do innej instytucji nie jest przenoszone (pominięte i liczone). Ponowne uruchomienie aktualizuje dane na miejscu. Kod agregatora nie jest importowany; komenda korzysta z danych portalu i formatu standardu.
