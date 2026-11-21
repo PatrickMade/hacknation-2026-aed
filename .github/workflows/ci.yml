@@ -12,31 +12,26 @@ jobs:
   validate:
     name: validation gate
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
-
-      - name: Read the Flutter version from .fvmrc
-        id: fvm
-        run: echo "flutter=$(jq -r .flutter .fvmrc)" >> "$GITHUB_OUTPUT"
-
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ steps.fvm.outputs.flutter }}
-          channel: stable
-          cache: true
-
-      # The gate commands call `fvm flutter ...`; this shim runs them on the pinned SDK installed above.
-      - name: Provide fvm
+      # This disposable hosted runner does not build mobile apps.
+      - name: Remove the unused preinstalled Android SDK
+        run: sudo rm -rf /usr/local/lib/android
+      - name: Generate ephemeral local configuration
+        run: python3 scripts/init-env.py
+      - name: Build the portal and prepare its test dependencies
         run: |
-          mkdir -p "$RUNNER_TEMP/bin"
-          printf '#!/bin/sh\nexec "$@"\n' > "$RUNNER_TEMP/bin/fvm"
-          chmod +x "$RUNNER_TEMP/bin/fvm"
-          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
-
-      - run: flutter pub get
-
-      - name: Run validation.commands from .ai/agentic.config.json
+          # All five application roles share the image built by manage.
+          # Reclaim intermediate build cache on this disposable runner;
+          # tagged runtime images remain available for the validation gate.
+          for service in manage frontend db elasticsearch redis rabbitmq rdfdb nginx; do
+            docker compose --profile tools --parallel 1 build "$service"
+            docker builder prune --all --force
+          done
+          docker compose up -d --wait db elasticsearch redis rabbitmq rdfdb smtp flags
+          docker compose run --rm manage python manage.py migrate --noinput
+      - name: Run validation.commands
         shell: bash
         run: |
           set -euo pipefail
@@ -45,3 +40,6 @@ jobs:
             sh -c "$cmd" < /dev/null
             echo "::endgroup::"
           done
+      - name: Stop the owned test stack
+        if: always()
+        run: docker compose down

@@ -1,0 +1,47 @@
+# Public upstream examples, fixture keys, test certificates and library false positives.
+# Files are byte-verified by scripts/check-portal-source.py. No generated jury secrets.
+# The commit fingerprints bind imported history; path fingerprints cover staged scans.
+backend/data/test_certs/server.pem:private-key:1
+backend/docker/nginx/certs/mcod.local.key:private-key:1
+backend/env.sample:generic-api-key:65
+backend/env.sample:generic-api-key:66
+backend/env.sample:generic-api-key:71
+backend/mcod/core/tests/fixtures/api_fixtures.py:generic-api-key:68
+backend/mcod/core/tests/test_csrf.py:generic-api-key:95
+backend/mcod/datasets/models.py:generic-api-key:839
+backend/mcod/users/tests/features/account.feature:generic-api-key:111
+backend/mcod/users/tests/features/change_password.feature:generic-api-key:7
+backend/mcod/users/tests/features/reset_password_confirm.feature:generic-api-key:7
+backend/mcod/users/tests/test_views.py:generic-api-key:668
+backend/mcod/users/tests/test_views.py:generic-api-key:669
+backend/statics/js/bokeh.js:generic-api-key:40858
+backend/statics/js/bokeh.legacy.js:generic-api-key:53498
+backend/statics/js/bokeh.legacy.min.js:generic-api-key:698
+backend/statics/js/bokeh.min.js:generic-api-key:575
+backend/statics/js/compiler.js:generic-api-key:136128
+backend/statics/js/compiler.js:generic-api-key:292203
+backend/statics/js/lib/client/connection.js:generic-api-key:7
+backend/statics/js/types/client/connection.d.ts:generic-api-key:6
+frontend/src/app/services/security/http-xsrf-interceptor.service.spec.ts:generic-api-key:21
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/data/test_certs/server.pem:private-key:1
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/docker/nginx/certs/mcod.local.key:private-key:1
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/env.sample:generic-api-key:65
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/env.sample:generic-api-key:66
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/env.sample:generic-api-key:71
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/mcod/core/tests/fixtures/api_fixtures.py:generic-api-key:68
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/mcod/core/tests/test_csrf.py:generic-api-key:95
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/mcod/datasets/models.py:generic-api-key:839
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/mcod/users/tests/features/account.feature:generic-api-key:111
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/mcod/users/tests/features/change_password.feature:generic-api-key:7
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/mcod/users/tests/features/reset_password_confirm.feature:generic-api-key:7
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/mcod/users/tests/test_views.py:generic-api-key:668
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/mcod/users/tests/test_views.py:generic-api-key:669
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/statics/js/bokeh.js:generic-api-key:40858
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/statics/js/bokeh.legacy.js:generic-api-key:53498
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/statics/js/bokeh.legacy.min.js:generic-api-key:698
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/statics/js/bokeh.min.js:generic-api-key:575
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/statics/js/compiler.js:generic-api-key:136128
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/statics/js/compiler.js:generic-api-key:292203
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/statics/js/lib/client/connection.js:generic-api-key:7
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:backend/statics/js/types/client/connection.d.ts:generic-api-key:6
+7c0984c1d4b466689c9cbcad0d8e9395ff07734c:frontend/src/app/services/security/http-xsrf-interceptor.service.spec.ts:generic-api-key:21

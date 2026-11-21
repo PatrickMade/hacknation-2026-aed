@@ -1,0 +1,174 @@
+name: aed-portal
+x-app: &app
+  image: aed-portal-backend:2.62.3-local
+  platform: linux/amd64
+  build:
+    context: backend
+    dockerfile: docker/app/Dockerfile
+    platforms: [linux/amd64]
+    extra_hosts:
+      - flags.dane.gov.pl=127.0.0.1
+  env_file: .env
+  environment: &app-env
+    DJANGO_SETTINGS_MODULE: mcod.settings.jury
+    ENVIRONMENT: local
+    POSTGRES_HOST: db
+    REDIS_URL: redis://redis:6379
+    ELASTICSEARCH_HOSTS: elasticsearch:9200
+    RABBITMQ_HOST: rabbitmq:5672
+    EMAIL_HOST: smtp
+    EMAIL_PORT: 1025
+    EMAIL_USE_TLS: 0
+    EMAIL_USE_SSL: 0
+    FUSEKI_URL: http://rdfdb:3030
+    DISCOURSE_FORUM_ENABLED: 'false'
+    COMPONENT: admin
+  volumes:
+    - ./backend/mcod:/usr/src/mcod_backend/mcod
+    - media:/usr/src/mcod_backend/media
+    - statics:/usr/src/mcod_backend/statics
+  networks: [portal]
+services:
+  db:
+    build:
+      context: backend
+      dockerfile: docker/postgres/Dockerfile
+    env_file: .env
+    volumes: [postgres:/var/lib/postgresql/data]
+    networks: [portal]
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  elasticsearch:
+    platform: linux/amd64
+    build:
+      context: backend
+      dockerfile: docker/elasticsearch/Dockerfile
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: 'false'
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+    volumes: [elastic:/usr/share/elasticsearch/data]
+    networks: [portal]
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -fsS http://localhost:9200/_cluster/health?wait_for_status=yellow']
+      interval: 5s
+      timeout: 10s
+      retries: 60
+  redis:
+    build:
+      context: backend
+      dockerfile: docker/redis/Dockerfile
+    volumes: [redis:/data]
+    networks: [portal]
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  rabbitmq:
+    build:
+      context: backend
+      dockerfile: docker/rabbitmq/Dockerfile
+    hostname: rabbitmq
+    volumes: [rabbitmq:/var/lib/rabbitmq]
+    networks: [portal]
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
+      interval: 5s
+      timeout: 10s
+      retries: 60
+  rdfdb:
+    build:
+      context: backend
+      dockerfile: docker/rdfdb/Dockerfile
+    env_file: .env
+    volumes: [rdf:/var/lib/fuseki]
+    networks: [portal]
+  smtp:
+    image: mailhog/mailhog:v1.0.1
+    platform: linux/amd64
+    ports: ['127.0.0.1:8025:8025']
+    networks: [portal]
+  flags:
+    image: nginx:1.29.1-alpine
+    volumes: ['./local/flags.conf:/etc/nginx/conf.d/default.conf:ro']
+    networks: [portal]
+  manage:
+    <<: *app
+    profiles: [tools]
+    entrypoint: []
+    command: ['python', 'manage.py', 'help']
+  admin:
+    <<: *app
+    command: ['python', 'manage.py', 'runserver', '0:8001', '--noreload']
+  api:
+    <<: *app
+    environment:
+      <<: *app-env
+      COMPONENT: api
+    command: ['python', '-m', 'werkzeug.serving', '--bind', '0:8000', 'mcod.api:app']
+  cms:
+    <<: *app
+    environment:
+      <<: *app-env
+      COMPONENT: cms
+    command: ['python', 'manage.py', 'runserver', '0:8002', '--noreload']
+  celery:
+    <<: *app
+    environment:
+      <<: *app-env
+      COMPONENT: celery
+    command: ['python', '-m', 'celery', '--app=mcod.celeryapp:app', 'worker', '-l', 'INFO']
+  frontend:
+    build:
+      context: frontend
+      target: serve-dynamic
+    environment:
+      MCOD_SERVE_CONFIGURATION_ENV: local
+      MCOD_PROXY_CONFIG_FILE: proxy.local.conf.json
+      MCOD_PORT: 4000
+    volumes:
+      - ./frontend/src:/usr/src/mcod/src
+      - ./frontend/angular.json:/usr/src/mcod/angular.json
+      - ./frontend/package.json:/usr/src/mcod/package.json
+      - ./frontend/tsconfig.app.json:/usr/src/mcod/tsconfig.app.json
+      - ./frontend/tsconfig.json:/usr/src/mcod/tsconfig.json
+      - ./frontend/proxy.local.conf.json:/usr/src/mcod/proxy.local.conf.json
+    networks: [portal]
+    ports: ['127.0.0.1:4200:4000']
+  nginx:
+    build:
+      context: backend
+      dockerfile: docker/nginx/Dockerfile
+    env_file: .env
+    environment:
+      MCOD_NGINX_FRONTEND: http://frontend:4000
+      MCOD_NGINX_API: http://api:8000
+      MCOD_NGINX_ADMIN: http://admin:8001
+      MCOD_NGINX_PN_APPS: http://admin:8001
+      MCOD_NGINX_CMS: http://cms:8002
+      MCOD_NGINX_WS: http://admin:8001
+      MCOD_NGINX_MAILHOG: http://smtp:8025
+      MCOD_NGINX_DISCOURSE: http://admin:8001
+    volumes:
+      - ./backend/docker/nginx/config-templates:/etc/nginx/templates:ro
+      - ./backend/docker/nginx/certs:/etc/nginx/conf.d/certs:ro
+      - media:/usr/share/nginx/html/media:ro
+      - statics:/usr/share/nginx/html/statics:ro
+    ports: ['127.0.0.1:80:80', '127.0.0.1:443:443']
+    networks:
+      portal:
+        aliases: [mcod.local, api.mcod.local, admin.mcod.local, cms.mcod.local, mail.mcod.local]
+networks:
+  portal:
+volumes:
+  postgres:
+  elastic:
+  redis:
+  rabbitmq:
+  rdf:
+  media:
+  statics:

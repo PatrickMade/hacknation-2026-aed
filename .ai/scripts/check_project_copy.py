@@ -30,7 +30,8 @@ EDITION_LOCK = '.ai/apptrick-skills.lock.json'
 CONFIG = '.ai/agentic.config.json'
 SKILL_ROOTS = ('.agents/skills', '.claude/skills')
 EXTENSIONS = '.ai/skills'
-EXEMPT = ('.ai/third-party/',)
+# Imported portal releases are checked by scripts/check-portal-source.py.
+EXEMPT = ('.ai/third-party/', 'backend/', 'frontend/')
 BEGIN = '<!-- apptrick-harness:begin -->'
 END = '<!-- apptrick-harness:end -->'
 # `apptrick-` tokens that are not skill names.
@@ -114,7 +115,7 @@ def check_extensions(root, skills):
 def check_text(root, skills):
     unknown, residue, scanned = {}, [], 0
     for rel in project_files(root):
-        if rel.startswith(EXEMPT):
+        if rel.startswith(EXEMPT) or rel in ('local/upstream-files.json', '.gitleaksignore'):
             continue
         text = text_of(root / rel)
         if text is None:

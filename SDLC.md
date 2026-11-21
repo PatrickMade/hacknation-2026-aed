@@ -198,8 +198,9 @@ Harness copy: this is a frozen, edited project copy of the harness (core 8680c72
 
 Every PR passes the full validation gate before review sign-off, in this order:
 
-- `fvm flutter analyze`
-- `fvm flutter test`
+- `python3 -B scripts/check-portal-source.py`
+- `docker compose --profile tools config --quiet`
+- `docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed --noinput --keepdb`
 - `python3 -B .ai/scripts/check_project_copy.py`
 - `python3 -B .ai/scripts/check_client_config.py`
 
@@ -438,45 +439,18 @@ The pinned pre-push guard runs only where `core.hooksPath` is `.ai/hooks`:
 Both modes read the effective value back. Never push from a worktree without
 the guard, and never use `--no-verify`.
 
-### Builds
+### Local portal setup and QA
 
-- iOS Simulator builds run under the `maestro-cli` lease with
-  `--prepare-flutter-app`.
-- Android emulators run with the debug APK built for that lane. USB devices,
-  iOS simulators and test clients stay on the local machine.
-- Builds are outside `validation.commands`.
+README.md defines the one Docker Compose flow. Build the images, start the
+support services and migrate the local database before validation.commands.
+The seed integration tests use an isolated test database. They do not prove the
+entire upstream portal or future AED features.
 
-### Mobile QA routes
-
-| Need | Route |
-|---|---|
-| iOS Simulator or Android emulator UI proof | `maestro-cli` |
-| Physical iPhone or Android phone, native sheets, hardware | `appium-real-device-testing` |
-
-Preparation acquires explicit leases through the existing launchers; QA reuses
-those owned targets. Call `device_list` and `device_open` so simulator and
-emulator runs are visible in T3; never steer the same target from agent-device
-while Maestro runs. The generic web prepare/verify loop is not an app
-provisioning mechanism.
-
-For harness evidence use `apptrick-verify`'s deployed CLI route after
-preparation: `--deployed <registered lab target> --expected-artifact <exact
-installed build>`. Freshly observe the installed artifact before scenario
-capture; source HEAD or a build request alone is insufficient. Inspect
-screenshots, record actual behavior per platform and keep failed rows. Obtain
-independent evidence review and run the shipped deployed-evidence validator
-before PASS. The verifier never provisions, restarts or tears down a target;
-the preparation owner releases leases after verification.
-
-Web scenarios use `.ai/browsers/t3-preview.md`. Browser failures block web
-evidence only, not native CLI scenarios.
-
-### Fresh worktree preparation
-
-A new task worktree cannot pass the gate until it is prepared (apptrick-test
-extension, "Fresh worktree preparation"): `fvm flutter pub get`, then
-`build_runner` when the app uses it. During editing use focused tests; do not
-rerun full checks for tracker-only updates or unchanged inputs.
+The jury target is the local web portal, not a mobile binary. Verify changed
+browser/API/admin flows locally; no mobile preparation, simulator or physical
+device gate applies. Keep qaGate false. Preserve empty upstream CMS behavior
+rather than adding unrequested portal content. Frozen skill package copies
+remain unchanged; their generic mobile examples do not change this scope.
 
 ## Project notes (Misja AED)
 
@@ -484,5 +458,5 @@ rerun full checks for tracker-only updates or unchanged inputs.
   project "HackNation 2026 - Misja AED" (IDs in `.ai/agentic.config.json`).
 - `delivery.mode` is unset, so it is `autonomous`: the owner merges through
   `merge_gate.py` after green checks and an independent review (D3).
-- Web is the primary target (jury prototype); iOS and Android are secondary.
+- The jury runs the official portal locally via compose.yaml; there is no mobile or public hosting target.
 - The submission must state the scope of AI use (HackNation regulamin §2 ust. 8).

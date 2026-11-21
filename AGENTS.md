@@ -3,9 +3,11 @@
 Misja AED - Dane na ratunek: a HackNation 2026 prototype for the Ministerstwo
 Cyfryzacji challenge. It collects AED (defibrillator) data from scattered
 sources into one open, machine-readable dataset that follows dane.gov.pl rules.
-Flutter app (`.fvmrc` pins the SDK; always use `fvm flutter`). Web is the
-primary target for the jury; iOS and Android are secondary. `README.md` is in
-Polish and describes running the app.
+The jury runs the official dane.gov.pl portal locally with Docker Compose.
+Backend: Python 3.8 / Django 2.2 / Falcon / Wagtail in backend/.
+Frontend: Angular 18 / Node 20 in frontend/. PostgreSQL, Elasticsearch 6,
+Redis, RabbitMQ, Fuseki and nginx are defined in compose.yaml.
+README.md is in Polish and defines the complete local setup.
 
 ## Project rules
 
@@ -25,22 +27,26 @@ Polish and describes running the app.
 
 | When the task involves… | Read first | Key rules |
 | --- | --- | --- |
-| App code and UI | `lib/main.dart`, `pubspec.yaml`, `analysis_options.yaml` | `flutter_lints` rules; Material 3; TODO: state management and layout conventions once chosen |
-| Web target (primary) | `web/index.html`, `web/manifest.json` | Run with `fvm flutter run -d chrome`; verify in a browser before claiming UI changes |
-| iOS / Android | `ios/`, `android/` | Secondary targets; mobile QA routes in `SDLC.md` |
-| AED data and open-data output | TODO: no data layer yet | Output must be machine-readable and follow dane.gov.pl rules |
-| Tests | `test/` (not created yet) | `fvm flutter test` with `flutter_test`; TODO: fixtures and mocking conventions |
-| Harness, tracker, hooks | `.ai/agentic.config.json`, `SDLC.md`, `.ai/trackers/linear-adapter.md`, `docs/AGENT-SKILL-CATALOG.md` | Never edit pinned harness files or installed skill copies |
+| Backend and account seed | `backend/mcod/settings/jury.py`, `backend/mcod/core/management/commands/seed_jury.py`, upstream module models/rules | Reuse existing organization scoping and roles; secrets only in ignored .env |
+| Frontend and UI | `frontend/package.json`, `frontend/angular.json`, changed components | Preserve portal design/content/layout outside explicitly scoped AED work; verify web flows in a browser |
+| Local runtime | `compose.yaml`, `.env.example`, `README.md` | Loopback-only ports; local proxy; telemetry off; never use production credentials |
+| Source and licence | `UPSTREAM.md`, `LICENSE`, `NOTICE.upstream.txt`, `local/upstream-files.json` | Preserve notices/GPLv3 and document dated changes; update the source verifier only for intentional modifications |
+| Tests | `backend/mcod/core/tests/test_jury_seed.py`, upstream tests | Run targeted Django tests in Compose; actual upstream versions are pinned in its locks |
+| Harness, tracker, hooks | `.ai/agentic.config.json`, `SDLC.md`, `.ai/trackers/linear-adapter.md`, `docs/AGENT-SKILL-CATALOG.md` | Never edit installed skill copies |
 
 ## Validation gate
 
 Run in order (the list lives in `validation.commands` of
 `.ai/agentic.config.json`; keep `SDLC.md` aligned):
 
-- `fvm flutter analyze`
-- `fvm flutter test`
+- `python3 -B scripts/check-portal-source.py`
+- `docker compose --profile tools config --quiet`
+- `docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed --noinput --keepdb`
 - `python3 -B .ai/scripts/check_project_copy.py`
 - `python3 -B .ai/scripts/check_client_config.py`
+
+Prepare images, dependencies and database using README.md before the test gate.
+The gate tests the local seed, not the complete upstream portal test suite.
 
 Process: `SDLC.md`. Config: `.ai/agentic.config.json`. No `CODE_REVIEW.md` or
 `BACKWARD_COMPATIBILITY.md` yet.
@@ -59,7 +65,7 @@ and acceptance criteria against it before declaring completion.
 
 ## Harness and continuation
 
-- Read `SDLC.md` for authorized autonomous delivery, Linear states, mobile QA
+- Read `SDLC.md` for authorized autonomous delivery, Linear states, web QA
   routing and completion. Read `.ai/agentic.config.json` and the covering
   `.ai/specs/` task spec before repository changes; existing feature specs stay
   canonical. Tracker-only and read-only work needs no extra spec.
@@ -80,10 +86,9 @@ and acceptance criteria against it before declaring completion.
 - The harness moves Linear states itself (Backlog, Ready, In Progress, Review,
   QA, Done) and creates projects, milestones and labels without asking.
   Deleting anything in Linear needs the owner's approval.
-- QA routes: `maestro-cli` for iOS simulators and Android emulators,
-  `appium-real-device-testing` for physical devices; there is no store
-  release route (the jury prototype is the web build). Solo non-release, non-`risk-high`
-  changes may be self-verified on the agent's own Maestro or Appium evidence.
+- QA is web browser evidence for the local portal. Mobile builds and device
+  scenarios do not apply to this architecture. qaGate is false; record actual
+  web/API verification and do not claim untested upstream/AED behavior.
 - Push guard: `sh .ai/scripts/bootstrap-hooks.sh` sets `core.hooksPath` for
   the clone; a task worktree that must not change shared config uses
   `--worktree`, or pushes with `git -c core.hooksPath=.ai/hooks push`.
@@ -150,3 +155,17 @@ familiar technical terms; explain unfamiliar terms once. Rewrite calques and
 mixed constructions, distinguish permissions from subscription access, and read
 once for natural Polish. Project-required languages and protected text remain
 unchanged.
+
+## Local portal boundaries
+
+- Never commit .env, generated passwords or private runtime evidence. .env.example
+  contains names and empty secret values. scripts/init-env.py creates local values.
+- seed_jury manages only the named demo accounts and six jury-* institutions;
+  it must validate all passwords before writes and keep existing portal guards.
+- The local seed deliberately omits upstream basic_data.json and production CMS
+  content. Do not create replacement pages merely to hide empty CMS responses.
+- Imported backend/ and frontend/ retain upstream source and test fixtures;
+  check_project_copy excludes these third-party trees from harness text-residue
+  checks. scripts/check-portal-source.py verifies their release manifest instead.
+- Existing mobile boilerplate in frozen harness skills does not require creating
+  Flutter, iOS or Android surfaces. This project targets a local web portal only.
