@@ -5,6 +5,7 @@ o defibrylatorach AED w portalu dane.gov.pl.
 
 - Nazwa akcji: **Mapa Serc**
 - Hasło: **Wszystkie AED pod ręką.**
+- Hasło dla dysponentów: **Lista AED w szufladzie nikogo nie uratuje.**
 - Zasady użycia: [ksiega-znaku-mapa-serc.pdf](ksiega-znaku-mapa-serc.pdf)
 
 ## Pliki
@@ -15,6 +16,7 @@ o defibrylatorach AED w portalu dane.gov.pl.
 | `logo/mapa-serc-logo-haslo-*` | Znak z hasłem |
 | `logo/mapa-serc-symbol-*` | Sam symbol |
 | `naklejka-qr/` | Wzór naklejki z kodem QR do umieszczenia przy urządzeniu |
+| `plakat/` | Wzór plakatu dla dysponentów (SVG, PDF w formacie A4, podgląd PNG) |
 | `tokens.css` | Kolory akcji jako zmienne CSS |
 | `ksiega-znaku-mapa-serc.pdf` | Księga znaku |
 
@@ -55,10 +57,28 @@ urządzenia powinien prowadzić do jego karty i do zgłoszenia usterki, które
 trafia do dysponenta. Na dolnym pasku naklejki jest miejsce na identyfikator
 urządzenia i nazwę dysponenta.
 
-## Hasło pomocnicze
+## Hasła
 
-W materiałach kierowanych do dysponentów można użyć zdania:
-"Lista AED w szufladzie nikogo nie uratuje."
+Akcja ma dwa hasła o różnych rolach:
+
+- **Wszystkie AED pod ręką.** - hasło główne, dla każdego odbiorcy. Jest
+  częścią znaku z hasłem.
+- **Lista AED w szufladzie nikogo nie uratuje.** - hasło dla dysponentów,
+  czyli instytucji i firm, które mają AED. Używa się go w pismach, na
+  plakatach i w prezentacjach dla dysponentów.
+
+Hasła dla dysponentów nie dopisuje się do znaku, nie używa w materiałach dla
+mieszkańców ani na naklejce przy urządzeniu. W materiale dla dysponentów jest
+nagłówkiem, a hasło główne zostaje przy znaku. Oba hasła zapisuje się
+w pełnym brzmieniu, z kropką na końcu.
+
+## Plakat dla dysponentów
+
+Wzór w `plakat/` jest przeznaczony do wywieszenia w urzędzie, szkole,
+przychodni albo firmie. Ma format A4 i te same proporcje co A3. Pole
+w prawym górnym rogu to miejsce na znak dysponenta. Treść trzech kroków
+można dopasować do własnej instrukcji; kolorów, kroju i brzmienia haseł
+się nie zmienia.
 
 ## Źródła i licencje
 
