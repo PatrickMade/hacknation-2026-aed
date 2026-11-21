@@ -1,0 +1,597 @@
+{
+  "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+  "title": "Wzorcowy zakres danych AED - profil PL 1.0.0",
+  "description": "43 pola do publikacji przez dysponentów. Dodatkowe reguły profilu w README i validate.py.",
+  "fields": [
+    {
+      "name": "aed_id",
+      "title": "Identyfikator AED",
+      "type": "string",
+      "description": "UUID nadany raz przez dysponenta. Zachowaj po przeniesieniu AED; nie twórz go z adresu, współrzędnych ani numeru wiersza. Służy powiązaniu zgłoszeń z urządzeniem.",
+      "x-requirement": "R",
+      "example": "9e908860-e09e-4ec2-a0ea-f28525974f40",
+      "constraints": {
+        "required": true,
+        "minLength": 1,
+        "unique": true,
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+      }
+    },
+    {
+      "name": "name",
+      "title": "Nazwa punktu AED",
+      "type": "string",
+      "description": "Nazwa punktu lub obiektu z AED. Etykieta mapy: przypisz do label. Nazwa nie potwierdza dysponenta ani sprawności.",
+      "x-requirement": "R",
+      "example": "PRZYKŁAD FIKCYJNY - AED w holu",
+      "constraints": {
+        "required": true,
+        "minLength": 1
+      }
+    },
+    {
+      "name": "location_kind",
+      "title": "Rodzaj lokalizacji",
+      "type": "string",
+      "description": "fixed: stałe miejsce; mobile: urządzenie przemieszczane; unknown: brak potwierdzenia. Siedziba operatora nie jest pozycją mobilnego AED.",
+      "x-requirement": "R",
+      "example": "fixed",
+      "constraints": {
+        "required": true,
+        "minLength": 1,
+        "enum": [
+          "fixed",
+          "mobile",
+          "unknown"
+        ]
+      }
+    },
+    {
+      "name": "latitude",
+      "title": "Szerokość geograficzna",
+      "type": "number",
+      "description": "Szerokość WGS84 w stopniach dziesiętnych. Na mapie przypisz do b. Para wymagana dla fixed; bez zera jako zamiennika braku.",
+      "x-requirement": "C",
+      "example": "52.2300",
+      "decimalChar": ".",
+      "groupChar": "",
+      "constraints": {
+        "minimum": -90,
+        "maximum": 90
+      }
+    },
+    {
+      "name": "longitude",
+      "title": "Długość geograficzna",
+      "type": "number",
+      "description": "Długość WGS84 w stopniach dziesiętnych. Na mapie przypisz do l. W GeoJSON kolejność jest odwrotna: [longitude, latitude].",
+      "x-requirement": "C",
+      "example": "21.0100",
+      "decimalChar": ".",
+      "groupChar": "",
+      "constraints": {
+        "minimum": -180,
+        "maximum": 180
+      }
+    },
+    {
+      "name": "coordinate_accuracy_m",
+      "title": "Dokładność współrzędnych w metrach",
+      "type": "number",
+      "description": "Dodatnia dokładność w metrach, tylko gdy wynika z pomiaru lub źródła. Liczba miejsc po przecinku nie dowodzi dokładności.",
+      "x-requirement": "O",
+      "example": "10",
+      "decimalChar": ".",
+      "groupChar": "",
+      "x-exclusiveMinimum": 0,
+      "constraints": {
+        "minimum": 0
+      }
+    },
+    {
+      "name": "coordinate_method",
+      "title": "Sposób ustalenia współrzędnych",
+      "type": "string",
+      "description": "Pochodzenie współrzędnych: źródło, pomiar, geokodowanie albo brak wiedzy. Geokodowanie nie potwierdza położenia szafki.",
+      "x-requirement": "R",
+      "example": "source",
+      "constraints": {
+        "required": true,
+        "minLength": 1,
+        "enum": [
+          "source",
+          "survey",
+          "geocoded",
+          "unknown"
+        ]
+      }
+    },
+    {
+      "name": "country_code",
+      "title": "Kod kraju",
+      "type": "string",
+      "description": "Kod kraju. Ten profil dotyczy Polski.",
+      "x-requirement": "R",
+      "example": "PL",
+      "constraints": {
+        "required": true,
+        "minLength": 1,
+        "enum": [
+          "PL"
+        ]
+      }
+    },
+    {
+      "name": "terc",
+      "title": "Identyfikator TERC gminy",
+      "type": "string",
+      "description": "Pełny 7-cyfrowy TERC gminy: WOJ+POW+GMI+RODZ. Sprawdź w datowanym katalogu TERYT. Nie dopisuj cyfry do niepełnego kodu.",
+      "x-requirement": "O",
+      "example": "1408011",
+      "constraints": {
+        "minLength": 1,
+        "pattern": "^[0-9]{7}$"
+      }
+    },
+    {
+      "name": "simc",
+      "title": "Identyfikator SIMC miejscowości",
+      "type": "string",
+      "description": "7-cyfrowy identyfikator miejscowości SIMC, jako tekst z zerami wiodącymi. Weryfikacja istnienia wymaga katalogu TERYT.",
+      "x-requirement": "O",
+      "example": "0920806",
+      "constraints": {
+        "minLength": 1,
+        "pattern": "^[0-9]{7}$"
+      }
+    },
+    {
+      "name": "ulic",
+      "title": "Identyfikator ULIC ulicy",
+      "type": "string",
+      "description": "5-cyfrowy identyfikator ulicy ULIC. Wymaga kontekstu miejscowości; sam format nie potwierdza istnienia ulicy.",
+      "x-requirement": "O",
+      "example": "17011",
+      "constraints": {
+        "minLength": 1,
+        "pattern": "^[0-9]{5}$"
+      }
+    },
+    {
+      "name": "locality",
+      "title": "Miejscowość",
+      "type": "string",
+      "description": "Nazwa miejscowości według źródła lub potwierdzonego rejestru.",
+      "x-requirement": "O",
+      "example": "Legionowo",
+      "constraints": {
+        "minLength": 1
+      }
+    },
+    {
+      "name": "street_type",
+      "title": "Cecha ulicy",
+      "type": "string",
+      "description": "Cecha ulicy, np. ulica lub aleja. Oddziel ją od nazwy ulicy.",
+      "x-requirement": "O",
+      "example": "ulica",
+      "constraints": {
+        "minLength": 1
+      }
+    },
+    {
+      "name": "street",
+      "title": "Nazwa ulicy",
+      "type": "string",
+      "description": "Nazwa ulicy bez dopisywania cechy.",
+      "x-requirement": "O",
+      "example": "Przykładowa",
+      "constraints": {
+        "minLength": 1
+      }
+    },
+    {
+      "name": "house_number",
+      "title": "Numer budynku",
+      "type": "string",
+      "description": "Numer budynku jako tekst. Zachowaj litery, ukośniki i zakresy.",
+      "x-requirement": "O",
+      "example": "41A",
+      "constraints": {
+        "minLength": 1
+      }
+    },
+    {
+      "name": "unit_number",
+      "title": "Numer lokalu",
+      "type": "string",
+      "description": "Numer lokalu jako tekst. Nie wyprowadzaj z kondygnacji.",
+      "x-requirement": "O",
+      "example": "2A",
+      "constraints": {
+        "minLength": 1
+      }
+    },
+    {
+      "name": "postcode",
+      "title": "Kod pocztowy",
+      "type": "string",
+      "description": "Polski kod pocztowy NN-NNN. Błędny zapis zachowaj poza tym polem do wyjaśnienia.",
+      "x-requirement": "O",
+      "example": "05-120",
+      "constraints": {
+        "minLength": 1,
+        "pattern": "^[0-9]{2}-[0-9]{3}$"
+      }
+    },
+    {
+      "name": "location_description",
+      "title": "Dokładny opis umiejscowienia",
+      "type": "string",
+      "description": "Dokładna droga do szafki: wejście, hol, strona, punkt orientacyjny. Bez danych osobowych, kodów do drzwi ani danych pacjentów.",
+      "x-requirement": "O",
+      "example": "Fikcyjny hol, po prawej stronie wejścia",
+      "constraints": {
+        "minLength": 1
+      }
+    },
+    {
+      "name": "indoor",
+      "title": "Umieszczenie wewnątrz budynku",
+      "type": "string",
+      "description": "Czy AED jest wewnątrz budynku. Umieszczenie na zewnątrz nie oznacza dostępności całodobowej.",
+      "x-requirement": "R",
+      "example": "yes",
+      "constraints": {
+        "required": true,
+        "minLength": 1,
+        "enum": [
+          "yes",
+          "no",
+          "unknown"
+        ]
+      }
+    },
+    {
+      "name": "level",
+      "title": "Poziom kondygnacji",
+      "type": "string",
+      "description": "Poziom w notacji OSM level. Zachowaj ułamki i wiele poziomów; nie zaokrąglaj.",
+      "x-requirement": "O",
+      "example": "0",
+      "constraints": {
+        "minLength": 1
+      }
+    },
+    {
+      "name": "level_ref",
+      "title": "Oznaczenie kondygnacji na miejscu",
+      "type": "string",
+      "description": "Oznaczenie kondygnacji na miejscu, np. parter. To nie numer lokalu.",
+      "x-requirement": "O",
+      "example": "parter",
+      "constraints": {
+        "minLength": 1
+      }
+    },
+    {
+      "name": "access",
+      "title": "Zasady dostępu",
+      "type": "string",
+      "description": "Zasady fizycznego dostępu, odrębne od godzin i sprawności. unknown nie oznacza public. W OSM access=emergency wymaga wyjaśnienia.",
+      "x-requirement": "R",
+      "example": "public",
+      "constraints": {
+        "required": true,
+        "minLength": 1,
+        "enum": [
+          "public",
+          "permissive",
+          "customers",
+          "private",
+          "restricted",
+          "no",
+          "unknown"
+        ]
+      }
+    },
+    {
+      "name": "opening_hours",
+      "title": "Godziny dostępności AED",
+      "type": "string",
+      "description": "Zapis w notacji OSM opening_hours. Wymaga timezone. Pełną składnię sprawdź parserem OSM przed obliczaniem dostępności; ten walidator jej nie interpretuje.",
+      "x-requirement": "O",
+      "example": "24/7",
+      "constraints": {
+        "minLength": 1
+      }
+    },
+    {
+      "name": "opening_hours_raw",
+      "title": "Oryginalny opis godzin",
+      "type": "string",
+      "description": "Oryginalny opis godzin, zwłaszcza niejednoznaczny lub sezonowy. Nie zamieniaj nieznanych godzin na 24/7.",
+      "x-requirement": "O",
+      "example": "całą dobę (przykład fikcyjny)",
+      "constraints": {
+        "minLength": 1
+      }
+    },
+    {
+      "name": "timezone",
+      "title": "Strefa czasowa",
+      "type": "string",
+      "description": "Strefa IANA dla interpretacji godzin. W profilu Polski Europe/Warsaw, z czasem letnim i zimowym.",
+      "x-requirement": "C",
+      "example": "Europe/Warsaw",
+      "constraints": {
+        "minLength": 1,
+        "enum": [
+          "Europe/Warsaw"
+        ]
+      }
+    },
+    {
+      "name": "access_notes",
+      "title": "Dodatkowe informacje o dostępie",
+      "type": "string",
+      "description": "Warunki wejścia, pomoc ochrony lub ograniczenia sezonowe. Bez prywatnych kodów dostępu i informacji o osobach.",
+      "x-requirement": "O",
+      "example": "Fikcyjny przykład - nie wskazuje rzeczywistego AED",
+      "constraints": {
+        "minLength": 1
+      }
+    },
+    {
+      "name": "locked",
+      "title": "Zamknięta szafka lub pomieszczenie",
+      "type": "string",
+      "description": "Czy szafka lub pomieszczenie są zamknięte. Odrębne od ogólnych zasad dostępu.",
+      "x-requirement": "R",
+      "example": "no",
+      "constraints": {
+        "required": true,
+        "minLength": 1,
+        "enum": [
+          "yes",
+          "no",
+          "unknown"
+        ]
+      }
+    },
+    {
+      "name": "operational_status",
+      "title": "Stan działania AED",
+      "type": "string",
+      "description": "Stan potwierdzony przez źródło. Obecność na mapie ani ważność baterii nie dowodzą working. Brak wiedzy: unknown.",
+      "x-requirement": "R",
+      "example": "unknown",
+      "constraints": {
+        "required": true,
+        "minLength": 1,
+        "enum": [
+          "working",
+          "out_of_service",
+          "temporarily_unavailable",
+          "removed",
+          "unknown"
+        ]
+      }
+    },
+    {
+      "name": "operator_name",
+      "title": "Dysponent urządzenia",
+      "type": "string",
+      "description": "Instytucja odpowiedzialna za urządzenie i odbiór zgłoszeń o nim. Wymagana; potwierdź u dysponenta. Nie kopiuj automatycznie wydawcy zbioru lub właściciela budynku.",
+      "x-requirement": "R",
+      "example": "Fikcyjna Instytucja Przykładowa",
+      "constraints": {
+        "required": true,
+        "minLength": 1
+      }
+    },
+    {
+      "name": "public_phone",
+      "title": "Publiczny telefon do punktu AED",
+      "type": "string",
+      "description": "Wyłącznie zatwierdzony telefon instytucjonalny lub funkcyjny w E.164. Bez prywatnych numerów; przykład jest fikcyjny i nie służy do dzwonienia.",
+      "x-requirement": "O",
+      "example": "+48000000000",
+      "constraints": {
+        "minLength": 1,
+        "pattern": "^\\+[1-9][0-9]{7,14}$"
+      }
+    },
+    {
+      "name": "public_email",
+      "title": "Publiczny adres kontaktowy punktu",
+      "type": "string",
+      "description": "Wyłącznie zatwierdzona skrzynka instytucjonalna lub funkcyjna. Nie publikuj adresu imiennego. Sama domena instytucji nie potwierdza braku danych osobowych.",
+      "x-requirement": "O",
+      "example": "aed@example.org",
+      "constraints": {
+        "minLength": 1,
+        "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+      }
+    },
+    {
+      "name": "manufacturer",
+      "title": "Producent AED",
+      "type": "string",
+      "description": "Producent AED, nie pojazdu ani szafki. Tylko jawna informacja źródłowa.",
+      "x-requirement": "O",
+      "example": "Fikcyjny Producent",
+      "constraints": {
+        "minLength": 1
+      }
+    },
+    {
+      "name": "model",
+      "title": "Model AED",
+      "type": "string",
+      "description": "Model AED, nie pojazdu ani numer seryjny wywnioskowany z nazwy.",
+      "x-requirement": "O",
+      "example": "Example AED 1",
+      "constraints": {
+        "minLength": 1
+      }
+    },
+    {
+      "name": "pediatric_pads",
+      "title": "Elektrody pediatryczne",
+      "type": "boolean",
+      "description": "Czy dostępne są elektrody pediatryczne. true/false tylko po potwierdzeniu; puste pole oznacza brak wiedzy, nie false.",
+      "x-requirement": "O",
+      "example": "true"
+    },
+    {
+      "name": "last_maintenance_on",
+      "title": "Data ostatniego przeglądu",
+      "type": "date",
+      "description": "Data faktycznego przeglądu. Pobranie pliku nie jest przeglądem.",
+      "x-requirement": "O",
+      "example": "2026-10-01",
+      "format": "default"
+    },
+    {
+      "name": "pads_expire_on",
+      "title": "Termin ważności elektrod",
+      "type": "date",
+      "description": "Termin ważności elektrod dla dorosłych. Nie wnioskuj o obecności elektrod pediatrycznych.",
+      "x-requirement": "O",
+      "example": "2027-10-01",
+      "format": "default"
+    },
+    {
+      "name": "battery_expires_on",
+      "title": "Termin ważności baterii",
+      "type": "date",
+      "description": "Termin ważności baterii. Sam termin nie potwierdza sprawności urządzenia.",
+      "x-requirement": "O",
+      "example": "2028-10-01",
+      "format": "default"
+    },
+    {
+      "name": "last_verified_at",
+      "title": "Data ostatniej weryfikacji w terenie lub u dysponenta",
+      "type": "string",
+      "description": "Data lub czas weryfikacji w terenie albo u dysponenta. Zachowaj dokładność źródła; edycja OSM nie jest kontrolą terenową.",
+      "x-requirement": "O",
+      "example": "2026-11-20",
+      "constraints": {
+        "minLength": 1,
+        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}(T[0-9]{2}:[0-9]{2}:[0-9]{2}Z)?$"
+      }
+    },
+    {
+      "name": "verification_method",
+      "title": "Metoda weryfikacji",
+      "type": "string",
+      "description": "Jak potwierdzono dane. documentary oznacza dokumentację; import pliku nie jest on_site.",
+      "x-requirement": "R",
+      "example": "documentary",
+      "constraints": {
+        "required": true,
+        "minLength": 1,
+        "enum": [
+          "on_site",
+          "operator_confirmation",
+          "documentary",
+          "unknown"
+        ]
+      }
+    },
+    {
+      "name": "source_records",
+      "title": "Rekordy źródłowe i pochodzenie",
+      "type": "array",
+      "description": "Tablica JSON z co najmniej jednym źródłem: source_id, source_record_id, source_url, retrieved_at, license_url. Wymagana licencja dla każdego źródła; zobacz README. Przy konfliktach zachowaj pochodzenie pól i oryginały poza publicznymi danymi osobowymi.",
+      "x-requirement": "R",
+      "example": "[{\"source_id\":\"example:institution\",\"source_record_id\":\"AED-001\",\"source_url\":\"https://example.org/aed/AED-001\",\"retrieved_at\":\"2026-11-21T13:42:00Z\",\"license_url\":\"https://creativecommons.org/publicdomain/zero/1.0/\",\"source_data_date\":\"2026-11-20\",\"source_updated_at\":\"2026-11-20T12:00:00Z\",\"attribution\":\"Fikcyjna Instytucja Przykładowa - dane syntetyczne\"}]",
+      "constraints": {
+        "required": true,
+        "minLength": 1
+      }
+    },
+    {
+      "name": "retrieved_at",
+      "title": "Czas ostatniego pobrania",
+      "type": "datetime",
+      "description": "Czas udanego pobrania przetworzonego rekordu w UTC. Nie zastępuje daty źródła lub kontroli terenowej.",
+      "x-requirement": "R",
+      "example": "2026-11-21T13:42:00Z",
+      "format": "default",
+      "constraints": {
+        "required": true
+      }
+    },
+    {
+      "name": "updated_at",
+      "title": "Czas zmiany rekordu wynikowego",
+      "type": "datetime",
+      "description": "Czas ostatniej zmiany treści rekordu w UTC. Nie zmieniaj przy odpytywaniu bez zmiany danych.",
+      "x-requirement": "R",
+      "example": "2026-11-21T13:42:00Z",
+      "format": "default",
+      "constraints": {
+        "required": true
+      }
+    },
+    {
+      "name": "quality_flags",
+      "title": "Oznaczenia jakości",
+      "type": "array",
+      "description": "Tablica JSON oznaczeń jakości. [] oznacza brak zgłoszonych flag, nie potwierdzenie sprawności. Flagi nie zwalniają z wyjaśnienia blokujących błędów.",
+      "x-requirement": "R",
+      "example": "[]",
+      "constraints": {
+        "required": true
+      }
+    }
+  ],
+  "primaryKey": [
+    "aed_id"
+  ],
+  "fieldsMatch": "superset",
+  "missingValues": [
+    ""
+  ],
+  "x-version": "1.0.0",
+  "x-csv": {
+    "delimiter": ",",
+    "encoding": "utf-8",
+    "lineTerminator": "\r\n"
+  },
+  "x-qualityFlags": [
+    "encoded_csv",
+    "suspected_axis_swap",
+    "outside_expected_area",
+    "duplicate_candidate",
+    "ambiguous_hours",
+    "geocoded",
+    "teryt_incomplete",
+    "conflicting_sources"
+  ],
+  "x-sourceRecord": {
+    "required": [
+      "source_id",
+      "source_record_id",
+      "source_url",
+      "retrieved_at",
+      "license_url"
+    ],
+    "optional": [
+      "source_updated_at",
+      "source_data_date",
+      "attribution",
+      "source_version",
+      "original_values",
+      "field_provenance"
+    ]
+  },
+  "x-map": {
+    "latitude": "b",
+    "longitude": "l",
+    "name": "label"
+  }
+}
