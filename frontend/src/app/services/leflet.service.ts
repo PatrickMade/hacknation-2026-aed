@@ -23,6 +23,7 @@ import {
   TileLayer,
   TileLayerOptions,
 } from 'leaflet';
+import * as leaflet from 'leaflet';
 
 /**
  * Leaflet Service
@@ -41,7 +42,7 @@ export class LeafletService {
     @Inject(PLATFORM_ID) private platformId: object,
   ) {
     if (isPlatformBrowser(platformId)) {
-      this.L = require('leaflet');
+      this.L = leaflet;
     }
   }
 

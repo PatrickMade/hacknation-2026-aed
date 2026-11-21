@@ -1,0 +1,16 @@
+{% extends "aed_wizard/base.html" %}
+{% block step %}
+<div class="aed-box" role="status">
+  <h2>Opublikowano</h2>
+  <p><span class="aed-mark">{{ mark }}</span></p>
+  <p>Zasób „{{ publication.resource.title }}” ({{ publication.records_count }} rekordów) jest w zbiorze „{{ publication.dataset.title }}” instytucji {{ publication.organization.title }}.
+     Portal przetwarza plik w tle; podgląd tabeli pojawi się po zakończeniu przetwarzania.</p>
+  <ul>
+    <li><a href="{% url 'admin:resources_resource_change' publication.resource.pk %}">Zasób w panelu</a></li>
+    <li><a href="{% url 'admin:datasets_dataset_change' publication.dataset.pk %}">Zbiór w panelu</a></li>
+    <li><a href="{{ base_url }}/pl/dataset/{{ publication.dataset.pk }}">Zbiór na portalu</a></li>
+    <li><a href="{{ api_url }}/1.4/datasets/{{ publication.dataset.pk }}/resources">Zasoby zbioru w API 1.4</a></li>
+  </ul>
+  <p class="aed-actions"><a class="btn btn-primary" href="{% url 'aed_wizard:source' %}">Dodaj kolejny plik</a></p>
+</div>
+{% endblock %}

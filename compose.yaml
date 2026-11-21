@@ -25,6 +25,8 @@ x-app: &app
     COMPONENT: admin
   volumes:
     - ./backend/mcod:/usr/src/mcod_backend/mcod
+    - ./backend/data/aed:/usr/src/mcod_backend/data/aed:ro
+    - ./aed-standard:/usr/src/aed-standard:ro
     - media:/usr/src/mcod_backend/media
     - statics:/usr/src/mcod_backend/statics
   networks: [portal]

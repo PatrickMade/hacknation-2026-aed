@@ -32,6 +32,7 @@ urlpatterns = common_urlpatterns + [
     path("dataset-license-labels/", ConditionLabelsAdminView.as_view(), name="dataset-license-labels"),
     path("i18n/", include("django.conf.urls.i18n")),
     path("login/", CustomAdminLoginView.as_view(), name="login"),
+    path("aed/", include("mcod.aed_wizard.urls")),  # AED provider wizard (APP-43)
     path("", admin.site.urls, name="admin"),
     path("pn-apps/", include("mcod.pn_apps.urls")),
     path("discourse/", include("mcod.discourse.urls")),

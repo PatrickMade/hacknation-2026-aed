@@ -78,3 +78,11 @@ UNLEASH_URL = "http://flags/api"
 MATOMO_URL = ""
 MATOMO_SITE_ID = ""
 ENABLE_SENTRY = False
+
+# Local AED modules, 2026-11-21.
+INSTALLED_APPS += ["mcod.aed_aggregate"]  # noqa: F405
+
+# AED provider wizard (APP-43, 2026-11-21): reference profile from aed-standard/.
+INSTALLED_APPS += ["mcod.aed_wizard"]  # noqa: F405
+AED_STANDARD_DIR = env("AED_STANDARD_DIR", default=str(ROOT_DIR.path("..", "aed-standard")))  # noqa: F405
+SUIT_CONFIG["MENU"][0]["models"].insert(0, {"label": "Dodaj dane AED", "url": "/aed/kreator/", "icon": "icon-heart"})  # noqa: F405

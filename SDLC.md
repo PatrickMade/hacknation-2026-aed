@@ -200,7 +200,7 @@ Every PR passes the full validation gate before review sign-off, in this order:
 
 - `python3 -B scripts/check-portal-source.py`
 - `docker compose --profile tools config --quiet`
-- `docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed --noinput --keepdb`
+- `docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed mcod.aed_aggregate mcod.aed_wizard --noinput --keepdb`
 - `python3 -B .ai/scripts/check_project_copy.py`
 - `python3 -B .ai/scripts/check_client_config.py`
 

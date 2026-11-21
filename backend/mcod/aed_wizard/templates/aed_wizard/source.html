@@ -1,0 +1,28 @@
+{% extends "aed_wizard/base.html" %}
+{% block step %}
+<div class="aed-box">
+  <h2>Szablon standardu AED (profil PL {{ standard_version }})</h2>
+  <p>Możesz przygotować plik według szablonu albo wgrać dane w dowolnym układzie kolumn. W następnym kroku przypiszesz kolumny do pól standardu.</p>
+  <ul>
+    <li><a href="{% url 'aed_wizard:standard_file' 'template.csv' %}">Pobierz szablon CSV (43 pola)</a></li>
+    <li><a href="{% url 'aed_wizard:standard_file' 'field-dictionary.xlsx' %}">Pobierz słownik pól (XLSX)</a></li>
+    <li><a href="{% url 'aed_wizard:standard_file' 'example.csv' %}">Pobierz przykładowy rekord (CSV)</a></li>
+  </ul>
+</div>
+<form method="post" enctype="multipart/form-data" class="aed-box" novalidate>
+  {% csrf_token %}
+  <h2>Plik z danymi AED</h2>
+  {% if error %}<p class="aed-error" role="alert">{{ error }}</p>{% endif %}
+  {% if form.non_field_errors %}<div class="aed-error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+  {% for field in form %}
+  <p>
+    <label for="{{ field.id_for_label }}"><strong>{{ field.label }}</strong></label><br>
+    {{ field }}
+    {% if field.errors %}<span class="aed-error" role="alert">{{ field.errors|join:" " }}</span>{% endif %}
+  </p>
+  {% endfor %}
+  <p>Obsługiwane formaty: CSV (separator przecinek lub średnik, UTF-8 albo Windows-1250), XLSX (pierwszy arkusz), GeoJSON (punkty). Maksymalnie 10 MB.</p>
+  <p class="aed-actions"><button type="submit" class="btn btn-primary">Dalej: przypisz kolumny</button></p>
+</form>
+<p>Chcesz tylko sprawdzić gotowy plik? <a href="{% url 'aed_wizard:check' %}">Sprawdź swój plik</a> (bez logowania, nic nie jest zapisywane).</p>
+{% endblock %}
