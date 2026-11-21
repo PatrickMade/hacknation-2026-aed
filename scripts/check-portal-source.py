@@ -10,6 +10,7 @@ modified = {
     'frontend/proxy.local.conf.json',
     'frontend/src/app/app.config.ts',
     'frontend/src/app/app.module.ts',
+    'frontend/src/app/services/leflet.service.ts',
 }
 manifest = json.loads((root / 'local/upstream-files.json').read_text())
 errors = []
