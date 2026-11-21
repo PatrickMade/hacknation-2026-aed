@@ -1,24 +1,29 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, from, Observable, of } from 'rxjs';
-import { map, mergeMap, switchMap, toArray } from 'rxjs/operators';
+import { concatMap, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 
 import { AED_REPORT_DATASET_TITLE } from '@app/pages/aed-campaign/aed-campaign.brand';
 import { AedOfficialRecord, AedPoint, GminaFeature } from '@app/pages/aed-campaign/aed-coverage';
+import { isOsmResource, isReportDatasetTitle } from '@app/pages/aed-campaign/aed-report-lookup';
 import { ApiModel } from '@app/services/api/api-model';
 import { DatasetService } from '@app/services/dataset.service';
 
 /** Page size limit of the portal table API. */
 const PAGE_SIZE = 100;
-/** Elasticsearch result window of the portal (max_result_window). */
-const MAX_ROWS = 40000;
+/** Elasticsearch result window of one resource data index: a query can page through at most this many rows. */
+const ROW_WINDOW = 10000;
+/** Latitude bands (degrees) for reading a larger resource; Poland lies within 49-55 N. */
+const LATITUDE_BANDS: [number, number][] = [49, 50, 51, 52, 53, 54].map((lat) => [lat, lat + 1]);
+/** Narrowest band that is still split in two when it holds more rows than the window. */
+const MIN_BAND = 0.01;
 const PARALLEL_REQUESTS = 6;
 
 export interface AedReportData {
   datasetId: string;
   datasetSlug: string;
   dataDate: string | null;
-  /** True when a resource has more rows than the portal returns (MAX_ROWS). */
+  /** True when some rows could not be read within the portal's row window. */
   truncated: boolean;
   records: AedOfficialRecord[];
   osmPoints: AedPoint[];
@@ -52,10 +57,6 @@ function toNumber(value: string | null): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function isOsmResource(title: string): boolean {
-  return /\bosm\b|openstreetmap/i.test(title || '');
-}
-
 /**
  * Reads the "Raport zbiorczy AED" dataset through the public portal API.
  */
@@ -78,11 +79,7 @@ export class AedCampaignService {
     return this.datasetService
       .getAll({ q: AED_REPORT_DATASET_TITLE, 'model[terms]': ApiModel.DATASET, per_page: 10 })
       .pipe(
-        map((response) =>
-          response.results.find((item) =>
-            (item.attributes?.title || '').toLowerCase().includes(AED_REPORT_DATASET_TITLE.toLowerCase()),
-          ),
-        ),
+        map((response) => response.results.find((item) => isReportDatasetTitle(item.attributes?.title))),
         switchMap((dataset) => (dataset ? this.readDataset(dataset) : of(null))),
       );
   }
@@ -126,21 +123,101 @@ export class AedCampaignService {
     );
   }
 
-  /** Reads every row of a tabular resource, page by page, with column names from `meta.headers_map`. */
+  /**
+   * Reads every row of a tabular resource, page by page, with column names from `meta.headers_map`.
+   * A resource larger than the row window is read in latitude bands (`q=colN:[a TO b}`), each within the window.
+   */
   private getRows(resourceId: string): Observable<{ rows: Row[]; truncated: boolean }> {
+    return this.readQuery(resourceId).pipe(
+      switchMap((result) => {
+        if (!result.overflow) {
+          return of({ rows: result.rows, truncated: false });
+        }
+        const latitude = Object.entries(result.headers).find(([, name]) => name === 'latitude' || name === 'lat');
+        if (!latitude) {
+          return of({ rows: result.rows, truncated: true });
+        }
+        const column = latitude[0];
+        const queries = [
+          `${column}:<${LATITUDE_BANDS[0][0]}`,
+          `${column}:>=${LATITUDE_BANDS[LATITUDE_BANDS.length - 1][1]}`,
+        ];
+        return from(LATITUDE_BANDS).pipe(
+          concatMap(([low, high]) => this.readBand(resourceId, column, low, high)),
+          toArray(),
+          switchMap((bands) =>
+            from(queries).pipe(
+              concatMap((query) => this.readQuery(resourceId, query)),
+              toArray(),
+              map((edges) => ({
+                rows: [...bands.flatMap((band) => band.rows), ...edges.flatMap((edge) => edge.rows)],
+                truncated: bands.some((band) => band.truncated) || edges.some((edge) => edge.overflow),
+              })),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  /** Reads one latitude band, halving it while it holds more rows than the window. */
+  private readBand(
+    resourceId: string,
+    column: string,
+    low: number,
+    high: number,
+  ): Observable<{ rows: Row[]; truncated: boolean }> {
+    return this.readQuery(resourceId, `${column}:[${low} TO ${high}}`).pipe(
+      switchMap((result) => {
+        if (!result.overflow) {
+          return of({ rows: result.rows, truncated: false });
+        }
+        if (high - low < MIN_BAND) {
+          return of({ rows: result.rows, truncated: true });
+        }
+        const middle = Math.round(((low + high) / 2) * 10000) / 10000;
+        return from([
+          [low, middle],
+          [middle, high],
+        ]).pipe(
+          concatMap(([from_, to]) => this.readBand(resourceId, column, from_, to)),
+          toArray(),
+          map((halves) => ({
+            rows: halves.flatMap((half) => half.rows),
+            truncated: halves.some((half) => half.truncated),
+          })),
+        );
+      }),
+    );
+  }
+
+  /** Reads all pages of one query that fit the row window; `overflow` means the query matched more rows. */
+  private readQuery(
+    resourceId: string,
+    query?: string,
+  ): Observable<{ rows: Row[]; headers: Record<string, string>; overflow: boolean }> {
     const page = (number: number) =>
-      this.datasetService.getResourceData(resourceId, { page: String(number), per_page: String(PAGE_SIZE) });
+      this.datasetService.getResourceData(resourceId, {
+        page: String(number),
+        per_page: String(PAGE_SIZE),
+        ...(query ? { q: query } : {}),
+      });
 
     return page(1).pipe(
-      switchMap((first) => {
-        const pages = Math.ceil(Math.min(first?.meta?.count || 0, MAX_ROWS) / PAGE_SIZE);
+      switchMap((first: TableResponse) => {
+        const count = first?.meta?.count || 0;
+        if (count > ROW_WINDOW) {
+          return of({ rows: [], headers: first?.meta?.headers_map || {}, overflow: true });
+        }
+        const pages = Math.ceil(count / PAGE_SIZE);
         const rest = Array.from({ length: Math.max(pages - 1, 0) }, (_, index) => index + 2);
         return from(rest).pipe(
           mergeMap((number) => page(number), PARALLEL_REQUESTS),
           toArray(),
-          map((responses) => ({
+          map((responses: TableResponse[]) => ({
             rows: [first, ...responses].flatMap((response) => this.toRows(response)),
-            truncated: (first?.meta?.count || 0) > MAX_ROWS,
+            headers: first?.meta?.headers_map || {},
+            overflow: false,
           })),
         );
       }),
