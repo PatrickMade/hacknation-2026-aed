@@ -61,7 +61,8 @@ agregacja, branding, publikacja w serwisie i kontakt z dysponentami.
   niezmienny przy przeniesieniu AED. Powiązanie incydentu używa tego ID;
   ten pakiet nie zbiera zgłoszeń ani danych pacjentów.
 - Opcjonalne kolumny można pominąć w publikowanym CSV, zachowując kolejność
-  schematu. Wymagane i warunkowe kolumny pozostają dostępne. Walidator
+  schematu. Wymagane kolumny pozostają; warunkowe są wymagane, gdy zachodzi
+  ich warunek (fixed lub opening_hours). Walidator
   odrzuca całkowicie puste kolumny w pliku z rekordami; szablon jest
   wyłącznie nagłówkiem i wymaga osobnego trybu `--template`.
 - Godziny pozostają w notacji OSM, bez nowej notacji własnej. Mały walidator
