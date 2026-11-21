@@ -60,9 +60,7 @@
 
       <div class="aed-device__actions d-flex flex-wrap gap-2 mb-4">
         @if (!formOpen()) {
-          <button type="button" class="btn btn-primary" (click)="openForm()" aria-controls="aed-report-form">
-            Zgłoś problem
-          </button>
+          <button type="button" class="btn btn-primary" (click)="openForm()">Zgłoś problem</button>
         }
         @if (d.latitude !== null && d.longitude !== null) {
           <a class="btn btn-outline-primary" [href]="mapUrl(d)" target="_blank" rel="noopener">

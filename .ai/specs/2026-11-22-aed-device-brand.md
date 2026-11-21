@@ -16,7 +16,7 @@ Nagłówek portalu, nawigacja, układ i inne strony; nowe materiały marki.
 
 ## Kryteria akceptacji i weryfikacja
 1. Przeglądarka: pasek akcji, link do `/pl/aed` i blok naklejki widoczne na `/pl/aed/<aed_id>`; inne strony bez zmian (diff dotyczy tylko komponentu strony urządzenia i skopiowanego pliku SVG).
-2. axe-core: 0 naruszeń na stronie urządzenia z otwartym formularzem i rozwiniętym blokiem QR.
+2. axe-core: 0 naruszeń w treści strony urządzenia przy zamkniętym i otwartym formularzu; przycisk „Zgłoś problem” nie ma `aria-controls` wskazującego niewyrenderowany formularz. Dwa elementy globalnej powłoki portalu (ng-progress, menu w nagłówku) są ograniczeniem upstream.
 3. 360 px: brak przewijania w poziomie; przyciski min. 44 px.
 4. Pliki SVG identyczne z `brand/logo` (porównanie sum SHA-256).
 5. Pełny gate, niezależny review, merge przez merge_gate.py.
