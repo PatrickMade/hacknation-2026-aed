@@ -90,9 +90,9 @@ lub hasła, kod generujący kody QR dla urządzeń (APP-45).
 
 ## Progress
 
-- [ ] 1. Finalny znak w SVG (trzy układy, trzy wersje) i `brand/tokens.css`
-- [ ] 2. Eksport znaku do PNG, JPG i PDF
-- [ ] 3. Naklejka QR (SVG, PNG, PDF) z odczytem kodu
-- [ ] 4. Księga znaku PDF
-- [ ] 5. `brand/README.md`, oświadczenie AI, lista kontrolna, usunięcie `brand-directions/`
+- [x] 1. Finalny znak w SVG (trzy układy, trzy wersje) i `brand/tokens.css` - d269450
+- [x] 2. Eksport znaku do PNG, JPG i PDF - d269450
+- [x] 3. Naklejka QR (SVG, PNG, PDF) z odczytem kodu - d269450
+- [x] 4. Księga znaku PDF - d269450
+- [x] 5. `brand/README.md`, oświadczenie AI, lista kontrolna, usunięcie `brand-directions/` - d269450
 - [ ] 6. Bramka walidacji i PR
