@@ -75,6 +75,30 @@ of the namespaced source key, so it is stable across runs.
 - Legionowo has no record ID. The source record key is a generated local key
   (hash of the original row), labelled as such in provenance, until the
   provider assigns IDs.
+- Deviations from `aed-standard/mappings.*`, accepted for the demo and visible
+  in every affected record:
+  - Marki axis swap: the brief asks for flagged swapped coordinates, so a swap
+    is applied per record only when the swapped point lies in the gmina box;
+    such records get `suspected_axis_swap` and `coordinate_method=unknown`
+    (not confirmed source coordinates) until the provider confirms them.
+  - `operator_name`: decision 2026-11-21 15:58 (Z12, each record names its
+    dysponent) fills it with the source publisher; `field_provenance` marks it
+    as "do potwierdzenia". OSM uses its `operator` tag as a candidate or
+    "nieustalony (OpenStreetMap)".
+  - `aed_id` stability: UUIDv5 of the namespaced source key, no committed
+    register. Legionowo has no ID, so its key hashes the original row: a
+    corrected row gets a new `aed_id`. A merged record takes the id of its
+    smallest source key, so a new source joining it can change the id.
+- Proximity merge applies only across different sources; two records of one
+  source at the same place stay two devices with `duplicate_candidate`. Values
+  taken from a merged source are named in its `field_provenance`.
+- OSM free text that contains a phone number, e-mail or intercom/code hint is
+  not published (also `operator` values that are only numbers).
+- An unknown source licence stops the refresh (no CC0 default).
+- The GeoJSON resource contains only records with coordinates (73 of 74).
+- Residual risk: the portal derives the dataset licence (CC BY 4.0) for all its
+  resources, including the ODbL OSM resource; only the resource title,
+  description and licence note state ODbL.
 - Krosno/Marki addresses are split with a conservative pattern; an address
   that does not match stays only in `original_values`.
 - Operating status, access, hours and verification stay `unknown`: the sources

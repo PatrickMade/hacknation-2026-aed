@@ -13,6 +13,7 @@ AED_NAMESPACE = uuid.UUID('4f3b2a7e-6d1c-5b8a-9e0f-aed000000001')
 CC0_URL = 'https://creativecommons.org/publicdomain/zero/1.0/'
 CC_BY_URL = 'https://creativecommons.org/licenses/by/4.0/'
 ODBL_URL = 'https://opendatacommons.org/licenses/odbl/1-0/'
+LICENCES = {'CC0 1.0': CC0_URL, 'CC BY 4.0': CC_BY_URL}
 OSM_ATTRIBUTION = '© OpenStreetMap contributors'
 OPERATOR_NOTE = 'wydawca zbioru źródłowego w dane.gov.pl; dysponent do potwierdzenia'
 
@@ -72,13 +73,14 @@ def place(record, area, lat, lon, provenance):
         record['latitude'], record['longitude'] = lat, lon
     elif in_area(area, lon, lat):
         record['latitude'], record['longitude'] = lon, lat
+        record['coordinate_method'] = 'unknown'  # not a confirmed source coordinate until the provider confirms
         record['quality_flags'].append('suspected_axis_swap')
-        provenance['latitude'] = 'z kolumny opisanej jako długość geograficzna; osie zamienione, bo tylko tak punkt leży w gminie'
-        provenance['longitude'] = 'z kolumny opisanej jako szerokość geograficzna; osie zamienione, bo tylko tak punkt leży w gminie'
+        provenance['latitude'] = 'z kolumny opisanej jako długość geograficzna; osie zamienione, bo tylko tak punkt leży w obszarze gminy (prostokąt); do potwierdzenia przez dysponenta'
+        provenance['longitude'] = 'z kolumny opisanej jako szerokość geograficzna; osie zamienione, bo tylko tak punkt leży w obszarze gminy (prostokąt); do potwierdzenia przez dysponenta'
     else:
         record['quality_flags'].append('outside_expected_area')
         provenance['latitude'] = provenance['longitude'] = (
-            'współrzędne źródła leżą poza gminą dysponenta; nie publikowane, oryginał w original_values')
+            'współrzędne źródła leżą poza obszarem gminy dysponenta (prostokąt); nie publikowane, oryginał w original_values')
 
 
 ADDRESS = re.compile(
@@ -115,7 +117,7 @@ def base_record(name, operator, retrieved):
 
 
 def source_record(source, meta, record_key, original, provenance, retrieved):
-    licence = CC_BY_URL if meta['dataset'].get('license_name') == 'CC BY 4.0' else CC0_URL
+    licence = LICENCES[meta['dataset'].get('license_name')]  # unknown licence: KeyError, nothing is published
     entry = {
         'source_id': 'dane:dataset:{}'.format(source['dataset_id']),
         'source_record_id': record_key,
@@ -145,7 +147,7 @@ def read_krosno_marki(source, meta, rows, retrieved, extra_flags=()):
         row = {key.strip(): (value or '').strip() for key, value in row.items()}
         original = {key: row[key] for key in ('Długość geograficzna', 'Szerokość geograficzna', 'Nazwa',
                                              'Lokalizacja', 'Adres', 'Numer Id')}
-        provenance = {'name': 'Lokalizacja (Nazwa zawiera tylko "Defibrylator")'}
+        provenance = {'name': 'Lokalizacja (Nazwa zawiera tylko "Defibrylator")' if row['Lokalizacja'] else 'Nazwa'}
         record = base_record(row['Lokalizacja'] or row['Nazwa'], meta['institution']['title'], retrieved)
         record['quality_flags'].extend(extra_flags)
         place(record, source['area'], number(row['Szerokość geograficzna']), number(row['Długość geograficzna']),
@@ -224,6 +226,18 @@ def official_records():
     return records
 
 
+PHONE = re.compile(r'(?:\+?\d[\d\s().-]{7,}\d)')
+EMAIL = re.compile(r'[^\s@]+@[^\s@]+\.[^\s@]+')
+
+
+def without_contacts(value):
+    """OSM free text may carry phone numbers, e-mails or intercom codes: such a value is not published."""
+    value = ' '.join((value or '').split())
+    if not value or PHONE.search(value) or EMAIL.search(value) or re.search(r'domofon|kod\b', value, re.I):
+        return None
+    return value
+
+
 OSM_ACCESS = {'yes': 'public', 'permissive': 'permissive', 'customers': 'customers', 'private': 'private', 'no': 'no'}
 
 
@@ -231,8 +245,11 @@ def osm_record(feature, retrieved):
     props = feature['properties']
     kind, ident = props['@osm_type'], props['@osm_id']
     lon, lat = feature['geometry']['coordinates'][:2]
-    record = base_record((props.get('name') or '').strip() or 'Defibrylator AED',
-                         (props.get('operator') or '').strip() or 'nieustalony (OpenStreetMap)', retrieved)
+    operator = without_contacts(props.get('operator'))
+    if operator and not re.search(r'[^\W\d_]', operator):
+        operator = None  # a bare number is not an operator name
+    record = base_record(without_contacts(props.get('name')) or 'Defibrylator AED',
+                         operator or 'nieustalony (OpenStreetMap)', retrieved)
     record['latitude'], record['longitude'] = number(str(lat)), number(str(lon))
     record['indoor'] = props.get('indoor') if props.get('indoor') in ('yes', 'no') else 'unknown'
     record['locked'] = props.get('locked') if props.get('locked') in ('yes', 'no') else 'unknown'
@@ -243,8 +260,9 @@ def osm_record(feature, retrieved):
                          ('locality', props.get('addr:city')), ('street', props.get('addr:street')),
                          ('house_number', props.get('addr:housenumber')), ('unit_number', props.get('addr:unit')),
                          ('manufacturer', props.get('manufacturer')), ('model', props.get('model'))):
-        if value and value.strip():
-            record[field] = ' '.join(value.split())
+        value = without_contacts(value)
+        if value:
+            record[field] = value
     if re.fullmatch(r'\d{2}-\d{3}', props.get('addr:postcode') or ''):
         record['postcode'] = props['addr:postcode']
     if re.fullmatch(r'\d{7}', props.get('addr:city:simc') or ''):
@@ -254,7 +272,8 @@ def osm_record(feature, retrieved):
         'source_id': 'osm', 'source_record_id': key, 'source_url': 'https://www.openstreetmap.org/' + key,
         'retrieved_at': retrieved, 'license_url': ODBL_URL, 'attribution': OSM_ATTRIBUTION,
         'source_version': str(props.get('@osm_version', '')),
-        'field_provenance': {'operator_name': 'tag operator jako kandydat; dysponent niepotwierdzony'},
+        'field_provenance': {'operator_name': 'tag operator jako kandydat; dysponent niepotwierdzony',
+                             'source_records': 'kopia OSM z eksportu OpenAEDMap ' + OSM_SOURCE_URL},
     }]
     record['aed_id'] = aed_id('osm:' + key)
     return record

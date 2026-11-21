@@ -9,10 +9,14 @@ Goal, scope, non-goals and risks: see the spec.
 
 ## Steps
 
-- [ ] 1. Snapshots of the five sources and OSM PL in backend/data/aed/sources/
-- [ ] 2. Mapping, dedup, validation and publication app backend/mcod/aed_aggregate/
-- [ ] 3. Tests for mapping, dedup, provenance and publication
-- [ ] 4. Local run: seed_jury + aed_refresh, API rows, map preview
+- [x] 1. Snapshots of the five sources and OSM PL in backend/data/aed/sources/
+- [x] 2. Mapping, dedup, validation and publication app backend/mcod/aed_aggregate/
+- [x] 3. Tests for mapping, dedup, provenance and publication
+- [x] 4. Local run: seed_jury + aed_refresh, API rows, map preview
 - [ ] 5. Validation gate, review, PR
 
 ## Progress
+- 2026-11-21 UTC 332d342: snapshots, mapping, dedup, publication, command, Celery task.
+- ef1d203: report column types and declared empty-cell sign; local run: 74 records, CSV map + /1.4 rows, OSM 18298 points.
+- Independent review (request changes) fixed: OSM contact scrubbing, same-source merge guard, swapped coordinates as unknown method, fail-closed licence, Celery local guard, tests for publish/replace/build failure; standard deviations recorded in the spec.
+- Map tab blank in the local frontend (leaflet require in frontend/src/app/services/leflet.service.ts); decision requested from the coordinator; with a local 1-line import fix the map shows the 73 placed records.

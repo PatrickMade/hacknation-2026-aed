@@ -48,6 +48,8 @@ def merge(target, other):
         mine, theirs = target.get(field), other.get(field)
         if mine in (None, '', 'unknown') and theirs not in (None, '', 'unknown'):
             target[field] = theirs
+            for source in other['source_records']:
+                source.setdefault('field_provenance', {})[field] = 'wartość przyjęta z tego źródła: pierwsze niepuste'
         elif theirs not in (None, '', 'unknown') and mine != theirs and field not in ('latitude', 'longitude'):
             add_flag(target, 'conflicting_sources')
     target['retrieved_at'] = max(target['retrieved_at'], other['retrieved_at'])
@@ -65,7 +67,9 @@ def deduplicate(records):
             for kept in result:
                 if kept.get('latitude') is None or distance_m(kept, record) >= MERGE_DISTANCE_M:
                     continue
-                if place_key(kept) == place_key(record):
+                # Same place and name from ANOTHER source is one device; within one source it is two devices.
+                other_source = not {s for s, _ in source_keys(kept)} & {s for s, _ in source_keys(record)}
+                if other_source and place_key(kept) == place_key(record):
                     match = kept
                     break
                 add_flag(kept, 'duplicate_candidate')

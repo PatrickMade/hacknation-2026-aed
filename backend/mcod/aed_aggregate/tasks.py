@@ -8,7 +8,10 @@ TASK_NAME = 'mcod.aed_aggregate.tasks.aed_refresh_task'
 
 @extended_shared_task(name=TASK_NAME)
 def aed_refresh_task():
+    from django.conf import settings
     from mcod.aed_aggregate.refresh import refresh
+    if settings.ENVIRONMENT != 'local':
+        return {'skipped': 'aed_refresh_task is restricted to ENVIRONMENT=local'}
     result = refresh()
     result.pop('rejected', None)
     return result

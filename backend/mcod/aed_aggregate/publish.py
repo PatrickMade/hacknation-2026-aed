@@ -224,7 +224,7 @@ def publish_report(user, report_csv, report_geojson, osm_csv, process=True):
                         common + ' Podgląd mapy: longitude, latitude, etykieta name. Licencja CC BY 4.0.', today,
                         filename='raport_zbiorczy_aed.csv', content=report_csv, geo=True, process=process),
         upsert_resource('aed-raport-geojson', dataset, user, 'Raport zbiorczy AED (GeoJSON)',
-                        common + ' Te same rekordy co w CSV, z geometrią Point (WGS84). Licencja CC BY 4.0.', today,
+                        common + ' Rekordy z CSV, które mają współrzędne, z geometrią Point (WGS84). Licencja CC BY 4.0.', today,
                         filename='raport_zbiorczy_aed.geojson', content=report_geojson, process=process),
         upsert_resource('aed-osm-csv', dataset, user, 'Punkty AED z OpenStreetMap - Polska (ODbL 1.0)',
                         'Punkty emergency=defibrillator z OpenStreetMap dla Polski (eksport OpenAEDMap {}), '

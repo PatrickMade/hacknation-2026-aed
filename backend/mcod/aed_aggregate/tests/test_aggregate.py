@@ -41,6 +41,7 @@ class MappingTests(SimpleTestCase):
         record = by_source(self.records, 4955, '1')
         self.assertEqual((record['latitude'], record['longitude']), (52.326697, 21.107557))
         self.assertEqual(record['quality_flags'], ['encoded_csv', 'suspected_axis_swap'])
+        self.assertEqual(record['coordinate_method'], 'unknown')
         # Row 7 carries Krosno's coordinates: no swap can place it in Marki, so no position is published.
         wrong = by_source(self.records, 4955, '7')
         self.assertNotIn('latitude', wrong)
@@ -68,6 +69,18 @@ class MappingTests(SimpleTestCase):
                          ('node/477958354', sources.ODBL_URL, sources.OSM_ATTRIBUTION))
         self.assertEqual(standard.record_errors(record), [])
 
+    def test_osm_free_text_with_contacts_is_not_published(self):
+        feature = {'type': 'Feature', 'geometry': {'type': 'Point', 'coordinates': [21.0, 52.2]},
+                   'properties': {'@osm_type': 'node', '@osm_id': 1, '@osm_version': 1, 'operator': '793-124-463',
+                                  'model': '+48 723 248 042', 'name': 'Apteka',
+                                  'defibrillator:location': 'Numer telefonu do portiera 513-077-416',
+                                  'level': '0', 'manufacturer': 'kontakt: aed@example.org'}}
+        record = sources.osm_record(feature, '2026-11-21T17:32:40Z')
+        self.assertEqual(record['operator_name'], 'nieustalony (OpenStreetMap)')
+        self.assertEqual((record['name'], record['level']), ('Apteka', '0'))
+        for field in ('model', 'location_description', 'manufacturer'):
+            self.assertNotIn(field, record)
+
 
 class DeduplicationTests(SimpleTestCase):
     @classmethod
@@ -94,8 +107,19 @@ class DeduplicationTests(SimpleTestCase):
         self.assertEqual({s['source_id'] for s in merged[0]['source_records']},
                          {'dane:dataset:4581', 'dane:dataset:99999'})
         self.assertEqual(merged[0]['public_phone'], '+48000000000')
+        chosen = next(src for src in merged[0]['source_records'] if src['source_id'] == 'dane:dataset:99999')
+        self.assertIn('public_phone', chosen['field_provenance'])
         reversed_order = aggregate.deduplicate([copy_from_other, original])
         self.assertEqual(merged[0]['aed_id'], reversed_order[0]['aed_id'])
+
+    def test_same_place_twice_in_one_source_stays_two_devices(self):
+        original = by_source(self.records, 4581, '744')
+        second = copy.deepcopy(original)
+        second['source_records'][0]['source_record_id'] = '9999'
+        result = aggregate.deduplicate([original, second])
+        self.assertEqual(len(result), 2)
+        for record in result:
+            self.assertIn('duplicate_candidate', record['quality_flags'])
 
     def test_conflicting_values_are_flagged_not_overwritten(self):
         original = by_source(self.records, 4581, '744')
@@ -141,6 +165,20 @@ class ProvenanceTests(SimpleTestCase):
             handle.write(content)
         self.addCleanup(os.unlink, handle.name)
         self.assertEqual(standard.file_errors(handle.name), [])
+
+    def test_invalid_report_file_stops_the_refresh(self):
+        from mcod.aed_aggregate import refresh
+        from mcod.aed_aggregate.publish import RefreshError
+        with patch.object(standard, 'file_errors', return_value=['nagłówek: brak wymaganych pól: name']):
+            with self.assertRaises(RefreshError):
+                refresh.build()
+
+    def test_unknown_source_licence_fails_closed(self):
+        source = sources.SOURCES[0]
+        meta = sources.source_meta(source)
+        meta['dataset']['license_name'] = 'CC BY-NC 4.0'
+        with self.assertRaises(KeyError):
+            sources.source_record(source, meta, '1', {}, {}, '2026-11-21T17:32:40Z')
 
     def test_validator_rejection_is_reported_not_published(self):
         record = copy.deepcopy(sources.official_records()[0])
@@ -201,3 +239,29 @@ class PublishTests(TestCase):
         counts = (Dataset.raw.count(), Resource.raw.count())
         refresh(process=False)
         self.assertEqual(counts, (Dataset.raw.count(), Resource.raw.count()))
+
+
+class ResourceReplacementTests(TestCase):
+    """on_commit callbacks run immediately, so the draft -> published step and file replacement are exercised."""
+
+    @patch('mcod.aed_aggregate.publish.transaction.on_commit', side_effect=lambda func: func())
+    def test_changed_content_replaces_the_file_of_the_same_published_resource(self, _on_commit):
+        import secrets
+        from django.core.management import call_command
+        from mcod.aed_aggregate import publish
+
+        with patch.dict(os.environ, {key: secrets.token_urlsafe(24) for key in PASSWORD_KEYS}):
+            call_command('seed_jury', verbosity=0)
+        user = publish.bootstrap_user()
+        dataset = publish.upsert_dataset('aed-test', publish.operator_organization(user), user,
+                                         title='Test AED', notes='Zbiór testowy AED.')
+        first = publish.upsert_resource('aed-test-csv', dataset, user, 'Test', 'Opis testowy zasobu.', None,
+                                        filename='t.csv', content=b'a\r\n1\r\n', process=False)
+        first.refresh_from_db()
+        self.assertEqual(first.status, 'published')
+        second = publish.upsert_resource('aed-test-csv', dataset, user, 'Test', 'Opis testowy zasobu.', None,
+                                         filename='t.csv', content=b'a\r\n2\r\n', process=False)
+        self.assertEqual(first.pk, second.pk)
+        main = second.files.get(is_main=True)
+        with main.file.open('rb') as handle:
+            self.assertEqual(handle.read(), b'a\r\n2\r\n')
