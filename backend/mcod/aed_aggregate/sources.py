@@ -226,14 +226,25 @@ def official_records():
     return records
 
 
-PHONE = re.compile(r'(?:\+?\d[\d\s().-]{7,}\d)')
+PHONE_CANDIDATE = re.compile(r'\+?\d[\d\s().-]{7,}\d')
+HOURS = re.compile(r'\d{1,2}[.:]\d{2}\s*-\s*\d{1,2}[.:]\d{2}')
 EMAIL = re.compile(r'[^\s@]+@[^\s@]+\.[^\s@]+')
+
+
+def has_phone(value):
+    """A 9-12 digit run that is not opening hours, a date, a coordinate or a postcode."""
+    for match in PHONE_CANDIDATE.finditer(value or ''):
+        text = match.group()
+        digits = re.sub(r'\D', '', text)
+        if 9 <= len(digits) <= 12 and not HOURS.search(text) and not re.search(r'\d\.\d{4,}', text):
+            return True
+    return False
 
 
 def without_contacts(value):
     """OSM free text may carry phone numbers, e-mails or intercom codes: such a value is not published."""
     value = ' '.join((value or '').split())
-    if not value or PHONE.search(value) or EMAIL.search(value) or re.search(r'domofon|kod\b', value, re.I):
+    if not value or has_phone(value) or EMAIL.search(value) or re.search(r'domofon|kod\b', value, re.I):
         return None
     return value
 

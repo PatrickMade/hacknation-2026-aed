@@ -81,6 +81,13 @@ class MappingTests(SimpleTestCase):
         for field in ('model', 'location_description', 'manufacturer'):
             self.assertNotIn(field, record)
 
+    def test_addresses_hours_and_dates_are_not_mistaken_for_phones(self):
+        for text in ('Urząd Miasta Krakowa ul. Lubelska 27 30-003 Kraków', 'Mo-Fr 08.00-16.00, Sa 09.00-13.00',
+                     'sprawdzono 2023-03-07', 'przy wejściu 52.1696788 20.8122254'):
+            self.assertEqual(sources.without_contacts(text), text)
+        for text in ('tel. całodobowy: 134961664', '793-124-463', '+48 723 248 042'):
+            self.assertIsNone(sources.without_contacts(text))
+
 
 class DeduplicationTests(SimpleTestCase):
     @classmethod
