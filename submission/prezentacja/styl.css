@@ -36,14 +36,13 @@ html, body {
 
 .szyna {
   display: flex; justify-content: space-between; align-items: center;
-  font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
-  color: var(--zielen); padding-bottom: 10px; border-bottom: 1px solid var(--linia);
+  font-size: 15px; font-weight: 600; color: var(--tekst2);
 }
-.szyna .znak { display: flex; align-items: center; gap: 8px; color: var(--ciemna); }
+.szyna .znak { display: flex; align-items: center; gap: 8px; color: var(--ciemna); font-weight: 800; }
 .szyna .znak img { height: 20px; }
 .szyna .kryt b { color: var(--ciemna); font-weight: 800; }
 
-h1 { font-size: 39px; line-height: 1.12; font-weight: 800; letter-spacing: -.012em; margin: 20px 0 0; max-width: 1060px; }
+h1 { font-size: 39px; line-height: 1.12; font-weight: 800; letter-spacing: -.012em; margin: 16px 0 0; max-width: 1060px; }
 h1 em { font-style: normal; color: var(--zielen); }
 .lid { font-size: 23px; line-height: 1.4; color: var(--tekst2); margin: 12px 0 0; max-width: 900px; }
 p { margin: 0; }
@@ -76,9 +75,10 @@ sup { font-size: .5em; font-weight: 700; vertical-align: super; line-height: 0; 
 /* ---------- kod i dane ---------- */
 pre, code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
 pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
-.plik { border-left: 4px solid var(--linia); padding: 2px 0 2px 12px; }
-.plik .kto { font-size: 14px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
-.plik .kto span { font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--tekst2); }
+.plik { padding: 0 0 9px; border-bottom: 1px solid var(--linia); }
+.plik:last-child { border-bottom: 0; }
+.plik .kto { font-size: 16px; font-weight: 800; }
+.plik .kto span { font-weight: 600; color: var(--tekst2); }
 .plik pre { font-size: 12.5px; line-height: 1.4; color: var(--ciemna); margin-top: 3px; }
 .plik .uwaga { font-size: 14px; color: var(--luka); font-weight: 700; margin-top: 2px; }
 .ciemny-kod { background: var(--ciemna); color: #E8F5EE; border-radius: 8px; padding: 16px 18px; font-size: 13.5px; line-height: 1.5; }
@@ -87,7 +87,7 @@ pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
 /* ---------- tabele ---------- */
 table { border-collapse: collapse; width: 100%; }
 th, td { text-align: left; vertical-align: top; padding: 9px 12px 9px 0; border-bottom: 1px solid var(--linia); font-size: 17.5px; line-height: 1.32; }
-th { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--zielen); border-bottom: 2px solid var(--ciemna); padding-bottom: 7px; }
+th { font-size: 15px; font-weight: 800; color: var(--ciemna); border-bottom: 2px solid var(--ciemna); padding-bottom: 7px; }
 td.r, th.r { text-align: right; padding-right: 18px; font-variant-numeric: tabular-nums; }
 td b { font-weight: 800; }
 td code { font-size: 14.5px; background: var(--jasna); padding: 1px 5px; border-radius: 4px; }
@@ -105,7 +105,7 @@ td code { font-size: 14.5px; background: var(--jasna); padding: 1px 5px; border-
 
 /* ---------- slajd ciemny ---------- */
 .noc { background: var(--ciemna); color: var(--bialy); }
-.noc .szyna { color: #8FD9B0; border-color: #2B5443; }
+.noc .szyna { color: #C4DCCF; }
 .noc .szyna .znak, .noc .szyna .kryt b { color: var(--bialy); }
 .noc h1 em { color: #8FD9B0; }
 .noc .lid, .noc .zrodla, .noc .nr { color: #C4DCCF; }
@@ -122,7 +122,7 @@ td code { font-size: 14.5px; background: var(--jasna); padding: 1px 5px; border-
 .lista li { font-size: 23px; line-height: 1.36; padding: 11px 0; border-bottom: 1px solid var(--linia); }
 .lista li:first-child { border-top: 2px solid var(--ciemna); }
 .lista li b { font-weight: 800; }
-.etykieta { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--zielen); margin-bottom: 8px; }
+.etykieta { font-size: 17px; font-weight: 800; color: var(--ciemna); margin-bottom: 8px; }
 .pasek { display: grid; grid-template-columns: 190px 1fr 46px; align-items: center; gap: 12px; font-size: 16px; padding: 5px 0; }
 .pasek code { font-size: 14.5px; }
 .pasek .b { height: 14px; background: var(--zielen); border-radius: 2px; }
