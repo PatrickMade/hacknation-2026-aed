@@ -28,9 +28,9 @@ class AedIncidentReportAdmin(OrganizationScopedAdmin):
     list_filter = ('status', 'type')
     search_fields = ('device__name', 'device__aed_id', 'description')
     fields = ('device', 'device_page', 'organization', 'type', 'description', 'reporter_name',
-              'contact', 'consent', 'created', 'status', 'dysponent_note')
+              'contact', 'consent', 'created', 'status', 'dysponent_note', 'resolved_at', 'personal_data_removed_at')
     readonly_fields = ('device', 'device_page', 'organization', 'type', 'description', 'reporter_name',
-                       'contact', 'consent', 'created')
+                       'contact', 'consent', 'created', 'resolved_at', 'personal_data_removed_at')
 
     def device_page(self, obj):
         return format_html('<a href="{0}" target="_blank" rel="noopener">{0}</a>', obj.device.page_url)
