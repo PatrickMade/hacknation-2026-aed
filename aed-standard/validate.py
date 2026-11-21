@@ -83,6 +83,35 @@ def scalar(value, field):
     return result
 
 
+REGON_WEIGHTS = {9: (8, 9, 2, 3, 4, 5, 6, 7), 14: (2, 4, 8, 5, 0, 9, 7, 3, 6, 1, 2, 4, 8)}
+
+
+def regon_valid(value):
+    """GUS check digit: weighted sum mod 11, where 10 counts as 0."""
+    weights = REGON_WEIGHTS.get(len(value))
+    if not weights or not value.isdigit():
+        return False
+    total = sum(int(digit) * weight for digit, weight in zip(value, weights))
+    return total % 11 % 10 == int(value[-1])
+
+
+def operator_rules(row, schema):
+    """A report may keep a record with an unconfirmed operator only behind the placeholder and its flag;
+    a dysponent's own publication must name the dysponent."""
+    rule = schema["x-operatorUnconfirmed"]
+    errors = []
+    flags = row.get("quality_flags") if isinstance(row.get("quality_flags"), list) else []
+    unconfirmed = rule["flag"] in flags
+    if row.get("operator_name") == rule["placeholder"] and not unconfirmed:
+        errors.append("operator_name: wartość \"{}\" wymaga flagi {}".format(rule["placeholder"], rule["flag"]))
+    sources = row.get("source_records") if isinstance(row.get("source_records"), list) else []
+    own = any(isinstance(s, dict) and str(s.get("source_id", "")).startswith(rule["forbiddenSourcePrefix"])
+              for s in sources)
+    if own and (unconfirmed or row.get("operator_name") == rule["placeholder"]):
+        errors.append("operator_name: publikacja dysponenta musi wskazać potwierdzonego dysponenta")
+    return errors
+
+
 def record_rules(row, schema):
     errors = []
     lat, lon = row.get("latitude"), row.get("longitude")
@@ -99,6 +128,10 @@ def record_rules(row, schema):
             iso_date(verified) if len(verified) == 10 else timestamp(verified)
         except ValueError as error:
             errors.append(f"last_verified_at: {error}")
+    if regon := row.get("operator_regon"):
+        if not regon_valid(regon):
+            errors.append("operator_regon: niepoprawna cyfra kontrolna REGON")
+    errors.extend(operator_rules(row, schema))
     if isinstance(row.get("quality_flags"), list):
         for flag in row["quality_flags"]:
             if not isinstance(flag, str) or flag not in schema["x-qualityFlags"]:
@@ -154,7 +187,7 @@ def validate(path, template=False):
         if header != [name for name in fields if name in header]:
             errors.append("nagłówek: zachowaj kolejność pól ze schema.json")
         if template and header != list(fields):
-            errors.append("szablon: wymagany pełny nagłówek 43 pól")
+            errors.append(f"szablon: wymagany pełny nagłówek {len(fields)} pól")
         records = 0
         used = set()
         ids = set()
