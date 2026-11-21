@@ -1,4 +1,5 @@
 """Provision local jury accounts using the portal's existing roles (2026-11-21)."""
+import logging
 import os
 
 from django.conf import settings
@@ -33,6 +34,19 @@ class Command(BaseCommand):
         if missing:
             raise CommandError('Missing environment variables: ' + ', '.join('SEED_{}_PASSWORD'.format(key) for key in missing))
 
+        # The portal logs every model signal at DEBUG with exc_info, so creating an institution inside
+        # get_or_create's handled DoesNotExist printed that traceback. Signals still run; only their
+        # debug log is quiet during the seed.
+        signal_logger = logging.getLogger('signals')
+        level = signal_logger.level
+        signal_logger.setLevel(logging.INFO)
+        try:
+            self.seed(passwords)
+        finally:
+            signal_logger.setLevel(level)
+        self.stdout.write('Jury seed complete: 15 accounts, 6 institutions. Passwords were not printed.')
+
+    def seed(self, passwords):
         with transaction.atomic():
             bootstrap = self.user('superadmin', passwords['SUPERADMIN'], admin=True)
             self.user('admin', passwords['ADMIN'], admin=True)
@@ -46,7 +60,6 @@ class Command(BaseCommand):
                 agent = self.user(slug + '.agent', passwords[slug.upper() + '_AGENT'], agent=True, org=org)
                 agent.agent_organizations.set([org])
                 self.user(slug + '.editor', passwords[slug.upper() + '_EDITOR'], org=org)
-        self.stdout.write('Jury seed complete: 15 accounts, 6 institutions. Passwords were not printed.')
 
     @staticmethod
     def user(login, password, admin=False, staff=True, agent=False, org=None):
