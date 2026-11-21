@@ -1,0 +1,49 @@
+# Strona akcji AED z mapą pokrycia gmin
+Issue: APP-44
+
+## Problem
+Dysponenci AED i jury nie mają w lokalnym portalu dane.gov.pl jednego miejsca, które wyjaśnia akcję, pokazuje, ile danych AED już opublikowano i gdzie są luki, oraz prowadzi dysponenta do publikacji własnych danych.
+
+## Rezultat
+Nowa trasa `/pl/aed` w istniejącym układzie `MainLayoutComponent` (nagłówek, stopka i nawigacja portalu bez zmian):
+
+- nazwa akcji, slogan i znak jako wyraźnie oznaczone placeholdery (`PLACEHOLDER`) w jednym pliku `aed-campaign.brand.ts`, do podmiany po decyzji o marce;
+- liczniki: dysponenci (unikalne `operator_name`), rekordy AED (wiersze raportu), gminy z danymi (unikalne 7-cyfrowe `terc`) z 2477;
+- mapa pokrycia gmin: gmina z oficjalnym rekordem, gmina, w której tylko OSM zna AED (luka), gmina bez danych; dymek z nazwą gminy, liczbą AED, dysponentami i liczbą punktów OSM;
+- tekstowa alternatywa mapy: legenda z opisem słownym i tabela gmin z lukami oraz gmin z danymi;
+- CTA „Udostępnij swoje AED” do panelu dostawcy (`https://admin.mcod.local/`, w którym L5 dodaje „Dodaj dane AED”).
+
+## Kontrakt danych (publiczne API portalu, bez wewnętrznych modułów L4)
+1. `GET /api/1.4/datasets?q=Raport zbiorczy AED` - zbiór, którego tytuł zawiera „Raport zbiorczy AED” (bez rozróżniania wielkości liter).
+2. `GET /api/1.4/datasets/:id/resources` - zasób oficjalny: tytuł bez „OSM”/„OpenStreetMap”, format CSV; zasób OSM: tytuł zawiera „OSM” lub „OpenStreetMap”.
+3. `GET /api/1.4/resources/:id/data?per_page=100&page=n` - wiersze; nazwy kolumn z `meta.headers_map`. Kolumny oficjalne: `terc`, `operator_name`, `latitude`, `longitude` (standard `aed-standard/`). OSM: `latitude`/`longitude` (albo `lat`/`lon`); gminę punktu OSM wyznacza strona przez punkt w wielokącie gminy. Okno wyników Elasticsearch portalu wynosi 40000 wierszy.
+4. Brak zbioru lub zasobu: strona pokazuje stan „Raport zbiorczy nie jest jeszcze opublikowany” zamiast zer udających dane.
+
+Granice gmin: PRG (GUGiK, dane bez opłat, pobrane 2026-11-21), uproszczone do statycznego GeoJSON w `frontend/src/assets/aed/gminy.geojson` z polami `terc` (JPT_KOD_JE) i `name`. Atrybucja na stronie.
+
+## Zakres
+Nowy moduł `frontend/src/app/pages/aed-campaign/`, jedna linia trasy w `app-routing.module.ts`, plik granic w `assets/aed/`, wpis o modyfikacji w `UPSTREAM.md` i `scripts/check-portal-source.py`. Bez nowych zależności (Leaflet przez istniejący `LeafletService`), bez zmian backendu, globalnych stylów, nagłówka i strony głównej.
+
+## Poza zakresem
+Agregacja (L4), kreator dysponenta (L5), zgłoszenia (L7), finalne materiały marki (podmiana placeholderów w osobnym małym kroku), tłumaczenie EN.
+
+## Kryteria akceptacji i weryfikacja
+1. Obliczenia liczników i klasyfikacji gmin: test jednostkowy Jest (`aed-coverage.spec.ts`), RED przed implementacją, potem GREEN.
+2. Trasa `/pl/aed` renderuje się w układzie portalu; nagłówek i stopka bez zmian - przeglądarka, desktop 1280 px i 360 px bez poziomego przewijania.
+3. Klawiatura: CTA, mapa i tabela osiągalne Tabem z widocznym fokusem; landmarki, jeden `h1`, kolejność nagłówków, `aria-label` mapy, tekstowa alternatywa - inspekcja drzewa dostępności.
+4. Liczby pochodzą z API: obserwacja żądań `/api/1.4/...` w przeglądarce; bez raportu L4 widoczny stan pusty.
+5. Placeholdery marki są oznaczone w UI i w kodzie.
+6. `python3 -B scripts/check-portal-source.py` i pełna bramka `validation.commands` przechodzą.
+
+## Ryzyka
+- Raport L4 powstaje równolegle; tytuły zasobów i nazwy kolumn mogą się różnić. Kontrakt powyżej zgłaszam koordynatorowi; rozbieżność oznacza drobną poprawkę dopasowania.
+- Rozmiar GeoJSON gmin wpływa na czas ładowania; cel poniżej 1,5 MB po uproszczeniu.
+- Pobieranie OSM stronami po 100 wierszy przy ~10-15 tys. punktów to ok. 100-150 żądań; równoległość ograniczona do 6.
+
+## Progress
+1. [ ] Spec, issue APP-44, claim.
+2. [ ] Granice gmin z PRG: uproszczenie, `terc`, `name`, rozmiar.
+3. [ ] RED: test obliczeń pokrycia.
+4. [ ] GREEN: serwis danych, obliczenia, komponent strony, trasa.
+5. [ ] Przeglądarka: desktop, 360 px, klawiatura, stan pusty, dane testowe przez przechwycone API.
+6. [ ] UPSTREAM.md, kontrola źródeł, pełna bramka, PR po scaleniu #3.
