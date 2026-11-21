@@ -10,6 +10,7 @@ Decyzja właściciela projektu z 2026-11-21 (20:0x UTC) zamyka pytanie Q3 ze spe
 2. Retencja: 30 dni po oznaczeniu zgłoszenia jako „rozwiązane” moduł usuwa `reporter_name` i `contact` (oraz zgodę na kontakt). Treść zgłoszenia (rodzaj, opis, status, notatka dysponenta, daty) zostaje.
    - `resolved_at` ustawia się przy zmianie statusu na „rozwiązane” i czyści przy powrocie do innego statusu (ponowne otwarcie zaczyna liczenie od nowa).
    - `personal_data_removed_at` zapisuje moment usunięcia; ponowne uruchomienie nie zmienia już wyczyszczonych zgłoszeń.
+   - Usuwanie dotyczy danych w portalu; kopia w e-mailu wysłanym do dysponenta przy przyjęciu zgłoszenia podlega jego zasadom przechowywania (klauzula to mówi).
    - Uruchomienie: komenda `purge_aed_reporter_data [--days 30]` oraz zadanie Celery `mcod.aed_reports.tasks.purge_reporter_data_task` w harmonogramie dziennym (ten sam wzorzec co `aed_refresh`; lokalny Compose nie uruchamia celery beat, więc w demo uruchamia się komendę).
 3. Panel pokazuje `resolved_at` i `personal_data_removed_at` tylko do odczytu.
 

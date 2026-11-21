@@ -127,7 +127,7 @@ Wpis „Najbliższy AED” w sekcji PoCoTo wskazuje mapę zasobu zbioru „Rapor
 
 Ograniczenia prototypu: strona urządzenia wywołuje API przez lokalny proxy `/api` serwera frontendu (konfiguracja Compose), a nieznany identyfikator pokazuje komunikat na stronie zamiast przekierowania na stronę 404 portalu; brak limitu zgłoszeń z jednego adresu.
 
-Klauzula pod formularzem (wzór do weryfikacji prawnej): administratorem danych zgłaszającego (imię lub podpis, opcjonalny kontakt) jest dysponent urządzenia; operator portalu wyłącznie przekazuje zgłoszenie. Imię i kontakt są usuwane 30 dni po oznaczeniu zgłoszenia jako „rozwiązane”; treść zgłoszenia zostaje bez danych osobowych. Usuwanie wykonuje `docker compose run --rm manage python manage.py purge_aed_reporter_data` oraz dzienne zadanie Celery `mcod.aed_reports.tasks.purge_reporter_data_task` (wymaga procesu celery beat, którego lokalny Compose nie uruchamia). Ponowne otwarcie zgłoszenia liczy 30 dni od nowa.
+Klauzula pod formularzem (wzór do weryfikacji prawnej): administratorem danych zgłaszającego (imię lub podpis, opcjonalny kontakt) jest dysponent urządzenia; operator portalu wyłącznie przekazuje zgłoszenie. Imię i kontakt są usuwane z portalu 30 dni po oznaczeniu zgłoszenia jako „rozwiązane”; treść zgłoszenia zostaje bez danych osobowych. Kopia zgłoszenia wysłana e-mailem do dysponenta podlega jego zasadom przechowywania. Usuwanie wykonuje `docker compose run --rm manage python manage.py purge_aed_reporter_data` oraz dzienne zadanie Celery `mcod.aed_reports.tasks.purge_reporter_data_task` (wymaga procesu celery beat, którego lokalny Compose nie uruchamia). Ponowne otwarcie zgłoszenia liczy 30 dni od nowa.
 
 ## Licencja i użycie AI
 
