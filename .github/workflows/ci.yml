@@ -37,7 +37,9 @@ jobs:
       - run: flutter pub get
 
       - name: Run validation.commands from .ai/agentic.config.json
+        shell: bash
         run: |
+          set -euo pipefail
           jq -r '.validation.commands[]' .ai/agentic.config.json | while IFS= read -r cmd; do
             echo "::group::$cmd"
             sh -c "$cmd" < /dev/null
