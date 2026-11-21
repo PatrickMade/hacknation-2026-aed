@@ -89,7 +89,7 @@ i prowadzi do jego zbioru źródłowego.
    zgłaszającego jest opcjonalny i wymaga wyraźnej zgody (RODO). Zgłoszenie
    trafia do panelu właściwego dysponenta ze statusem nowe, w trakcie,
    rozwiązane.
-7. **"Najbliższy AED"**: wpis w zakładce Aplikacje portalu, oparty na
+7. **"Najbliższy AED"**: wpis w zakładce PoCoTo portalu, oparty na
    istniejącym filtrze odległości mapy portalu i raporcie zbiorczym.
 
 ### Kroki użytkownika
@@ -127,7 +127,9 @@ i prowadzi do jego zbioru źródłowego.
   "© OpenStreetMap contributors".
 - Mapa portalu: kolumny `longitude`, `latitude`, `name` przypisane do ról
   `l`, `b`, `label`.
-- Nowe strony AED: WCAG 2.2 na poziomie AA, układ responsywny od 360 px.
+- Nowe strony AED: projektowane pod WCAG 2.2 na poziomie AA, układ
+  responsywny od 360 px. Wynik automatycznej kontroli i znane naruszenie
+  (rozmiar trzech linków w kreatorze) opisuje `ograniczenia.md`.
 
 ## Architektura i technologie
 
@@ -145,7 +147,7 @@ w repozytorium.
 
 ## Stan prototypu
 
-Stan na 2026-11-21, 22:05 UTC: wszystkie elementy są w gałęzi `main`.
+Stan na 2026-11-21, 22:27 UTC: wszystkie elementy są w gałęzi `main`.
 
 | Element | Stan |
 |---|---|

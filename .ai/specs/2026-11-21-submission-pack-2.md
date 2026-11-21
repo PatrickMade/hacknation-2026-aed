@@ -18,8 +18,8 @@ zawiera znaczniki dla marki, stanu prototypu i dostępu do repozytorium.
   odtwarza PDF i sprawdza limit 10 MB oraz liczbę stron. Slajdy: problem,
   rozwiązanie, dowody wymagań technicznych ze zrzutami, kroki użytkownika,
   ograniczenia, użycie AI.
-- Zrzuty ekranu z lokalnej instancji portalu (main oraz moduły AED z
-  otwartych PR, przez lokalną instancję integracyjną).
+- Zrzuty ekranu i nagranie z lokalnej instancji portalu uruchomionej
+  z `main`.
 - `submission/akceptacja.md`: lista do akceptacji przez autora (demo lokalne,
   PDF, księga znaku, XLSX, oświadczenie AI, nagranie).
 - Teksty wersji 1: nazwa i hasło "Mapa Serc", repozytorium publiczne, link
@@ -65,5 +65,5 @@ na formę bezosobową (zasada zespołu jednoosobowego).
 4. [x] Aktualizacja tekstów wersji 1, `akceptacja.md`.
 5. [ ] Bramka, PR, niezależny przegląd, merge.
 6. [x] Zrzut strony akcji z licznikami i mapą (PR #6, head 01804b1).
-7. [x] Nagranie demo MP4 (100,8 s) i zrzuty z instancji uruchomionej z `main`.
+7. [x] Nagranie demo MP4 (102,1 s) i zrzuty z instancji uruchomionej z `main`.
 8. [x] Okładka HackTribe 800 x 600; kontrola axe-core nowych stron AED.

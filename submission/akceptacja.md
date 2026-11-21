@@ -4,11 +4,13 @@ Każdy punkt akceptuje autor po własnym sprawdzeniu. Zaznacz `[x]` i wpisz
 uwagi albo "OK". Punkt z uwagami wraca do poprawy przed wysłaniem
 zgłoszenia.
 
-Stan na 2026-11-21, 22:05 UTC. Wszystkie sprawdzane elementy są w gałęzi `main`.
+Stan na 2026-11-21, 22:27 UTC. Wszystkie sprawdzane elementy są w gałęzi `main`.
 
 ## 1. Demo lokalne
 
-Uruchomienie według `README.md` (sekcja "Uruchomienie od zera"), potem:
+Uruchomienie według `README.md`: sekcja "Uruchomienie od zera", a dla
+punktów 1.6 i 1.8 także "Zgłoszenia AED i kody QR" (`load_aed_devices`,
+`seed_aed_showcase`). Potem:
 
 - [ ] 1.1 Portal działa pod https://mcod.local/ bez zmian wyglądu poza
       obszarami AED.
@@ -72,7 +74,7 @@ Uwagi:
 
 ## 6. Nagranie demo
 
-`submission/mapa-serc-demo.mp4` (1 min 41 s, bez dźwięku, z napisami)
+`submission/mapa-serc-demo.mp4` (1 min 42 s, bez dźwięku, z napisami)
 
 - [ ] 6.1 Nagranie pokazuje kroki dysponenta i odbiorcy danych.
 - [ ] 6.2 Długość do 2 minut; brak haseł i prywatnych danych na ekranie.

@@ -7,13 +7,13 @@ w HackTribe: https://hacknation2026.hacktribe.co/mapa-serc/
 | Plik | Zawartość |
 |---|---|
 | [mapa-serc-prezentacja.pdf](mapa-serc-prezentacja.pdf) | Prezentacja zgłoszenia (PDF, 14 slajdów) |
-| [mapa-serc-demo.mp4](mapa-serc-demo.mp4) | Nagranie demo: 1 min 41 s, bez dźwięku, z napisami |
+| [mapa-serc-demo.mp4](mapa-serc-demo.mp4) | Nagranie demo: 1 min 42 s, bez dźwięku, z napisami |
 | [mapa-serc-okladka-hacktribe.png](mapa-serc-okladka-hacktribe.png) | Okładka projektu w HackTribe (800 x 600 px) |
 | [prezentacja/](prezentacja/) | Źródła slajdów: HTML, CSS, zrzuty ekranu, znak, krój pisma i skrypt budujący PDF |
 | [opis-projektu.md](opis-projektu.md) | Tytuł, krótki i szczegółowy opis, kroki użytkownika, teksty do formularza HackTribe |
 | [oswiadczenie-ai.md](oswiadczenie-ai.md) | Zakres wykorzystania AI według obszarów (regulamin zadania, par. 2 ust. 8) |
 | [ograniczenia.md](ograniczenia.md) | Ograniczenia prototypu |
-| [akceptacja.md](akceptacja.md) | Lista akceptacji autora: demo, PDF, księga znaku, XLSX, oświadczenie AI |
+| [akceptacja.md](akceptacja.md) | Lista akceptacji autora: demo, PDF, księga znaku, XLSX, oświadczenie AI, nagranie, decyzje o danych zgłaszających |
 | [lista-kontrolna.md](lista-kontrolna.md) | Lista robocza: siedem wymaganych rezultatów ze statusem i kontrola przed wysłaniem; nie wchodzi do treści zgłoszenia |
 
 Wzorcowy zakres danych AED (słownik XLSX, szablon, schemat, walidator)

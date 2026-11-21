@@ -1,6 +1,6 @@
 # Lista kontrolna zgłoszenia
 
-Lista robocza. Stan na 2026-11-21, 22:05 UTC. Termin finalnego zgłoszenia
+Lista robocza. Stan na 2026-11-21, 22:27 UTC. Termin finalnego zgłoszenia
 w HackTribe: **2026-11-22, 10:00 UTC (11:00 czasu polskiego, CET)**. Po
 terminie nie można zmieniać rozwiązania.
 
@@ -26,7 +26,7 @@ Wymagania z pełnej treści zadania, pkt 2-5.
 | Element | Status | Uwagi |
 |---|---|---|
 | Lista ograniczeń | gotowe | `submission/ograniczenia.md`; skrót na slajdzie 12 |
-| Nagranie demo | gotowe | `submission/mapa-serc-demo.mp4`: 1 min 41 s, 2,2 MB, bez dźwięku, z napisami; materiał dodatkowy w HackTribe |
+| Nagranie demo | gotowe | `submission/mapa-serc-demo.mp4`: 1 min 42 s, 2,3 MB, bez dźwięku, z napisami; materiał dodatkowy w HackTribe |
 | Okładka HackTribe | gotowe do akceptacji | `submission/mapa-serc-okladka-hacktribe.png` (800 x 600 px) |
 | Lista akceptacji autora | gotowe do akceptacji | `submission/akceptacja.md` |
 
