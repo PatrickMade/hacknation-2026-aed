@@ -65,6 +65,7 @@ describe('computeCoverage', () => {
 
     expect(warszawa.status).toBe('published');
     expect(warszawa.officialCount).toBe(3);
+    expect(warszawa.operators).toEqual(['Szkoła Podstawowa nr 1', 'Urząd m.st. Warszawy']);
     expect(warszawa.osmCount).toBe(1);
     expect(result.gminy.get('1408011').status).toBe('published');
     expect(result.gminy.get('1861011')).toEqual(
@@ -110,6 +111,8 @@ describe('computeCoverage', () => {
     expect(result.confirmedOperators).toBe(1);
     expect(result.gminy.get('1408011').publishers).toEqual(['Urząd Miasta Legionowo']);
     expect(result.gminy.get('1861011').publishers).toEqual(['Urząd Miasta Krosna']);
+    expect(result.gminy.get('1861011').operators).toEqual(['Szpital Wojewódzki w Krośnie']);
+    expect(result.gminy.get('1408011').operators).toEqual([]);
     expect(result.gminy.get('1465011').publishers).toEqual([]);
     expect(result.gminyCovered).toBe(3);
   });

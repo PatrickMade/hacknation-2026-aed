@@ -152,6 +152,13 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  /** Up to three names, then how many more: one gmina can have dozens of dysponenci. */
+  shortList(names: string[]): string {
+    const shown = names.slice(0, 3).join(', ');
+    const more = names.length - 3;
+    return more > 0 ? `${shown} i jeszcze ${this.fmt(more)}` : shown;
+  }
+
   fmt(value: number): string {
     return value.toLocaleString('pl-PL');
   }
@@ -218,9 +225,9 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
         /[&<>"']/g,
         (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char],
       );
-    const publishers = gmina.publishers.length
-      ? `<br>Wydawcy danych: ${gmina.publishers.slice(0, 5).map(escape).join(', ')}${gmina.publishers.length > 5 ? '…' : ''}`
-      : '';
-    return `<strong>${escape(gmina.name)}</strong><br>AED w oficjalnych danych: ${gmina.officialCount}<br>AED w OpenStreetMap: ${gmina.osmCount}${publishers}`;
+    const list = (label: string, names: string[]) =>
+      names.length ? `<br>${label}: ${names.slice(0, 5).map(escape).join(', ')}${names.length > 5 ? '…' : ''}` : '';
+    const institutions = list('Dysponenci', gmina.operators) + list('Wydawcy danych', gmina.publishers);
+    return `<strong>${escape(gmina.name)}</strong><br>AED w oficjalnych danych: ${gmina.officialCount}<br>AED w OpenStreetMap: ${gmina.osmCount}${institutions}`;
   }
 }

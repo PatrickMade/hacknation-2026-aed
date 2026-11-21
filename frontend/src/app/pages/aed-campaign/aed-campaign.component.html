@@ -50,7 +50,7 @@
                 <dd>{{ fmt(summary.publishers) }}</dd>
               </div>
               <div class="aed-campaign__counter">
-                <dt>Potwierdzeni dysponenci AED</dt>
+                <dt>Dysponenci AED</dt>
                 <dd>{{ fmt(summary.confirmedOperators) }}</dd>
               </div>
               <div class="aed-campaign__counter">
@@ -78,8 +78,7 @@
             </p>
             <p class="aed-campaign__source">
               Wydawca danych to instytucja, która opublikowała zbiór, na przykład urząd miasta. Dysponent to instytucja,
-              która odpowiada za konkretne urządzenie i przyjmuje zgłoszenia o nim. Dysponent potwierdza to sam, gdy
-              udostępnia dane w panelu dostawcy. Do tego czasu urządzenie ma dysponenta „nieustalonego”.
+              która odpowiada za konkretne urządzenie i przyjmuje zgłoszenia o nim, na przykład szkoła albo przychodnia.
             </p>
           }
         }
@@ -176,13 +175,13 @@
             @if (publishedGminy.length) {
               <table class="table table-sm aed-campaign__table">
                 <caption class="visually-hidden">
-                  Gminy z oficjalnymi danymi o AED i wydawcy tych danych
+                  Gminy z oficjalnymi danymi o AED i dysponenci urządzeń
                 </caption>
                 <thead>
                   <tr>
                     <th scope="col">Gmina</th>
                     <th scope="col" class="text-end">AED</th>
-                    <th scope="col">Wydawcy danych</th>
+                    <th scope="col">Dysponenci</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -193,7 +192,7 @@
                     <tr>
                       <th scope="row">{{ gmina.name }}</th>
                       <td class="text-end">{{ gmina.officialCount }}</td>
-                      <td>{{ gmina.publishers.join(', ') }}</td>
+                      <td>{{ shortList(gmina.operators) }}</td>
                     </tr>
                   }
                 </tbody>
