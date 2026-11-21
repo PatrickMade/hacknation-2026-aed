@@ -85,6 +85,11 @@ const routes: Routes = [
         loadChildren: () => import('./pages/broken-links/broken-links.routes').then((mod) => mod.BROKEN_LINKS_ROUTES),
       },
       {
+        path: '!aed',
+        data: { breadcrumbs: { label: 'Akcja AED' } },
+        loadChildren: () => import('./pages/aed-campaign/aed-campaign.routes').then((mod) => mod.AED_CAMPAIGN_ROUTES),
+      },
+      {
         path: '!user',
         loadChildren: () => import('./user/user.module').then((m) => m.UserModule),
       },

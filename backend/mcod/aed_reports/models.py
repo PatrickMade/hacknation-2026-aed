@@ -4,6 +4,7 @@ Field names follow the AED reference standard (aed-standard/schema.json).
 """
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 
 class AedDevice(models.Model):
@@ -69,13 +70,16 @@ class AedIncidentReport(models.Model):
     )
     type = models.CharField('rodzaj problemu', max_length=20, choices=TYPE_CHOICES)
     description = models.TextField('opis')
-    reporter_name = models.CharField('zgłaszający', max_length=200)
+    # blank only so retention can empty it; the public form still requires a name (services.ReportForm)
+    reporter_name = models.CharField('zgłaszający', max_length=200, blank=True)
     contact = models.CharField('kontakt', max_length=200, blank=True)
     consent = models.BooleanField('zgoda RODO na kontakt', default=False)
     status = models.CharField('status', max_length=20, choices=STATUS_CHOICES, default=STATUS_NEW)
     dysponent_note = models.TextField('notatka dysponenta', blank=True)
     created = models.DateTimeField('przyjęto', auto_now_add=True)
     modified = models.DateTimeField('zmieniono', auto_now=True)
+    resolved_at = models.DateTimeField('rozwiązano', null=True, blank=True)
+    personal_data_removed_at = models.DateTimeField('usunięto dane zgłaszającego', null=True, blank=True)
 
     class Meta:
         verbose_name = 'zgłoszenie AED'
@@ -84,3 +88,11 @@ class AedIncidentReport(models.Model):
 
     def __str__(self):
         return 'Zgłoszenie {} - {}'.format(self.pk, self.device.name)
+
+    def save(self, *args, **kwargs):
+        # Retention counts from resolution; reopening restarts the clock (APP-51).
+        if self.status == self.STATUS_RESOLVED:
+            self.resolved_at = self.resolved_at or timezone.now()
+        else:
+            self.resolved_at = None
+        super().save(*args, **kwargs)
