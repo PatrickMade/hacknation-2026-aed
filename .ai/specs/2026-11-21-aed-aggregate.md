@@ -134,6 +134,6 @@ Django 2.2 does not pick an app's `AppConfig` automatically (that started in
 
 | # | Criterion | Check |
 |---|---|---|
-| F1 | The loaded app config is `AedAggregateConfig` and `aed-refresh-daily` (task `mcod.aed_aggregate.tasks.aed_refresh_task`) is in `mcod.celeryapp.app.conf.beat_schedule` | `mcod.aed_aggregate.tests.test_app_config` (fails before the fix) |
+| F1 | The loaded app config is `AedAggregateConfig` and `aed-refresh-daily` (task `mcod.aed_aggregate.tasks.aed_refresh_task`) is in `mcod.celeryapp.app.conf.beat_schedule`, routed to the `periodic` queue like upstream beat tasks | `mcod.aed_aggregate.tests.test_app_config` (fails before the fix) |
 
 Non-goals: a celery beat service in compose; changes to the refresh itself.
