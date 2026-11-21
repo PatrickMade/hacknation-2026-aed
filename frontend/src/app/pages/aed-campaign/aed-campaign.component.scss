@@ -12,12 +12,17 @@
   &__mark {
     flex: 0 0 auto;
     width: 96px;
-    height: 96px;
-    fill: #c92a2a;
+    height: 100px;
+  }
 
-    path + path {
-      fill: $color-white;
-    }
+  &__hero-link {
+    margin-top: 1rem;
+  }
+
+  &__join {
+    padding: 1.5rem;
+    border-left: 4px solid #087f45;
+    background: #f3f8f5;
   }
 
   &__placeholder {

@@ -1,17 +1,19 @@
 /**
- * PLACEHOLDER brand: campaign name, slogan and mark are not decided yet.
- * Replace the values below after the brand decision; keep `isPlaceholder` false afterwards.
+ * Campaign brand (coordinator decision 2026-11-21): name, slogan, dysponent line and mark variant 1.
+ * The mark path comes from the sketch brand-directions/mapa-serc/symbol-1.svg (branch feat/brand-directions).
+ * When L3's final files land in brand/ on main, replace `mark` with the final symbol.
  */
 export const AED_CAMPAIGN_BRAND = {
-  isPlaceholder: true,
-  name: '[Nazwa akcji]',
-  slogan: '[Slogan akcji]',
+  isPlaceholder: false,
+  name: 'Mapa Serc',
+  slogan: 'Wszystkie AED pod ręką.',
+  dysponentLine: 'Lista AED w szufladzie nikogo nie uratuje.',
   mark: {
-    viewBox: '0 0 64 64',
+    color: '#087F45',
+    viewBox: '0 0 100 104',
+    // Heart with the AED bolt as a map pin; the bolt is cut out with the even-odd fill rule.
     paths: [
-      // PLACEHOLDER mark: a plain heart with a lightning bolt, to be replaced by the chosen SVG paths.
-      'M32 56 C14 42 6 32 6 21 C6 13 12 7 20 7 C25 7 29 10 32 14 C35 10 39 7 44 7 C52 7 58 13 58 21 C58 32 50 42 32 56 Z',
-      'M35 16 L24 34 H31 L28 48 L40 28 H33 Z',
+      'M50 96C30 74 8 56 8 34C8 18 20 8 32 8C40 8 46 12 50 19C54 12 60 8 68 8C80 8 92 18 92 34C92 56 70 74 50 96ZM57 18L38 44H48.5L43.5 65L63 38H52Z',
     ],
   },
 };

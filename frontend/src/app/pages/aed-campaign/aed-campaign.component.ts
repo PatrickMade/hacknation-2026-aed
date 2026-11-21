@@ -28,7 +28,7 @@ import {
 type LoadState = 'loading' | 'ready' | 'unpublished' | 'error';
 
 const STATUS_STYLE: Record<GminaStatus, { fillColor: string; fillOpacity: number }> = {
-  published: { fillColor: '#1b7a3a', fillOpacity: 0.75 },
+  published: { fillColor: '#087f45', fillOpacity: 0.75 },
   gap: { fillColor: '#d9480f', fillOpacity: 0.75 },
   none: { fillColor: '#ced4da', fillOpacity: 0.35 },
 };
@@ -171,8 +171,8 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
         (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char],
       );
     const operators = gmina.operators.length
-      ? `<br>Dysponenci: ${gmina.operators.slice(0, 5).map(escape).join(', ')}${gmina.operators.length > 5 ? '…' : ''}`
+      ? `<br>Instytucje: ${gmina.operators.slice(0, 5).map(escape).join(', ')}${gmina.operators.length > 5 ? '…' : ''}`
       : '';
-    return `<strong>${escape(gmina.name)}</strong><br>Oficjalne rekordy AED: ${gmina.officialCount}<br>AED w OSM: ${gmina.osmCount}${operators}`;
+    return `<strong>${escape(gmina.name)}</strong><br>AED w oficjalnych danych: ${gmina.officialCount}<br>AED w OpenStreetMap: ${gmina.osmCount}${operators}`;
   }
 }

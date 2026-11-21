@@ -1,6 +1,6 @@
 <section class="aed-campaign vertical-spacing" aria-labelledby="aed-campaign-title">
   <div class="container">
-    <!-- Hero: name, slogan and mark come from aed-campaign.brand.ts (placeholders until the brand decision) -->
+    <!-- Hero: name, slogan and mark come from aed-campaign.brand.ts -->
     <div class="aed-campaign__hero">
       <svg
         class="aed-campaign__mark"
@@ -9,7 +9,7 @@
         focusable="false"
         xmlns="http://www.w3.org/2000/svg">
         @for (path of brand.mark.paths; track $index) {
-          <path [attr.d]="path" />
+          <path [attr.d]="path" [attr.fill]="brand.mark.color" fill-rule="evenodd" />
         }
       </svg>
       <div>
@@ -19,43 +19,45 @@
         <h1 id="aed-campaign-title" class="heading heading--md mb-2">{{ brand.name }}</h1>
         <p class="aed-campaign__slogan">{{ brand.slogan }}</p>
         <p class="aed-campaign__lead">
-          Defibrylator AED pomoże tylko wtedy, gdy świadek zdarzenia wie, gdzie go szukać. Dysponenci AED publikują dane
-          o swoich urządzeniach w jednym otwartym formacie na dane.gov.pl, a raport zbiorczy łączy je w jeden zbiór dla
-          całej Polski.
+          Defibrylator AED pomaga uratować osobę, której nagle zatrzymało się serce. Liczy się każda minuta, dlatego
+          trzeba szybko wiedzieć, gdzie jest najbliższe urządzenie. Mapa Serc pokazuje, gdzie w Polsce są AED znane z
+          oficjalnych danych i w których gminach tych danych jeszcze brakuje.
         </p>
-        <a class="btn btn-primary btn-lg" [href]="providerPanelUrl">Udostępnij swoje AED</a>
+        <a class="btn btn-primary btn-lg" href="#aed-campaign-stats">Zobacz, ile AED już widać</a>
+        <p class="aed-campaign__hero-link">
+          Masz AED w swojej instytucji? <a href="#aed-campaign-join">Udostępnij dane o nim</a>.
+        </p>
       </div>
     </div>
 
     <!-- Counters -->
     <section class="aed-campaign__section" aria-labelledby="aed-campaign-stats">
-      <h2 id="aed-campaign-stats" class="heading heading--sm">Stan danych AED</h2>
+      <h2 id="aed-campaign-stats" class="heading heading--sm">Ile AED już widać</h2>
       <div aria-live="polite">
         @switch (state) {
           @case ('loading') {
-            <p>Wczytuję dane z raportu zbiorczego…</p>
+            <p>Wczytuję dane…</p>
           }
           @case ('error') {
-            <p class="aed-campaign__notice">Nie udało się wczytać danych z API portalu. Odśwież stronę za chwilę.</p>
+            <p class="aed-campaign__notice">Nie udało się wczytać danych. Odśwież stronę za chwilę.</p>
           }
           @case ('unpublished') {
             <p class="aed-campaign__notice">
-              Raport zbiorczy AED nie jest jeszcze opublikowany w portalu. Liczniki i mapa pojawią się po jego
-              publikacji.
+              Zbiorczy wykaz AED nie jest jeszcze opublikowany w portalu. Liczby i mapa pojawią się po jego publikacji.
             </p>
           }
           @case ('ready') {
             <dl class="aed-campaign__counters">
               <div class="aed-campaign__counter">
-                <dt>Dysponenci, którzy udostępnili dane</dt>
+                <dt>Instytucje, które udostępniły dane o AED</dt>
                 <dd>{{ fmt(summary.operators) }}</dd>
               </div>
               <div class="aed-campaign__counter">
-                <dt>Rekordy AED w raporcie zbiorczym</dt>
+                <dt>Defibrylatory AED w oficjalnych danych</dt>
                 <dd>{{ fmt(summary.records) }}</dd>
               </div>
               <div class="aed-campaign__counter">
-                <dt>Gminy z oficjalnymi danymi AED</dt>
+                <dt>Gminy z oficjalnymi danymi o AED</dt>
                 <dd>
                   {{ fmt(summary.gminyCovered) }}
                   <span class="aed-campaign__counter-total">z {{ fmt(summary.gminyTotal) }}</span>
@@ -69,8 +71,8 @@
                   ['/!dataset', report.datasetId + (report.datasetSlug ? ',' + report.datasetSlug : '')] | localize
                 "
                 >Raport zbiorczy AED</a
-              >{{ report.dataDate ? ', stan na ' + report.dataDate : '' }}. Dysponent to instytucja odpowiedzialna za
-              urządzenie, wskazana w każdym rekordzie.
+              >{{ report.dataDate ? ', stan na ' + report.dataDate : '' }}. Przy każdym urządzeniu wskazano instytucję,
+              która za nie odpowiada (dysponenta).
             </p>
           }
         }
@@ -80,11 +82,11 @@
     <!-- Coverage map -->
     @if (state === 'ready') {
       <section class="aed-campaign__section" aria-labelledby="aed-campaign-map">
-        <h2 id="aed-campaign-map" class="heading heading--sm">Mapa pokrycia gmin</h2>
+        <h2 id="aed-campaign-map" class="heading heading--sm">Gdzie brakuje danych o AED</h2>
         <p id="aed-campaign-map-desc">
-          Mapa pokazuje, w których gminach dysponenci opublikowali oficjalne dane AED. Luka oznacza gminę, w której
-          OpenStreetMap zna defibrylatory, ale żaden dysponent nie opublikował rekordu. Te same informacje zawierają
-          tabele pod mapą.
+          Zielone gminy mają oficjalne dane o AED. Pomarańczowe to luki: wolontariusze OpenStreetMap zaznaczyli tam
+          defibrylatory, ale żadna instytucja nie opublikowała o nich oficjalnych danych. Szare gminy nie mają danych z
+          żadnego z tych źródeł. Te same informacje są w tabelach pod mapą.
         </p>
         <ul class="aed-campaign__legend list-unstyled">
           <li>
@@ -92,13 +94,13 @@
               class="aed-campaign__swatch"
               [style.background]="statusStyle.published.fillColor"
               aria-hidden="true"></span>
-            Oficjalne dane AED: {{ gminyLabel(summary.gminyCovered) }} ({{
+            Oficjalne dane o AED: {{ gminyLabel(summary.gminyCovered) }} ({{
               percent(summary.gminyCovered, summary.gminyTotal)
             }}%)
           </li>
           <li>
             <span class="aed-campaign__swatch" [style.background]="statusStyle.gap.fillColor" aria-hidden="true"></span>
-            Luka - AED tylko w OSM: {{ gminyLabel(summary.gaps) }}
+            Luka - AED tylko w OpenStreetMap: {{ gminyLabel(summary.gaps) }}
           </li>
           <li>
             <span class="aed-campaign__swatch aed-campaign__swatch--none" aria-hidden="true"></span>
@@ -109,7 +111,7 @@
           #mapRef
           class="aed-campaign__map"
           role="region"
-          aria-label="Mapa pokrycia gmin danymi AED"
+          aria-label="Mapa gmin: oficjalne dane o AED i luki"
           aria-describedby="aed-campaign-map-desc"></div>
 
         <div class="row">
@@ -118,12 +120,12 @@
             @if (gapGminy.length) {
               <table class="table table-sm aed-campaign__table">
                 <caption class="visually-hidden">
-                  Gminy, w których OSM zna AED, a brak oficjalnych rekordów
+                  Gminy, w których OpenStreetMap zna AED, a brak oficjalnych danych
                 </caption>
                 <thead>
                   <tr>
                     <th scope="col">Gmina</th>
-                    <th scope="col" class="text-end">AED w OSM</th>
+                    <th scope="col" class="text-end">AED w OpenStreetMap</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -145,7 +147,7 @@
                 </button>
               }
             } @else {
-              <p>Brak gmin, w których OSM zna AED bez oficjalnego rekordu.</p>
+              <p>Brak gmin, w których OpenStreetMap zna AED bez oficjalnych danych.</p>
             }
           </div>
           <div class="col-lg-6">
@@ -153,13 +155,13 @@
             @if (publishedGminy.length) {
               <table class="table table-sm aed-campaign__table">
                 <caption class="visually-hidden">
-                  Gminy z oficjalnymi rekordami AED i ich dysponenci
+                  Gminy z oficjalnymi danymi o AED i instytucje, które za nie odpowiadają
                 </caption>
                 <thead>
                   <tr>
                     <th scope="col">Gmina</th>
-                    <th scope="col" class="text-end">Rekordy</th>
-                    <th scope="col">Dysponenci</th>
+                    <th scope="col" class="text-end">AED</th>
+                    <th scope="col">Instytucje</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -185,16 +187,17 @@
                 </button>
               }
             } @else {
-              <p>Żadna gmina nie ma jeszcze oficjalnych danych AED.</p>
+              <p>Żadna gmina nie ma jeszcze oficjalnych danych o AED.</p>
             }
           </div>
         </div>
       </section>
     }
 
-    <!-- How to join -->
-    <section class="aed-campaign__section" aria-labelledby="aed-campaign-join">
-      <h2 id="aed-campaign-join" class="heading heading--sm">Jak udostępnić dane AED</h2>
+    <!-- For dysponenci -->
+    <section class="aed-campaign__section aed-campaign__join" aria-labelledby="aed-campaign-join">
+      <h2 id="aed-campaign-join" class="heading heading--sm">Masz AED w swojej instytucji?</h2>
+      <p class="aed-campaign__slogan">{{ brand.dysponentLine }}</p>
       <ol class="aed-campaign__steps">
         <li>Zaloguj się do panelu dostawcy jako pełnomocnik lub edytor swojej instytucji.</li>
         <li>Wybierz „Dodaj dane AED”, pobierz szablon albo wgraj własny plik CSV, XLSX lub GeoJSON.</li>
