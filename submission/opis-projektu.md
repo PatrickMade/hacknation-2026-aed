@@ -128,8 +128,8 @@ i prowadzi do jego zbioru źródłowego.
 - Mapa portalu: kolumny `longitude`, `latitude`, `name` przypisane do ról
   `l`, `b`, `label`.
 - Nowe strony AED: projektowane pod WCAG 2.2 na poziomie AA, układ
-  responsywny od 360 px. Wynik automatycznej kontroli i znane naruszenie
-  (rozmiar trzech linków w kreatorze) opisuje `ograniczenia.md`.
+  responsywny od 360 px. Wynik automatycznej kontroli dostępności opisuje
+  `ograniczenia.md`.
 
 ## Architektura i technologie
 

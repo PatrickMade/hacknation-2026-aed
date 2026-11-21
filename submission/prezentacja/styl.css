@@ -39,7 +39,7 @@ html, body {
   font-size: 15px; font-weight: 600; color: var(--tekst2);
 }
 .szyna .znak { display: flex; align-items: center; gap: 8px; color: var(--ciemna); font-weight: 800; }
-.szyna .znak img { height: 20px; }
+.szyna .znak img { height: 36px; display: block; margin-left: -6px; }  /* znak podstawowy z pliku; symbol ma ok. 21 px, minimum z księgi to 20 px */
 .szyna .kryt b { color: var(--ciemna); font-weight: 800; }
 
 h1 { font-size: 39px; line-height: 1.12; font-weight: 800; letter-spacing: -.012em; margin: 16px 0 0; max-width: 1060px; }
@@ -127,3 +127,27 @@ td code { font-size: 14.5px; background: var(--jasna); padding: 1px 5px; border-
 .pasek code { font-size: 14.5px; }
 .pasek .b { height: 14px; background: var(--zielen); border-radius: 2px; }
 .pasek .ile { font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ---------- runda 2 ---------- */
+.s { padding-top: 22px; }
+h1 { margin-top: 10px; }
+.stan { display: inline-block; width: 22px; height: 22px; border-radius: 50%; position: relative; top: 4px; margin-right: 6px; border: 2.5px solid var(--zielen); }
+.stan.pelny { background: var(--zielen); }
+.stan.pelny::after { content: ""; position: absolute; left: 5px; top: 1px; width: 6px; height: 11px; border: solid #fff; border-width: 0 3px 3px 0; transform: rotate(42deg); }
+.stan.pol { background: linear-gradient(90deg, var(--zielen) 50%, #fff 50%); }
+.stan.decyzja { border-color: var(--luka); }
+.legenda { font-size: 14.5px; color: var(--tekst2); }
+.legenda .stan { width: 15px; height: 15px; top: 2px; border-width: 2px; }
+.legenda .stan.pelny::after { display: none; }
+.pasmo { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 15.5px; font-weight: 700; margin-top: 14px; padding-top: 12px; border-top: 2px solid var(--ciemna); }
+.pasmo span { background: var(--jasna); border-radius: 5px; padding: 5px 9px; }
+.pasmo i { font-style: normal; color: var(--zielen); font-weight: 800; }
+.plakat { background: var(--jasna); border-radius: 8px; padding: 22px 24px 20px; display: flex; flex-direction: column; }
+.plakat img { width: 210px; margin-left: -8px; }
+.plakat .haslo { font-size: 33px; line-height: 1.08; font-weight: 800; letter-spacing: -.012em; margin-top: 16px; }
+.plakat ol { margin: 14px 0 0; padding-left: 20px; font-size: 16.5px; line-height: 1.4; }
+.plakat .cta { align-self: flex-start; margin-top: 14px; background: var(--zielen); color: #fff; font-size: 17px; font-weight: 800; padding: 9px 14px; border-radius: 6px; }
+.miniatury { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.miniatury img { width: 100%; display: block; border: 1px solid var(--linia); border-radius: 5px; }
+.zalacznik { font-weight: 800; color: var(--ciemna); }
+table.ciasna th, table.ciasna td { padding: 6px 12px 6px 0; font-size: 16px; line-height: 1.28; }

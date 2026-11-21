@@ -4,7 +4,8 @@
 |---|---|
 | `slajdy.html` | Treść slajdów, jeden `<section>` na slajd (1280 x 720 px) |
 | `styl.css` | Układ i kolory akcji Mapa Serc (`brand/tokens.css`) |
-| `img/zrzuty/` | Zrzuty ekranu z lokalnej instancji portalu (JPEG) |
+| `img/zrzuty/` | Zrzuty ekranu z lokalnej instancji portalu i dwie strony księgi znaku (JPEG) |
+| `img/qr-*.svg` | Kody QR do repozytorium i nagrania, wygenerowane koderem z `backend/mcod/aed_reports/qr.py` |
 | `fonts/` | Krój Figtree z licencją SIL Open Font License 1.1 (`OFL.txt`) |
 | `okladka.html` | Okładka projektu w HackTribe, 800 x 600 px |
 | `build-pdf.py` | Budowa `../mapa-serc-prezentacja.pdf` i `../mapa-serc-okladka-hacktribe.png` |
@@ -27,8 +28,10 @@ ze źródłami.
 Zrzuty pochodzą z lokalnej instancji portalu uruchomionej według
 `README.md` w katalogu głównym, z kontami demonstracyjnymi i fikcyjnym
 urządzeniem demo. Przeglądarka sterowana skryptem otwierała strony
-w oknie 1440 x 900 px (telefon: 360 x 800 px). Pliki są przycięte
-i zapisane jako JPEG. Nie zawierają haseł ani danych osobowych.
+w oknie o szerokości 1000-1100 px (telefon: 360 x 800 px), tak żeby tekst
+interfejsu był czytelny na slajdzie. Kadry kończą się na pełnych
+elementach strony i są zapisane jako JPEG. Nie zawierają haseł ani danych
+osobowych.
 
 Nagranie `../mapa-serc-demo.mp4` powstało tak samo: skrypt przeglądarki
 przeszedł kroki dysponenta i odbiorcy danych w oknie 1280 x 720 px,

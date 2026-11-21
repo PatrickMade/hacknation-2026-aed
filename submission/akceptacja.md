@@ -35,8 +35,8 @@ Uwagi:
 
 - [ ] 2.1 Treść slajdów zgodna z prototypem i opisem.
 - [ ] 2.2 Zrzuty ekranu aktualne, w tym strona akcji z licznikami i mapą.
-- [ ] 2.3 Slajd 10: wynik automatycznej kontroli dostępności (axe-core)
-      nowych stron AED, w tym jedno naruszenie w kreatorze.
+- [ ] 2.3 Załącznik A prezentacji: stan każdej zasady portalu (spełnione,
+      częściowo, wymaga decyzji) i wynik automatycznej kontroli dostępności.
 - [ ] 2.4 Rozmiar do 10 MB, co najmniej 5 slajdów.
 
 Uwagi:

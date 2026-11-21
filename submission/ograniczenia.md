@@ -75,11 +75,9 @@ Stan na 2026-11-21.
 20. Wymagania WCAG 2.2 AA i responsywności (od 360 px) dotyczą nowych stron
     AED. Pozostała część portalu jest bez zmian i poza zakresem audytu.
     Automatyczna kontrola axe-core (reguły WCAG 2.0-2.2 A i AA) nie wykazała
-    naruszeń na stronie akcji, karcie urządzenia z formularzem
-    i w publicznym walidatorze. W pierwszym kroku kreatora wykazała jedno:
-    trzy linki do pobrania szablonu są mniejsze niż 24 px (kryterium 2.5.8).
-    Kontrola automatyczna obejmuje tylko część kryteriów; nie wykonano testu
-    z czytnikiem ekranu.
+    naruszeń na stronie akcji, karcie urządzenia z formularzem, w publicznym
+    walidatorze i w pierwszym kroku kreatora. Kontrola automatyczna obejmuje
+    tylko część kryteriów; nie wykonano testu z czytnikiem ekranu.
 21. Kod portalu pochodzi z oficjalnego wydania (backend 2.62.3, frontend
     3.5.2) na licencji GPLv3. Zmiany i moduły AED podlegają tej samej
     licencji (`LICENSE`, `UPSTREAM.md`). Datowane kopie danych źródłowych
