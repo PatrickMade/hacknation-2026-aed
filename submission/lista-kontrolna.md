@@ -18,8 +18,8 @@ Wymagania z pełnej treści zadania, pkt 2-5.
 | 3 | Działający prototyp | Zbieranie danych AED z wielu źródeł do jednego maszynowo czytelnego zbioru w dane.gov.pl | Lokalny portal (APP-42); agregator (`backend/mcod/aed_aggregate/`); kreator i walidator (APP-43); strona akcji (APP-44); zgłoszenia i "Najbliższy AED" (`backend/mcod/aed_reports/`) | portal w przeglądzie; moduły AED w realizacji | repozytorium, `README.md` |
 | 4 | Wzorcowy zakres danych | Tabela w formacie XLSX | Wzorcowy zakres danych (APP-41) | gotowe | `aed-standard/field-dictionary.xlsx` |
 | 5 | Kod źródłowy | Kod źródłowy rozwiązania | Wszystkie obszary | w realizacji; dostęp jury do repozytorium do zrobienia | repozytorium GitHub |
-| 6 | Nazwa akcji, hasło, logo, księga znaku | Logo w .jpg, .png, .pdf i formacie otwartym (np. .svg); księga znaku PDF: kolorystyka, pole ochronne, minimalna wielkość, niedozwolone użycia, opis koncepcji w 3-5 zdaniach | Marka akcji | w realizacji: kierunek do wyboru | do ustalenia |
-| 7 | Oświadczenie o użyciu AI | Zakres wykorzystania AI (regulamin zadania, par. 2 ust. 8) | Pakiet zgłoszenia (APP-47) | w przeglądzie (wersja 1); uzupełnić narzędzia użyte przy znaku | `submission/oswiadczenie-ai.md` |
+| 6 | Nazwa akcji, hasło, logo, księga znaku | Logo w .jpg, .png, .pdf i formacie otwartym (np. .svg); księga znaku PDF: kolorystyka, pole ochronne, minimalna wielkość, niedozwolone użycia, opis koncepcji w 3-5 zdaniach | Marka akcji (APP-48) | w przeglądzie: nazwa "Mapa Serc", hasło "Wszystkie AED pod ręką." | `brand/` |
+| 7 | Oświadczenie o użyciu AI | Zakres wykorzystania AI (regulamin zadania, par. 2 ust. 8) | Pakiet zgłoszenia (APP-47) | w przeglądzie (wersja 1); wiersz o znaku uzupełniony | `submission/oswiadczenie-ai.md` |
 
 ## Elementy uzupełniające
 
@@ -33,13 +33,13 @@ Wymagania z pełnej treści zadania, pkt 2-5.
 
 | Pole | Status | Źródło treści |
 |---|---|---|
-| Nazwa projektu | do zrobienia: aktualizacja po wyborze nazwy akcji | `opis-projektu.md`, sekcja Tytuł |
+| Nazwa projektu | do zrobienia: nazwa akcji wybrana ("Mapa Serc"), tytuł do aktualizacji | `opis-projektu.md`, sekcja Tytuł |
 | Nazwa zespołu, numer stolika | do zrobienia: uzupełnia autor | - |
 | Zadanie partnerskie | do sprawdzenia: przypisane w drafcie (termin draftu 2026-11-21, 19:00 UTC) | "Misja AED - Dane na ratunek" |
 | Problem, rozwiązanie, krótki opis | gotowe do wklejenia (wersja 1) | `opis-projektu.md`, sekcje Krótki opis i Teksty do formularza HackTribe |
 | Link do repozytorium | do zrobienia: dostęp dla jury | Repozytorium staje się publiczne wyłącznie za zgodą autora, przed terminem |
 | Prezentacja PDF | do zrobienia | Maksymalnie 10 MB |
-| Materiały dodatkowe | do zrobienia | XLSX, pliki logo, księga znaku, nagranie |
+| Materiały dodatkowe | w realizacji: XLSX gotowy, pliki logo i księga znaku w przeglądzie, nagranie do zrobienia | `aed-standard/field-dictionary.xlsx`, `brand/`, nagranie |
 
 ## Kontrola przed wysłaniem
 
@@ -48,8 +48,8 @@ Wymagania z pełnej treści zadania, pkt 2-5.
 - [ ] Prototyp uruchomiony od zera według `README.md`; demo przechodzi
       wszystkie kroki z konspektu.
 - [ ] PDF prezentacji ma co najmniej 5 slajdów i najwyżej 10 MB.
-- [ ] Logo w .jpg, .png, .pdf i .svg; księga znaku w PDF z wymaganymi
-      sekcjami.
+- [x] Logo w .jpg, .png, .pdf i .svg; księga znaku w PDF z wymaganymi
+      sekcjami (`brand/`).
 - [ ] Opis, ograniczenia i oświadczenie AI odpowiadają scalonemu stanowi;
       brak znaczników "do uzupełnienia", "do wykonania" i "w realizacji"
       w `opis-projektu.md`, `ograniczenia.md` i `oswiadczenie-ai.md`.
