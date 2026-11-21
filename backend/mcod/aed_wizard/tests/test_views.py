@@ -1,4 +1,5 @@
 """Provider-panel publication and public validator of the AED wizard (APP-43, 2026-11-21)."""
+import glob
 import os
 import secrets
 import shutil
@@ -145,6 +146,7 @@ class WizardTests(TestCase):
 
     def test_public_check_reports_without_storing_anything(self):
         before = (Dataset.objects.count(), Resource.objects.count(), AedPublication.objects.count())
+        temp_files = set(glob.glob(os.path.join(tempfile.gettempdir(), "aed-check-*")))
         example = (standard.standard_dir() / "example.csv").read_bytes()
         response = self.client.post(reverse("aed_wizard:check"), {
             "file": SimpleUploadedFile("example.csv", example, content_type="text/csv")})
@@ -162,4 +164,5 @@ class WizardTests(TestCase):
         self.assertIn("nieznane pola", result["errors"][0]["message"])
         self.assertGreater(result["suggested"], 0)
         self.assertEqual(before, (Dataset.objects.count(), Resource.objects.count(), AedPublication.objects.count()))
+        self.assertEqual(temp_files, set(glob.glob(os.path.join(tempfile.gettempdir(), "aed-check-*"))))
         self.assertEqual(self.client.get(reverse("aed_wizard:standard_file", args=["template.csv"])).status_code, 200)

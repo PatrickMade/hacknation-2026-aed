@@ -19,13 +19,14 @@ Nowa aplikacja Django `backend/mcod/aed_wizard/` w komponencie admin (admin.mcod
 - Kształt zasobu dla agregatora L4 (umowa przez standard, nie przez wspólny kod): opublikowany zasób CSV UTF-8, CRLF, nagłówek będący podzbiorem pól profilu w kolejności `schema.json`, przechodzący `validate.py`, w zbiorze instytucji-dysponenta oznaczonym słowem kluczowym `AED`. `source_records[].source_id` = `dysponent:<slug instytucji>`.
 - `aed_id`: wartość UUID ze źródła zostaje; w przeciwnym razie UUID5 z `dysponent:<slug>` i identyfikatora rekordu źródła (stały przy ponownym wgraniu tego samego źródła). Raport mówi, ile identyfikatorów nadano.
 - Stan między krokami: token w sesji, tabela w cache portalu (redis) na 1 godzinę. Limit pliku 10 MB. URL: tylko http(s), adresy hosta rozwiązujące się do sieci prywatnych/pętli zwrotnej są odrzucane.
-- Mapa podglądu (role `l`/`b`/`label`) zależy od asynchronicznego przetworzenia pliku przez portal i pozostaje do ustawienia w zakładce map; to ograniczenie wersji 1.
+- Zasób dostaje gotowy schemat tabeli (`tabular_data_schema`): kolumny tekstowe, liczbowe `latitude`/`longitude` oraz role mapy `b`/`l`/`label` z `x-map` profilu, gdy każdy rekord ma współrzędne. Bez tego portal zgaduje typy z pierwszych wierszy i odrzuca puste komórki w kolumnach uznanych za liczbowe. Podgląd tabeli i mapy pojawia się po asynchronicznym przetworzeniu pliku przez portal.
+- Publiczna kontrola XLSX czyta najwyżej 20 000 wierszy arkusza (poza limitem 10 MB pliku).
 
 ## Kryteria akceptacji i weryfikacja
 1. Mapowanie: plik w układzie miejskim (`;`, polskie nagłówki, przecinek dziesiętny) daje CSV, które przechodzi `validate.py` - test Django `mcod.aed_wizard.tests`.
 2. Walidacja: zamienione osie i punkt poza Polską dają błąd walidatora oraz ostrzeżenie o osiach; zamiana osi usuwa błąd; duplikaty i godziny spoza OSM dają ostrzeżenia - testy.
 3. Publikacja: konto pełnomocnika publikuje plik; powstaje zbiór instytucji z kategorią HEAL, tagiem AED, licencją i zasób z plikiem CSV, `data_date` i znakiem zgodności; druga publikacja używa tego samego zbioru; obca instytucja jest odrzucona - test Django z klientem.
-4. Publiczny walidator: anonimowy POST zwraca raport, nie tworzy obiektów w bazie i nie zostawia pliku - test.
+4. Publiczny walidator: anonimowy POST zwraca raport, nie tworzy obiektów w bazie i nie zostawia pliku tymczasowego walidacji - test.
 5. End to end lokalnie: konto pełnomocnika przechodzi kreator w przeglądarce; zasób jest widoczny w API `/1.4`; agregator L4 odczytuje zasób, gdy jego PR jest dostępny (inaczej raportowane jako niezweryfikowane).
 6. Pełny gate `validation.commands`, niezależny review i merge przez merge gate.
 

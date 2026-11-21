@@ -10,6 +10,7 @@ from urllib.parse import urljoin, urlsplit
 import requests
 
 MAX_BYTES = 10 * 1024 * 1024
+MAX_ROWS = 20000
 GEOJSON_LAT = "geometry_latitude"
 GEOJSON_LON = "geometry_longitude"
 
@@ -130,7 +131,11 @@ def read_xlsx(data):
         sheet = load_workbook(io.BytesIO(data), read_only=True, data_only=True).worksheets[0]
     except Exception as error:  # openpyxl raises many types for damaged files
         raise SourceError("Nie można odczytać pliku XLSX: {}".format(error))
-    records = [[cell(value) for value in row] for row in sheet.iter_rows(values_only=True)]
+    records = []
+    for row in sheet.iter_rows(values_only=True):
+        if len(records) > MAX_ROWS:
+            raise SourceError("Arkusz ma więcej niż {} wierszy.".format(MAX_ROWS))
+        records.append([cell(value) for value in row])
     while records and not any(value not in (None, "") for value in records[0]):
         records.pop(0)
     if not records:
@@ -204,8 +209,13 @@ def fetch(url):
             parts = checked_url(url)
         else:
             raise SourceError("Zbyt wiele przekierowań adresu URL.")
-        response.raise_for_status()
-        data = response.raw.read(MAX_BYTES + 1, decode_content=True)
+        try:
+            if 300 <= response.status_code < 400:
+                raise SourceError("Serwer zwrócił przekierowanie bez adresu docelowego.")
+            response.raise_for_status()
+            data = response.raw.read(MAX_BYTES + 1, decode_content=True)
+        finally:
+            response.close()
     except requests.RequestException as error:
         raise SourceError("Nie udało się pobrać pliku: {}".format(error))
     filename = parts.path.rsplit("/", 1)[-1]

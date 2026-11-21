@@ -175,3 +175,12 @@ class FetchTests(SimpleTestCase):
         with mock.patch("mcod.aed_wizard.readers.socket.getaddrinfo", side_effect=resolve):
             with self.assertRaisesMessage(readers.SourceError, "publiczny"):
                 readers.fetch("https://files.example/aed.csv")
+
+    @mock.patch("mcod.aed_wizard.readers.check_public_host")
+    @mock.patch("mcod.aed_wizard.readers.requests.get")
+    def test_redirect_without_location_is_not_returned_as_a_file(self, get, check):
+        response = FakeResponse(200, body=b"<html>moved</html>")
+        response.status_code = 302
+        get.return_value = response
+        with self.assertRaisesMessage(readers.SourceError, "bez adresu docelowego"):
+            readers.fetch("https://files.example/aed.csv")

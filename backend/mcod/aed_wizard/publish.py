@@ -4,6 +4,7 @@ import io
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import transaction
+from django.utils.html import escape
 
 from mcod.aed_wizard import standard
 from mcod.aed_wizard.models import AedPublication
@@ -32,7 +33,7 @@ def dataset_notes(organization):
     return (
         "<p>Lokalizacje i dostępność defibrylatorów AED, za które odpowiada {}. "
         "Dane w formacie wzorcowego zakresu danych AED (profil PL {}), "
-        "przygotowane kreatorem „Dodaj dane AED”.</p>".format(organization.title, standard.version())
+        "przygotowane kreatorem „Dodaj dane AED”.</p>".format(escape(organization.title), standard.version())
     )
 
 
@@ -100,8 +101,9 @@ def publish(organization, user, csv_bytes, records_count, warnings_count, meta):
     """meta: title, description, license (cc0|cc-by), update_frequency, data_date (date), source_name."""
     with transaction.atomic():
         dataset = aed_dataset(organization, user, meta["license"], meta["update_frequency"])
+        extra = meta.get("description") or ""
         description = "<p><strong>{}</strong>. Sprawdzono walidatorem aed-standard: {} rekordów.</p>{}".format(
-            mark(), records_count, meta.get("description") or ""
+            mark(), records_count, "<p>{}</p>".format(escape(extra)) if extra else ""
         )
         resource = Resource.objects.create(
             title=meta["title"],
