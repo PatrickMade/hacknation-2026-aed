@@ -19,7 +19,7 @@ W katalogu głównym repozytorium:
 python3 scripts/init-env.py
 
 # Jedna konfiguracja Compose dla całego portalu.
-docker compose --profile tools build
+docker compose --profile tools --parallel 1 build manage frontend db elasticsearch redis rabbitmq rdfdb nginx
 docker compose up -d --wait db elasticsearch redis rabbitmq rdfdb smtp flags
 docker compose run --rm manage python manage.py migrate --noinput
 docker compose run --rm manage python manage.py seed_jury

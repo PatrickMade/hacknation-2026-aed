@@ -22,7 +22,13 @@ jobs:
         run: python3 scripts/init-env.py
       - name: Build the portal and prepare its test dependencies
         run: |
-          docker compose --profile tools build
+          # All five application roles share the image built by manage.
+          # Reclaim intermediate build cache on this disposable runner;
+          # tagged runtime images remain available for the validation gate.
+          for service in manage frontend db elasticsearch redis rabbitmq rdfdb nginx; do
+            docker compose --profile tools --parallel 1 build "$service"
+            docker builder prune --all --force
+          done
           docker compose up -d --wait db elasticsearch redis rabbitmq rdfdb smtp flags
           docker compose run --rm manage python manage.py migrate --noinput
       - name: Run validation.commands

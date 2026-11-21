@@ -37,3 +37,5 @@ Funkcje i dane AED, branding, zmiany treści i layoutu, produkcja oraz hosting p
 ## Przygotowanie runnera CI
 
 Pełna budowa na jednorazowym runnerze GitHub Actions wymaga usunięcia preinstalowanego, nieużywanego przez portal Android SDK z /usr/local/lib/android przed budową. Zaobserwowano ENOSPC podczas pierwszej budowy. Zmiana dotyczy wyłącznie efemerycznego runnera workflow ubuntu-latest; wszystkie obrazy i validation.commands nadal są wymagane.
+
+Compose definiuje pięć usług aplikacji z jednym wspólnym obrazem. Budujemy każdy unikalny obraz raz. CI wykonuje budowy kolejno i usuwa wyłącznie cache BuildKit na jednorazowym runnerze między obrazami; obrazy wynikowe i wszystkie kontrole pozostają zachowane.
