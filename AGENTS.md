@@ -70,8 +70,8 @@ and acceptance criteria against it before declaring completion.
   upgrades go through `apptrick-upgrade`.
 - Deliver with `apptrick-deliver` (it has a small-change path); a bare
   continue resumes the same issue, run and PR. Agents merge to `baseBranch`
-  only through `.ai/scripts/merge_gate.py` (review, required checks and both
-  QA verdicts on the head) and only when `delivery.mode` is `autonomous`.
+  only through `.ai/scripts/merge_gate.py` (review, required checks, and both
+  device QA verdicts only while `qaGate` is true; it is false here) and only when `delivery.mode` is `autonomous`.
 - Invoke skills; reading a skill file is not invoking it. Under a coordinator
   (SDLC.md "Coordinator lanes"; contract: the coordinator's
   event-only rules) lanes report only events, owners hold no devices
