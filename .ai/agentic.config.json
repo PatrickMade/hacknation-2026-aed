@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "baseBranch": "main",
+  "tracker": "linear",
+  "trackerTransport": "native",
+  "harness": {
+    "overlays": []
+  },
+  "linear": {
+    "workspace": "slop-slayer",
+    "team": "APP",
+    "teamId": "36d46b1c-ceb4-4f9f-a430-cfd2d6849d1e",
+    "project": "9f306713-927d-4c7f-8c80-f9cef34413b1",
+    "states": {
+      "backlog": {
+        "name": "Backlog",
+        "id": "88dbc0e0-6a4a-4d92-9431-9e9d8437110c",
+        "type": "backlog"
+      },
+      "ready": {
+        "name": "Ready",
+        "id": "c2f446a3-ed28-4afd-b848-ceec162336f8",
+        "type": "unstarted"
+      },
+      "inProgress": {
+        "name": "In Progress",
+        "id": "d96fc5ff-1b57-4243-9bcf-0851365e71ff",
+        "type": "started"
+      },
+      "review": {
+        "name": "Review",
+        "id": "7c386e3d-3eba-48fe-b7da-5c4dcc903fd6",
+        "type": "started"
+      },
+      "qa": {
+        "name": "QA",
+        "id": "94a35ebc-85f3-4f5a-a07c-f0fc978a011e",
+        "type": "started"
+      },
+      "done": {
+        "name": "Done",
+        "id": "3746f313-5c7a-40dd-bf42-6f73252d663e",
+        "type": "completed"
+      },
+      "canceled": {
+        "name": "Canceled",
+        "id": "5a57b4e7-d412-43f0-9609-2e63659d4897",
+        "type": "canceled"
+      }
+    },
+    "routing": {
+      "app": "9f306713-927d-4c7f-8c80-f9cef34413b1",
+      "template": null,
+      "lab": null
+    }
+  },
+  "ticketKeyPattern": "APP-[0-9]+",
+  "github": {
+    "repository": "PatrickMade/hacknation-2026-aed",
+    "host": "github.com"
+  },
+  "validation": {
+    "commands": [
+      "fvm flutter analyze",
+      "fvm flutter test",
+      "python3 -B .ai/scripts/check_project_copy.py",
+      "python3 -B .ai/scripts/check_client_config.py"
+    ]
+  },
+  "labels": {
+    "enabled": true,
+    "pipeline": [
+      "review",
+      "changes-requested",
+      "qa",
+      "qa-failed",
+      "merge-queue",
+      "blocked",
+      "do-not-merge"
+    ],
+    "category": [
+      "bug",
+      "feature",
+      "refactor",
+      "security",
+      "dependencies",
+      "documentation"
+    ],
+    "meta": [
+      "needs-qa",
+      "skip-qa",
+      "qa-approved",
+      "qa-self-verified",
+      "in-progress",
+      "ci-monitoring"
+    ],
+    "priority": [
+      "priority-low",
+      "priority-medium",
+      "priority-high",
+      "priority-extreme"
+    ],
+    "risk": [
+      "risk-low",
+      "risk-medium",
+      "risk-high"
+    ]
+  },
+  "qaGate": false,
+  "paths": {
+    "runs": ".ai/runs",
+    "analysis": ".ai/analysis",
+    "specs": ".ai/specs",
+    "scripts": ".ai/scripts",
+    "qa": ".ai/qa"
+  },
+  "closeKeywords": []
+}

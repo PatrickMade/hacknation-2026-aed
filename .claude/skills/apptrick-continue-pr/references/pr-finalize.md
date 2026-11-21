@@ -1,0 +1,71 @@
+# PR finalize - update the resumed PR, labels, summary comment, markers
+
+The single procedure for the "push → update the existing PR → normalize labels → summary comment → chaining reference lines" mechanics (steps 9 and 10 of the skill body). The point is **one** implementation of PR updating + labeling, reused rather than copied, and never a second PR for work that already has one.
+
+## Specification before publication
+
+Apply the Task specification gate from `references/agentic-setup.md` to the
+candidate tree before commit or PR publication. Include the covering spec in the
+branch and `Source doc:` in the body; verify coverage again after review fixes.
+An incomplete draft states any gap and cannot be marked complete or ready.
+
+## Never open a duplicate PR
+
+Before opening anything, check whether a PR already exists for this branch via **search-prs** / **get-pr**. If one exists, **reuse it** - push new commits to its head branch and update its body/labels - never open a second PR. Only the skill that first opens the PR owns opening it; everyone else updates that same PR. For this skill the check is already decided: the run resumes PR `#{prNumber}`, so this step **always updates that existing PR and never opens a new one**.
+
+## Prefer the `apptrick-open-pr` skill when installed
+
+`apptrick-open-pr` implements the push + label-normalization mechanics (through the descriptor guards, with rationale comments). When it is installed, **reuse it** instead of re-deriving the steps - this is a resume with no `{issueId}` in scope, so its PR-opening, issue-handback, and lock-release parts do not apply: this skill updates the existing PR and holds its own lock until step 10.
+
+## Graceful fallback when `apptrick-open-pr` is NOT installed
+
+`apptrick-open-pr` is an **optional** enhancement - a repo may install this skill without it, and it must still work. When absent, perform the mechanics inline via the tracker operations: commit with a conventional-commit subject, push the head branch, normalize labels per the section below. Behavior is identical either way - the same PR, the same labels - so installing `apptrick-open-pr` only removes duplication, it never changes the outcome.
+
+## Spec-only PRs stay design-only
+
+Determine design-only intent from the requested workflow and PR/plan purpose,
+not file types alone. An explicitly design-only spec PR remains a design
+artifact; implementation belongs on its own PR via `apptrick-implement-spec`,
+linked with `Refs #{prNumber}`. An implementation PR interrupted after its
+spec/plan seed must resume on this same PR, even when no code has landed yet.
+An execution plan describing intended implementation is evidence of that intent;
+a specs/docs-only diff does not override it. If intent is ambiguous, resolve that
+question before redirecting or editing; never create a duplicate based only on
+file types. A branch already mixing spec and implementation continues normally.
+
+## PR body updates
+
+- If all Progress steps are now `- [x]`, flip `Status: in-progress` to `Status: complete` **and flip the PR from draft to ready via mark-pr-ready** - `apptrick-deliver` leaves the PR a draft while unfinished, so completing the resume is what promotes it. A resume that stays `in-progress` leaves the PR a draft the user can watch and re-enter.
+- Refresh agent-owned prose using `references/pr-body-template.md`: describe the full current change and validation, replacing stale text instead of appending a run history. Preserve adopted human-authored prose. The summary comment carries only this resume’s delta and next action.
+
+## Label normalization - resume semantics
+
+Every mutation goes through the `apply_label`/`label_exists` guards from the tracker descriptor; when `labels.enabled` is `false`, skip every label operation and say so in the summary comment.
+
+- If the PR is still in a non-terminal pipeline state (`review`, `changes-requested`, `qa`, `qa-failed`, `merge-queue`, `blocked`, `do-not-merge`), keep it. Do NOT move a PR already in `merge-queue` back to `review` just because a resume happened.
+- If the PR has no pipeline label (shouldn't happen, but may after an override), apply `review`.
+- Add `needs-qa` if the resume introduces user-facing behavior. Add `skip-qa` only for clearly low-risk changes. Never both. If the resume newly introduces user-facing behavior on a PR previously in `merge-queue`, add `needs-qa` and drop any stale `qa-approved` - the QA sign-off no longer covers the new work; when `qaGate` is on, the QA-approval gate re-blocks the merge until QA re-approves. Do not set the `qa` pipeline label yourself; `qa` is applied manually by a QA reviewer when they re-test.
+- Preserve the priority label. If the resume materially widens the scope (e.g. now touches auth, money, or data scoping), raise the priority accordingly and comment why; otherwise leave it. If the PR somehow has no priority, infer and apply one: outage, data loss, or a security incident → `priority-extreme`; security hardening or a release-blocking regression → `priority-high`; ordinary bug or feature → `priority-medium`; cosmetic, docs, dependency bumps, or cleanup → `priority-low`.
+- Preserve the risk label. If the resume materially widens the blast radius (e.g. it now widens access, rewrites existing data, changes how money is computed or moved, or breaks a published contract), raise the risk accordingly and comment why; otherwise leave it. If the PR somehow has no risk label, infer and apply one: a diff that widens access control (authorization, sessions, grants, tenant or scope filters), rewrites or deletes existing data or changes a migration runner, changes how money is computed or moved, changes module boundaries or state ownership, or breaks a published contract → `risk-high` (only tightening access, an additive migration with up/down evidence, display-only amount changes and stricter validation of invalid input are not high-risk on that ground; unclear direction counts as high-risk); ordinary single-area change with tests → `risk-medium`; docs, dependency bumps, test-only, or isolated cleanup → `risk-low`.
+- Never add `qa-approved` and never set the `qa` pipeline label from this skill. When `qaGate` is on, a `needs-qa` PR may sit in `merge-queue` while the QA-approval gate blocks the merge until a QA reviewer adds `qa-approved`; when `qaGate` is off, `needs-qa` is advisory only.
+- Maintain the single consolidated `🏷️ label rationale` comment instead of per-change comments: on any label change, find the `` 🤖 `apptrick-continue-pr` - 🏷️ label rationale `` marker via **list-issue-comments** and rewrite that comment via **update-comment** to the current label state - one label per line with its emoji and a full-sentence reason; create it when absent, never post a second (the format and label emoji map are the shared contract in `apptrick-open-pr`'s label normalization).
+
+## Summary comment
+
+Every resume ends with one outcome and handoff comment (delta, verification result or evidence link, and next action; no repeated PR-body or label narrative), posted in step 9 via the tracker operation **comment-pr** with a body file so multi-line formatting is preserved. Full structure and rules: `references/summary-comment-template.md`. Never post it before the automated review loop (step 8) finishes, never claim a completion you did not reach, and never paste secrets into it. Keep this resume’s validation-gate and integration/UI outcomes in the PR body or linked evidence; when a verification runs mid-flight and is worth surfacing early, post it as its own idempotent `` 🤖 `apptrick-continue-pr` - verification `` comment (screenshots via **attach-image-evidence** when UI changed).
+
+## Marker emission
+
+End the run's final report with the chaining reference lines, one per line, exact shape - include `Issue:` only when the run has a subject issue:
+
+```
+Issue: {#<number> for GitHub | <native-key> for Jira/Linear} (link: <full issue URL>)
+PR: #<PR number> (link: <full PR URL>)
+```
+
+Chained consumers (`apptrick-review`, `apptrick-verify`, orchestration scripts) parse these exact text markers - never rename, translate, or decorate them.
+
+## apptrick-continue-pr specifics
+
+- Release the `in-progress` lock at the very end of step 10 - **always**, even on failure (trap/finally). Mechanics and the completion-comment text: `references/claim-pr.md`.
+- Remove the worktree you created and prune, in the same trap/finally: `references/worktree-setup.md`.
