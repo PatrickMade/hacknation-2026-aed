@@ -39,7 +39,7 @@
             </p>
           }
           @case ('ready') {
-            @if (report.truncated) {
+            @if (report.truncated || osmTruncated) {
               <p class="aed-campaign__notice">
                 Części wierszy nie udało się wczytać z portalu, więc liczby mogą być zaniżone.
               </p>
@@ -64,9 +64,11 @@
             <p class="aed-campaign__source">
               Źródło:
               <a
-                [routerLink]="
-                  ['/!dataset', report.datasetId + (report.datasetSlug ? ',' + report.datasetSlug : '')] | localize
-                "
+                [routerLink]="[
+                  '/' | localize,
+                  'dataset',
+                  report.datasetId + (report.datasetSlug ? ',' + report.datasetSlug : ''),
+                ]"
                 >Raport zbiorczy AED</a
               >{{ report.dataDate ? ', stan na ' + report.dataDate : '' }}. Przy każdym urządzeniu wskazano instytucję,
               która za nie odpowiada (dysponenta).
@@ -76,8 +78,14 @@
       </div>
     </section>
 
-    <!-- Coverage map -->
-    @if (state === 'ready') {
+    <!-- Coverage map: needs the large OpenStreetMap resource, which loads after the counters -->
+    @if (state === 'ready' && osmState === 'loading') {
+      <p class="aed-campaign__notice" aria-live="polite">Trwa wczytywanie mapy luk w danych…</p>
+    }
+    @if (state === 'ready' && osmState === 'error') {
+      <p class="aed-campaign__notice" aria-live="polite">Nie udało się wczytać mapy luk. Odśwież stronę za chwilę.</p>
+    }
+    @if (state === 'ready' && osmState === 'ready') {
       <section class="aed-campaign__section" aria-labelledby="aed-campaign-map">
         <h2 id="aed-campaign-map" class="heading heading--sm">Gdzie brakuje danych o AED</h2>
         <p id="aed-campaign-map-desc">

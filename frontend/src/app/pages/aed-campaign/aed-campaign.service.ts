@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { forkJoin, from, Observable, of } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { concatMap, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 
 import { AED_REPORT_DATASET_TITLE } from '@app/pages/aed-campaign/aed-campaign.brand';
@@ -26,7 +26,14 @@ export interface AedReportData {
   /** True when some rows could not be read within the portal's row window. */
   truncated: boolean;
   records: AedOfficialRecord[];
-  osmPoints: AedPoint[];
+  /** OpenStreetMap resource of the report, read separately with getOsmPoints(). */
+  osmResourceId: string | null;
+}
+
+export interface AedOsmData {
+  points: AedPoint[];
+  /** True when some rows could not be read within the portal's row window. */
+  truncated: boolean;
 }
 
 type Row = Record<string, string | null>;
@@ -95,31 +102,38 @@ export class AedCampaignService {
           return of(null);
         }
         const osm = resources.find((item) => isOsmResource(item.attributes?.title));
-        return forkJoin({
-          official: this.getRows(official.id),
-          osm: osm ? this.getRows(osm.id) : of({ rows: [] as Row[], truncated: false }),
-        }).pipe(
-          map(({ official: { rows: records, truncated }, osm: { rows: osmRows, truncated: osmTruncated } }) => ({
+        return this.getRows(official.id).pipe(
+          map(({ rows, truncated }) => ({
             datasetId: String(dataset.id),
             datasetSlug: dataset.attributes?.slug,
             dataDate: official.attributes?.data_date || dataset.attributes?.modified || null,
-            truncated: truncated || osmTruncated,
-            records: records.map((row) => ({
+            truncated,
+            records: rows.map((row) => ({
               // Optional: the raport zbiorczy has no terc column, so the gmina usually comes from coordinates.
               terc: row['terc'] ?? null,
               operatorName: row['operator_name'],
               lat: toNumber(row['latitude']),
               lon: toNumber(row['longitude']),
             })),
-            osmPoints: osmRows
-              .map((row) => ({
-                lat: toNumber(row['latitude'] ?? row['lat']),
-                lon: toNumber(row['longitude'] ?? row['lon']),
-              }))
-              .filter((point) => point.lat !== null && point.lon !== null),
+            osmResourceId: osm ? String(osm.id) : null,
           })),
         );
       }),
+    );
+  }
+
+  /** Points of the OpenStreetMap resource; it is large, so the page reads it after the counters are shown. */
+  getOsmPoints(resourceId: string): Observable<AedOsmData> {
+    return this.getRows(resourceId).pipe(
+      map(({ rows, truncated }) => ({
+        points: rows
+          .map((row) => ({
+            lat: toNumber(row['latitude'] ?? row['lat']),
+            lon: toNumber(row['longitude'] ?? row['lon']),
+          }))
+          .filter((point) => point.lat !== null && point.lon !== null),
+        truncated,
+      })),
     );
   }
 

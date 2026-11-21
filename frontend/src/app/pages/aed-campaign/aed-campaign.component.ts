@@ -13,11 +13,13 @@ import {
 import { RouterLink } from '@angular/router';
 import { LocalizeRouterPipe } from '@gilsdav/ngx-translate-router';
 import type { Map as LeafletMap } from 'leaflet';
-import { forkJoin, Subscription } from 'rxjs';
+import { EMPTY, forkJoin, Subscription } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 
 import { AED_CAMPAIGN_BRAND, AED_PROVIDER_PANEL_URL } from '@app/pages/aed-campaign/aed-campaign.brand';
 import { AedCampaignService, AedReportData } from '@app/pages/aed-campaign/aed-campaign.service';
 import {
+  AedPoint,
   computeCoverage,
   CoverageSummary,
   GminaCoverage,
@@ -56,6 +58,9 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
   readonly tablePreview = TABLE_PREVIEW;
 
   state: LoadState = 'loading';
+  /** Loading of the OpenStreetMap resource, which feeds the gap map and tables. */
+  osmState: 'loading' | 'ready' | 'error' = 'loading';
+  osmTruncated = false;
   report: AedReportData | null = null;
   summary: CoverageSummary | null = null;
   gapGminy: GminaCoverage[] = [];
@@ -82,27 +87,50 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
     this.subscription = forkJoin({
       gminy: this.aedCampaignService.getGminy(),
       report: this.aedCampaignService.getReport(),
-    }).subscribe({
-      next: ({ gminy, report }) => {
-        this.gminy = gminy;
-        this.report = report;
-        this.summary = computeCoverage(report?.records || [], report?.osmPoints || [], gminy);
-        const all = Array.from(this.summary.gminy.values());
-        this.gapGminy = all.filter((gmina) => gmina.status === 'gap').sort((a, b) => b.osmCount - a.osmCount);
-        this.publishedGminy = all
-          .filter((gmina) => gmina.status === 'published')
-          .sort((a, b) => b.officialCount - a.officialCount);
-        this.state = report ? 'ready' : 'unpublished';
-        this.changeDetector.detectChanges();
-        if (report) {
+    })
+      .pipe(
+        // Show the counters from the small official resource first; the large OSM resource follows.
+        tap(({ gminy, report }) => {
+          this.gminy = gminy;
+          this.report = report;
+          this.updateCoverage([]);
+          this.state = report ? 'ready' : 'unpublished';
+          this.osmState = report?.osmResourceId ? 'loading' : 'ready';
+          this.changeDetector.detectChanges();
+          if (report && !report.osmResourceId) {
+            this.drawMap();
+          }
+        }),
+        switchMap(({ report }) =>
+          report?.osmResourceId ? this.aedCampaignService.getOsmPoints(report.osmResourceId) : EMPTY,
+        ),
+      )
+      .subscribe({
+        next: (osmData) => {
+          this.updateCoverage(osmData.points);
+          this.osmTruncated = osmData.truncated;
+          this.osmState = 'ready';
+          this.changeDetector.detectChanges();
           this.drawMap();
-        }
-      },
-      error: () => {
-        this.state = 'error';
-        this.changeDetector.markForCheck();
-      },
-    });
+        },
+        error: () => {
+          if (this.state === 'ready') {
+            this.osmState = 'error';
+          } else {
+            this.state = 'error';
+          }
+          this.changeDetector.markForCheck();
+        },
+      });
+  }
+
+  private updateCoverage(osmPoints: AedPoint[]): void {
+    this.summary = computeCoverage(this.report?.records || [], osmPoints, this.gminy);
+    const all = Array.from(this.summary.gminy.values());
+    this.gapGminy = all.filter((gmina) => gmina.status === 'gap').sort((a, b) => b.osmCount - a.osmCount);
+    this.publishedGminy = all
+      .filter((gmina) => gmina.status === 'published')
+      .sort((a, b) => b.officialCount - a.officialCount);
   }
 
   ngOnDestroy(): void {

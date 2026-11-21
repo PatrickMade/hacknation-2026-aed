@@ -1,4 +1,5 @@
 import { Observable, of, throwError } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { AedCampaignService } from './aed-campaign.service';
 
@@ -68,14 +69,23 @@ describe('AedCampaignService.getReport', () => {
   it('reads every OSM row of a resource larger than the 10000-row window', (done) => {
     const service = new AedCampaignService(datasetService as never, {} as never);
 
-    service.getReport().subscribe({
-      next: (report) => {
-        expect(report.records.length).toBe(2);
-        expect(report.osmPoints.length).toBe(25000);
-        expect(report.truncated).toBe(false);
-        done();
-      },
-      error: (error) => done(error),
-    });
+    service
+      .getReport()
+      .pipe(
+        switchMap((report) => {
+          expect(report.records.length).toBe(2);
+          expect(report.truncated).toBe(false);
+          expect(report.osmResourceId).toBe('8');
+          return service.getOsmPoints(report.osmResourceId);
+        }),
+      )
+      .subscribe({
+        next: (osmData) => {
+          expect(osmData.points.length).toBe(25000);
+          expect(osmData.truncated).toBe(false);
+          done();
+        },
+        error: (error) => done(error),
+      });
   });
 });

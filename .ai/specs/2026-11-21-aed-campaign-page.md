@@ -18,7 +18,8 @@ Nowa trasa `/pl/aed` w istniejącym układzie `MainLayoutComponent` (nagłówek,
 1. `GET /api/search?q=Raport zbiorczy AED&model[terms]=dataset&per_page=10` (istniejące `DatasetService.getAll`) - zbiór, którego tytuł zawiera „Raport zbiorczy AED” (bez rozróżniania wielkości liter). Wyszukiwarka zwraca tytuł z podświetleniem `<mark>`, więc tagi są usuwane przed porównaniem.
 2. `GET /api/1.4/datasets/:id/resources` - zasób oficjalny: tytuł bez „OSM”/„OpenStreetMap”, format CSV; zasób OSM: tytuł zawiera „OSM” lub „OpenStreetMap” (u L4: „Punkty AED z OpenStreetMap - Polska (ODbL 1.0)”); zasób oficjalny u L4: „Raport zbiorczy AED (CSV)”.
 3. `GET /api/1.4/resources/:id/data?per_page=100&page=n` - wiersze; nazwy kolumn z `meta.headers_map`. Kolumny oficjalne: `operator_name`, `latitude`, `longitude`; `terc` jest opcjonalne. Zmiana kontraktu od L4 (PR #8, head a36cd828, decyzja koordynatora - opcja A): raport zbiorczy nie ma kolumny `terc`, bo żadne źródło nie ma poprawnego 7-cyfrowego kodu, a standard zabrania zgadywania. Gminę rekordu oficjalnego i punktu OSM wyznacza więc strona ze współrzędnych przez punkt w wielokącie gminy z dołączonych granic PRG; `terc` jest używane tylko wtedy, gdy istnieje i wskazuje gminę z PRG. Rekord bez współrzędnych liczy się do rekordów i dysponentów, ale nie do gmin. OSM: `latitude`/`longitude` (albo `lat`/`lon`). Indeks danych jednego zasobu ma okno wyników Elasticsearch 10000 wierszy (strona 101 i dalsze zwracają 400). Zasób większy od okna strona czyta pasami szerokości geograficznej (`q=colN:[a TO b}`, po 1° w 49-55 N, plus krawędzie), a pas większy od okna dzieli na pół. Gdy czegoś nie da się wczytać w oknie, strona pokazuje komunikat, że liczby mogą być zaniżone. Wartość `terc` z 6 cyframi (liczba bez wiodącego zera) jest uzupełniana do 7 cyfr.
-4. Brak zbioru lub zasobu: strona pokazuje stan „Raport zbiorczy nie jest jeszcze opublikowany” zamiast zer udających dane.
+4. Kolejność: liczniki pokazują się po wczytaniu małego zasobu oficjalnego; mapa luk i tabele po wczytaniu zasobu OSM (komunikat „Trwa wczytywanie mapy luk w danych…”).
+5. Brak zbioru lub zasobu: strona pokazuje stan „Raport zbiorczy nie jest jeszcze opublikowany” zamiast zer udających dane.
 
 Granice gmin: PRG (GUGiK, dane bez opłat, pobrane 2026-11-21), uproszczone do statycznego GeoJSON w `frontend/src/assets/aed/gminy.geojson` z polami `terc` (JPT_KOD_JE) i `name`. Atrybucja na stronie.
 
@@ -52,4 +53,5 @@ Agregacja (L4), kreator dysponenta (L5), zgłoszenia (L7), zmiany plików `brand
 8. [x] Zmiana kontraktu L4 (brak `terc`, gminy ze współrzędnych): test charakteryzujący i sprawdzenie na atrapie z tytułami zasobów L4.
 9. [x] Finalny znak i kolory z `brand/` (L3).
 10. [x] Defekt z integracyjnego QA (L8): wyszukiwanie z `<mark>` w tytule i odczyt OSM ponad okno 10000 wierszy; testy regresji RED, potem GREEN; dowód na stosie z `aed_refresh`.
-11. [ ] Niezależny review nowego head, CI, merge gate (kolejność 6).
+11. [x] Dowód na stosie L7 z danymi `aed_refresh` (tylko odczyt): liczniki 4/74/5 z 2479, mapa, tabele, CTA do kreatora, 360 px bez przewijania w poziomie; poprawka linku do zbioru (`/pl/dataset/6,raport-zbiorczy-aed`) i liczniki przed wczytaniem OSM.
+12. [ ] Niezależny review nowego head, CI, merge gate (kolejność 6).
