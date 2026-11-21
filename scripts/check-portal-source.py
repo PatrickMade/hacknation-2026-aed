@@ -8,7 +8,9 @@ root = Path(__file__).resolve().parents[1]
 modified = {
     'backend/docker/app/Dockerfile',
     'backend/mcod/urls.py',
+    'backend/mcod/routes.py',
     'frontend/proxy.local.conf.json',
+    'frontend/src/app/app-routing.module.ts',
     'frontend/src/app/app.config.ts',
     'frontend/src/app/app.module.ts',
     'frontend/src/app/services/leflet.service.ts',

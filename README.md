@@ -98,15 +98,37 @@ Po budowie obrazów i przygotowaniu usług/bazy z instrukcji startu uruchom bram
 ```sh
 python3 -B scripts/check-portal-source.py
 docker compose --profile tools config --quiet
-docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed mcod.aed_aggregate mcod.aed_wizard --noinput --keepdb
+docker compose run --rm manage python manage.py test mcod.core.tests.test_jury_seed mcod.aed_aggregate mcod.aed_wizard mcod.aed_reports --noinput --keepdb
 python3 -B .ai/scripts/check_project_copy.py
 python3 -B .ai/scripts/check_client_config.py
 ```
 
-Test obejmuje seed, ponowienie, brak hasła, logowanie edytorów i odmowę dostępu do obcej instytucji oraz panelu dla zwykłego użytkownika. Testy `mcod.aed_aggregate` sprawdzają mapowanie źródeł AED do wzorcowego zakresu, deduplikację, pochodzenie rekordów, walidację przez `aed-standard/validate.py` oraz publikację zasobów raportu. Testy `mcod.aed_wizard` sprawdzają mapowanie plików dysponentów do standardu, raport walidacji, publikację przez konto instytucji, publiczny walidator oraz to, że opublikowany zasób trafia do raportu zbiorczego po odświeżeniu. Nie jest to pełny zestaw testów całego portalu.
+Test obejmuje seed, ponowienie, brak hasła, logowanie edytorów i odmowę dostępu do obcej instytucji oraz panelu dla zwykłego użytkownika. Testy `mcod.aed_aggregate` sprawdzają mapowanie źródeł AED do wzorcowego zakresu, deduplikację, pochodzenie rekordów, walidację przez `aed-standard/validate.py` oraz publikację zasobów raportu. Testy `mcod.aed_wizard` sprawdzają mapowanie plików dysponentów do standardu, raport walidacji, publikację przez konto instytucji, publiczny walidator oraz to, że opublikowany zasób trafia do raportu zbiorczego po odświeżeniu. Testy `mcod.aed_reports` sprawdzają moduł zgłoszeń AED: API, zgodę RODO, zakres panelu, e-mail, kod QR i komendy. Nie jest to pełny zestaw testów całego portalu.
+
+## Zgłoszenia AED i kody QR
+
+Moduł `backend/mcod/aed_reports/` prowadzi rejestr urządzeń AED po `aed_id` ze wzorcowego zakresu danych i przyjmuje zgłoszenia problemów do dysponenta. Fikcyjne urządzenia demonstracyjne załadujesz po `seed_jury`:
+
+```sh
+docker compose run --rm manage python manage.py load_aed_devices mcod/aed_reports/data/demo-jury-demo.csv --organization jury-demo
+docker compose run --rm manage python manage.py load_aed_devices mcod/aed_reports/data/demo-jury-legionowo.csv --organization jury-legionowo
+```
+
+Plik każdego dysponenta musi mieć układ standardu i przejść jego walidator; komenda aktualizuje urządzenia po `aed_id` i odrzuca identyfikator należący do innej instytucji.
+
+| Adres | Zastosowanie |
+|---|---|
+| https://mcod.local/pl/aed/5b0c3c1e-6f0e-4a57-9d4e-2f1a3b7c8d01 | Strona urządzenia demo z przyciskiem „Zgłoś problem” (adres z kodu QR) |
+| https://api.mcod.local/aed/devices/<aed_id>/qr.svg | Kod QR strony urządzenia do naklejki |
+| https://admin.mcod.local/aed_reports/aedincidentreport/ | Zgłoszenia w panelu: tylko konta instytucji odpowiedzialnej za urządzenie, statusy nowe / w trakcie / rozwiązane |
+| http://localhost:8025/ | E-mail o nowym zgłoszeniu do adresu instytucji i jej kont |
+
+Wpis „Najbliższy AED” w sekcji PoCoTo wskazuje mapę zasobu zbioru „Raport zbiorczy AED” z filtrem odległości. Uruchom go po opublikowaniu tego zbioru: `docker compose run --rm manage python manage.py seed_aed_showcase` (albo z `--url <adres mapy>`).
+
+Ograniczenia prototypu: brak limitu zgłoszeń z jednego adresu, brak automatycznego usuwania danych zgłaszających po zamknięciu sprawy, treść klauzuli RODO wymaga akceptacji prawnej.
 
 ## Licencja i użycie AI
 
 Portal i nasze modyfikacje są udostępniane na GNU GPL v3.0. Wyjątek: datowane kopie danych źródłowych w `backend/data/aed/sources/` nie są objęte GPL v3.0; zachowują licencje źródeł (CC0 1.0, CC BY 4.0, OpenStreetMap: ODbL 1.0), opisane w `backend/data/aed/sources/LICENSES.md`. Zobacz `LICENSE`, `NOTICE.upstream.txt` i `UPSTREAM.md` z wersjami, sumami archiwów i listą zmian. Zachowano oryginalne notices i licencje zależności.
 
-AI wspierało analizę, konfigurację lokalną, seed kont, agregator raportu zbiorczego AED (mapowanie, deduplikacja, publikacja), kod kreatora AED i walidatora, testy i dokumentację tej wersji. Oficjalny kod portalu pochodzi z dystrybucji dane.gov.pl. Zakres użycia AI należy aktualizować w materiałach zgłoszenia zgodnie z regulaminem HackNation §2 ust. 8; końcowy rezultat wymaga przeglądu i odpowiedzialności zespołu.
+AI wspierało analizę, konfigurację lokalną, seed kont, agregator raportu zbiorczego AED (mapowanie, deduplikacja, publikacja), kod kreatora AED i walidatora, moduł zgłoszeń AED z koderem QR, testy i dokumentację tej wersji. Oficjalny kod portalu pochodzi z dystrybucji dane.gov.pl. Zakres użycia AI należy aktualizować w materiałach zgłoszenia zgodnie z regulaminem HackNation §2 ust. 8; końcowy rezultat wymaga przeglądu i odpowiedzialności zespołu.
