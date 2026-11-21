@@ -20,3 +20,5 @@ Goal, scope, non-goals and risks: Source doc.
 - Browser: homepage count 6, institutions page lists all six; local flags 202/200; no production telemetry in observed requests. Empty CMS responses remain 404 as documented. Screenshot export unavailable because the browser tool rejected the workspace path; DOM/network evidence was inspected.
 - Full validation.commands passed in order on this source candidate. Upstream whitespace remains byte-identical; own-file whitespace check passed.
 - Local secret scan: 22 generated env values, no match in staged source. Gitleaks staged scan reported 161 inherited findings: 25 in byte-identical upstream examples/test certificates/library sources and 136 integrity-hash false positives in the manifest; no finding in modified/new application code. Generated local values had no staged match. Celery inspect ping returned pong (1 worker).
+
+- Pre-push rejected 25 known upstream findings; exact occurrence fingerprints added, with unchanged-file SHA verification retained. No broad source-tree secret-scan exception.

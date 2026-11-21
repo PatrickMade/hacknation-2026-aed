@@ -5,7 +5,7 @@ Issue: APP-42
 Repozytorium zawiera szkielet Flutter. Jury potrzebuje oficjalnego portalu uruchamianego lokalnie z kodu, wraz z kontami demonstracyjnymi. Zastępujemy szkielet oficjalnymi wydaniami backend 2.62.3 i frontend 3.5.2 na GPLv3.
 
 ## Zakres
-Źródła w backend/ i frontend/, jedna konfiguracja compose.yaml i opisana sekwencja budowy, migracji, seedowania oraz startu. Zachowujemy oryginalne notices i dołączamy oficjalną licencję, pochodzenie, SHA-256 archiwów oraz datowaną listę zmian. Zmieniamy tylko konfigurację lokalną i telemetrię. Nie zmieniamy designu, treści ani układu portalu. Seed tworzy instytucje i konta, bez zbiorów AED i bez nowych stron CMS. Flutter usuwamy po potwierdzeniu startu portalu z repozytorium. Aktualizujemy README, AGENTS, SDLC i CI.
+Źródła w backend/ i frontend/, jedna konfiguracja compose.yaml i opisana sekwencja budowy, migracji, seedowania oraz startu. Zachowujemy oryginalne notices i dołączamy oficjalną licencję, pochodzenie, SHA-256 archiwów oraz datowaną listę zmian. Zmieniamy tylko konfigurację lokalną i telemetrię. Nie zmieniamy designu, treści ani układu portalu. Seed tworzy instytucje i konta, bez zbiorów AED i bez nowych stron CMS. Flutter usuwamy po potwierdzeniu startu portalu z repozytorium. Aktualizujemy README, AGENTS, SDLC i CI. Konkretne wystąpienia publicznych przykładów i certyfikatów testowych upstream są zapisane w .gitleaksignore; ich oryginalne pliki nadal muszą przejść kontrolę SHA-256.
 
 ## Ustalenia
 - Web lokalny jest jedynym celem tej zmiany; brak publikacji produkcyjnej i wydania mobilnego.

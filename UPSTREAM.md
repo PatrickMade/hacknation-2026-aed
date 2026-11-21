@@ -22,3 +22,7 @@ Oficjalny plik README.txt jest zachowany jako NOTICE.upstream.txt, a LICENCE.txt
 - Pliki w katalogu głównym, local/ i scripts/: Compose, konfiguracja lokalna, generowanie env, instrukcja startu, kontrola źródeł i testy. Dotychczasowy szkielet Flutter zostaje zastąpiony portalem.
 
 Nie zmieniamy szablonów, stylów, treści ani layoutu portalu. Pusta baza po migracjach nie zawiera produkcyjnych stron CMS. Seed nie ładuje upstream basic_data.json ani jego kont z publicznie znanymi hasłami.
+
+## Kontrola sekretów w źródłach upstream
+
+.gitleaksignore wskazuje konkretne wystąpienia w niezmienionych archiwach: publiczne przykłady kluczy, certyfikaty testowe, literały w testach oraz fałszywe trafienia w kodzie bibliotek. Nie obejmuje katalogów jako całości. Kontrola SHA-256 każdego z tych plików pozostaje częścią wymaganej bramki. Nowe hasła jury są generowane w .env i nie są objęte wyjątkami.
