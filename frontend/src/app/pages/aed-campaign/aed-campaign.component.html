@@ -2,16 +2,8 @@
   <div class="container">
     <!-- Hero: name, slogan and mark come from aed-campaign.brand.ts -->
     <div class="aed-campaign__hero">
-      <svg
-        class="aed-campaign__mark"
-        [attr.viewBox]="brand.mark.viewBox"
-        aria-hidden="true"
-        focusable="false"
-        xmlns="http://www.w3.org/2000/svg">
-        @for (path of brand.mark.paths; track $index) {
-          <path [attr.d]="path" [attr.fill]="brand.mark.color" fill-rule="evenodd" />
-        }
-      </svg>
+      <!-- Decorative: the campaign name is the h1 next to it. -->
+      <img class="aed-campaign__mark" [src]="brand.markSrc" alt="" width="120" height="115" />
       <div>
         <h1 id="aed-campaign-title" class="heading heading--md mb-2">{{ brand.name }}</h1>
         <p class="aed-campaign__slogan">{{ brand.slogan }}</p>

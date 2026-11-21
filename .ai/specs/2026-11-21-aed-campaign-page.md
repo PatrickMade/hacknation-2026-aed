@@ -7,7 +7,7 @@ Dysponenci AED i jury nie mają w lokalnym portalu dane.gov.pl jednego miejsca, 
 ## Rezultat
 Nowa trasa `/pl/aed` w istniejącym układzie `MainLayoutComponent` (nagłówek, stopka i nawigacja portalu bez zmian):
 
-- marka z decyzji koordynatora (2026-11-21): nazwa „Mapa Serc”, slogan „Wszystkie AED pod ręką.”, hasło dla dysponentów „Lista AED w szufladzie nikogo nie uratuje.”, znak wariant 1 (serce z błyskawicą AED jako pinezka, zielony #087F45) ze szkicu `brand-directions/mapa-serc/symbol-1.svg`; wszystko w jednym pliku `aed-campaign.brand.ts`. Po scaleniu finalnych plików L3 w `brand/` znak zostanie podmieniony na finalny;
+- marka z decyzji koordynatora (2026-11-21): nazwa „Mapa Serc”, slogan „Wszystkie AED pod ręką.”, hasło dla dysponentów „Lista AED w szufladzie nikogo nie uratuje.”, finalny znak L3 (APP-48): pełny kontur Polski z wyciętym sercem AED, plik `brand/logo/mapa-serc-symbol-kolor.svg`, skopiowany bajt w bajt do `frontend/src/assets/aed/` (build Angular serwuje tylko `frontend/src/assets`) i wyświetlany jako obraz dekoracyjny obok `h1`; kolory z `brand/tokens.css` (#087F45, #0B2E20, #DDF3E6). Tekst marki w jednym pliku `aed-campaign.brand.ts`;
 - odbiorca: zwykły mieszkaniec, prosty język; sekcja dla dysponentów osobno, z CTA;
 - liczniki: dysponenci (unikalne `operator_name`), rekordy AED (wiersze raportu), gminy z oficjalnymi danymi z liczby gmin w pliku granic PRG (2479 w wersji GUGiK z 2026-11-10; brief podawał 2477). Gminę rekordu wyznaczają współrzędne; 7-cyfrowe `terc`, jeśli kiedyś się pojawi, ma pierwszeństwo (części gminy miejsko-wiejskiej, typ 4 i 5, liczą się do gminy typu 3);
 - mapa pokrycia gmin: gmina z oficjalnym rekordem, gmina, w której tylko OSM zna AED (luka), gmina bez danych; dymek z nazwą gminy, liczbą AED, dysponentami i liczbą punktów OSM;
@@ -26,7 +26,7 @@ Granice gmin: PRG (GUGiK, dane bez opłat, pobrane 2026-11-21), uproszczone do s
 Nowy moduł `frontend/src/app/pages/aed-campaign/`, jedna linia trasy w `app-routing.module.ts`, plik granic w `assets/aed/`, wpis o modyfikacji w `UPSTREAM.md` i `scripts/check-portal-source.py`. Bez nowych zależności: Leaflet jest już zależnością portalu; strona ładuje go przez dynamiczny `import('leaflet')`, bo istniejący `LeafletService` używa `require('leaflet')`, którego obecny serwer deweloperski (esbuild) nie obsługuje. Bez zmian backendu, globalnych stylów, nagłówka, strony głównej i `LeafletService`.
 
 ## Poza zakresem
-Agregacja (L4), kreator dysponenta (L5), zgłoszenia (L7), finalne pliki logo z `brand/` (podmiana znaku po scaleniu PR L3), tłumaczenie EN.
+Agregacja (L4), kreator dysponenta (L5), zgłoszenia (L7), zmiany plików `brand/` po scaleniu PR L3 (kopię w assets trzeba wtedy odświeżyć), tłumaczenie EN.
 
 ## Kryteria akceptacji i weryfikacja
 1. Obliczenia liczników i klasyfikacji gmin: test jednostkowy Jest (`aed-coverage.spec.ts`), RED przed implementacją, potem GREEN.
@@ -50,4 +50,5 @@ Agregacja (L4), kreator dysponenta (L5), zgłoszenia (L7), finalne pliki logo z 
 6. [x] UPSTREAM.md, kontrola źródeł, pełna bramka, PR #6 po scaleniu #3.
 7. [x] Poprawki po review: linki wewnątrz strony przewijają do sekcji i przenoszą fokus (portal ma `<base href="/">`), komunikat o limicie 40000 wierszy, `terc` bez wiodącego zera, brak mapy po opuszczeniu strony w trakcie ładowania Leaflet.
 8. [x] Zmiana kontraktu L4 (brak `terc`, gminy ze współrzędnych): test charakteryzujący i sprawdzenie na atrapie z tytułami zasobów L4.
-9. [ ] Niezależny review nowego head, CI, merge gate (kolejność 6).
+9. [x] Finalny znak i kolory z `brand/` (L3).
+10. [ ] Niezależny review nowego head, CI, merge gate (kolejność 6).

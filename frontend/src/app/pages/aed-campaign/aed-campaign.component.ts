@@ -28,6 +28,7 @@ import {
 type LoadState = 'loading' | 'ready' | 'unpublished' | 'error';
 
 const STATUS_STYLE: Record<GminaStatus, { fillColor: string; fillOpacity: number }> = {
+  // #087f45 = --mapa-serc-zielen in brand/tokens.css.
   published: { fillColor: '#087f45', fillOpacity: 0.75 },
   gap: { fillColor: '#d9480f', fillOpacity: 0.75 },
   none: { fillColor: '#ced4da', fillOpacity: 0.35 },
