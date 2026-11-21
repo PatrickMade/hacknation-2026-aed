@@ -12,6 +12,7 @@ from mcod.users.models import User
 
 TITLE = 'Najbliższy AED'
 DATASET_TITLE = 'Raport zbiorczy AED'
+MAP_RESOURCE = 'aed-raport-csv'
 NOTES = (
     '<p>Mapa defibrylatorów AED z raportu zbiorczego. Otwórz mapę, wybierz „Moja lokalizacja” '
     'i ustaw odległość, aby zobaczyć najbliższe urządzenia. Przy każdym AED dysponent jest '
@@ -28,7 +29,11 @@ class Command(BaseCommand):
     def handle(self, url=None, **options):
         dataset = Dataset.objects.filter(title__iexact=DATASET_TITLE, status='published').order_by('-pk').first()
         if url is None:
-            resource = dataset and dataset.resources.filter(status='published').order_by('pk').first()
+            resource = None
+            if dataset is not None:
+                published = dataset.resources.filter(status='published')
+                # Prefer the CSV with the l/b map columns (identifier set by the aggregator), else the first resource.
+                resource = published.filter(ext_ident=MAP_RESOURCE).first() or published.order_by('pk').first()
             if resource is None:
                 raise CommandError('No published "{}" dataset with a resource; run the aggregator first '
                                    'or pass --url.'.format(DATASET_TITLE))
