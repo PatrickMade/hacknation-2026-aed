@@ -4,6 +4,7 @@ Inputs are synthetic rows in the layouts of the municipal AED datasets on dane.g
 """
 import io
 import json
+from unittest import mock
 
 from django.test import SimpleTestCase
 
@@ -136,3 +137,41 @@ class MappingTests(SimpleTestCase):
             readers.read("empty.csv", b"nazwa,szerokosc\r\n")
         with self.assertRaisesMessage(readers.SourceError, "publiczny"):
             readers.fetch("http://127.0.0.1/aed.csv")
+
+
+class FakeResponse:
+    def __init__(self, status, location=None, body=b""):
+        self.status_code = status
+        self.headers = {"Location": location} if location else {"Content-Type": "text/csv"}
+        self.is_redirect = location is not None
+        self.raw = io.BytesIO(body)
+        self.raw.read = lambda size, decode_content=True, _read=self.raw.read: _read(size)
+
+    def raise_for_status(self):
+        pass
+
+    def close(self):
+        pass
+
+
+class FetchTests(SimpleTestCase):
+    @mock.patch("mcod.aed_wizard.readers.check_public_host")
+    @mock.patch("mcod.aed_wizard.readers.requests.get")
+    def test_redirects_are_followed_and_each_hop_is_checked(self, get, check):
+        get.side_effect = [
+            FakeResponse(302, "https://api.dane.gov.pl/media/resources/aed.csv"),
+            FakeResponse(200, body=b"nazwa,szerokosc,dlugosc\r\nPunkt,52.1,21.0\r\n"),
+        ]
+        name, data = readers.fetch("https://api.dane.gov.pl/resources/1,aed/file")
+        self.assertEqual(name, "aed.csv")
+        self.assertTrue(data.startswith(b"nazwa"))
+        self.assertEqual([call.args[0] for call in check.call_args_list], ["api.dane.gov.pl", "api.dane.gov.pl"])
+
+    @mock.patch("mcod.aed_wizard.readers.requests.get")
+    def test_redirect_to_a_private_address_is_refused(self, get):
+        get.return_value = FakeResponse(302, "http://127.0.0.1/admin")
+        addresses = {"files.example": "93.184.215.14", "127.0.0.1": "127.0.0.1"}
+        resolve = lambda host, port: [(0, 0, 0, "", (addresses[host], 0))]  # noqa: E731
+        with mock.patch("mcod.aed_wizard.readers.socket.getaddrinfo", side_effect=resolve):
+            with self.assertRaisesMessage(readers.SourceError, "publiczny"):
+                readers.fetch("https://files.example/aed.csv")

@@ -5,7 +5,7 @@ import io
 import ipaddress
 import json
 import socket
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 
 import requests
 
@@ -180,13 +180,30 @@ def check_public_host(hostname):
             raise SourceError("Adres URL musi wskazywać publiczny serwer.")
 
 
-def fetch(url):
+MAX_REDIRECTS = 5
+
+
+def checked_url(url):
     parts = urlsplit(url)
     if parts.scheme not in ("http", "https") or not parts.hostname or parts.username or parts.password:
         raise SourceError("Podaj publiczny adres http(s) bez danych logowania.")
     check_public_host(parts.hostname)
+    return parts
+
+
+def fetch(url):
+    """Download a public file; every redirect hop is checked like the first URL."""
+    parts = checked_url(url)
     try:
-        response = requests.get(url, timeout=20, stream=True, allow_redirects=False)
+        for _ in range(MAX_REDIRECTS + 1):
+            response = requests.get(url, timeout=20, stream=True, allow_redirects=False)
+            if not response.is_redirect:
+                break
+            url = urljoin(url, response.headers["Location"])
+            response.close()
+            parts = checked_url(url)
+        else:
+            raise SourceError("Zbyt wiele przekierowań adresu URL.")
         response.raise_for_status()
         data = response.raw.read(MAX_BYTES + 1, decode_content=True)
     except requests.RequestException as error:
