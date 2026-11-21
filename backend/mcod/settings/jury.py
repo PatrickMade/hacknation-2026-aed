@@ -78,3 +78,6 @@ UNLEASH_URL = "http://flags/api"
 MATOMO_URL = ""
 MATOMO_SITE_ID = ""
 ENABLE_SENTRY = False
+
+# Local AED modules, 2026-11-21.
+INSTALLED_APPS += ["mcod.aed_aggregate"]  # noqa: F405
