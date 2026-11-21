@@ -4,7 +4,7 @@ Każdy punkt akceptuje autor po własnym sprawdzeniu. Zaznacz `[x]` i wpisz
 uwagi albo "OK". Punkt z uwagami wraca do poprawy przed wysłaniem
 zgłoszenia.
 
-Stan na 2026-11-21, 20:45 UTC. Punkty zależne od nie scalonych jeszcze
+Stan na 2026-11-21, 19:50 UTC. Punkty zależne od niescalonych jeszcze
 pull requestów są oznaczone numerem PR.
 
 ## 1. Demo lokalne
@@ -16,9 +16,9 @@ Uruchomienie według `README.md` (sekcja "Uruchomienie od zera"), potem:
 - [ ] 1.2 Zbiór "Raport zbiorczy AED" ma zasoby CSV, GeoJSON i OSM (ODbL);
       zakładka Mapa pokazuje punkty.
 - [ ] 1.3 API zwraca rekordy raportu: `https://api.mcod.local/1.4/resources/<id CSV>/data`.
-- [ ] 1.4 Kreator (PR #5): konto pełnomocnika Krosna, "Dodaj dane AED",
+- [ ] 1.4 Kreator: konto pełnomocnika Krosna, "Dodaj dane AED",
       plik Krosna, przypisanie kolumn, raport walidacji, publikacja.
-- [ ] 1.5 Walidator "Sprawdź swój plik" (PR #5) pokazuje błędy pliku
+- [ ] 1.5 Walidator "Sprawdź swój plik" pokazuje błędy pliku
       z błędami bez logowania.
 - [ ] 1.6 Karta urządzenia i "Zgłoś problem" (PR #7): zgłoszenie widzi tylko
       dysponent urządzenia, e-mail w MailHog.
@@ -34,7 +34,9 @@ Uwagi:
 
 - [ ] 2.1 Treść slajdów zgodna z prototypem i opisem.
 - [ ] 2.2 Zrzuty ekranu aktualne (strona akcji z licznikami po PR #6).
-- [ ] 2.3 Rozmiar do 10 MB, co najmniej 5 slajdów.
+- [ ] 2.3 Slajd 10: wynik kontroli dostępności nowych stron AED zamiast
+      znacznika "do uzupełnienia" (po przeglądzie integracyjnym).
+- [ ] 2.4 Rozmiar do 10 MB, co najmniej 5 slajdów.
 
 Uwagi:
 

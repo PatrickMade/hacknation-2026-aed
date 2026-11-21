@@ -18,6 +18,9 @@ python3 -B submission/prezentacja/build-pdf.py
 Wymaga Pythona 3 oraz Chrome albo Chromium (ścieżkę można podać przez
 `--chrome`). Skrypt drukuje `slajdy.html` w trybie bez interfejsu
 i kończy się błędem, gdy PDF ma ponad 10 MB albo mniej niż 5 stron.
+Każde uruchomienie nadpisuje `../mapa-serc-prezentacja.pdf` (nowa data
+utworzenia w metadanych), więc po zmianie slajdów zatwierdź nowy PDF razem
+ze źródłami.
 
 ## Zrzuty ekranu
 

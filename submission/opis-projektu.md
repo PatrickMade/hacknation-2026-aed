@@ -145,7 +145,7 @@ w repozytorium.
 
 ## Stan prototypu
 
-Stan na 2026-11-21, 20:45 UTC. "W przeglądzie" oznacza pull request
+Stan na 2026-11-21, 19:50 UTC. "W przeglądzie" oznacza pull request
 czekający na przegląd i scalenie do `main`.
 
 | Element | Stan |
@@ -153,7 +153,7 @@ czekający na przegląd i scalenie do `main`.
 | Wzorcowy zakres danych `aed-standard/` | gotowy, w `main` |
 | Lokalny portal dane.gov.pl z kontami | gotowy, w `main` |
 | Agregator i raport zbiorczy AED | gotowy, w `main` |
-| Kreator dysponenta i walidator | w przeglądzie (PR #5) |
+| Kreator dysponenta i walidator | gotowy, w `main` |
 | Strona akcji i mapa pokrycia | w przeglądzie (PR #6) |
 | Zgłoszenia problemów, QR, "Najbliższy AED" | w przeglądzie (PR #7) |
 | Nazwa, hasło, logo, księga znaku | w przeglądzie (PR #10) |

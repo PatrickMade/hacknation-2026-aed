@@ -37,7 +37,7 @@ konfiguracji) i przeglądem w osobnej sesji AI.
 | Zgłoszenia AED | Moduł `backend/mcod/aed_reports` (rejestr urządzeń po `aed_id`, API zgłoszeń ze zgodą RODO, panel dysponenta, e-mail, własny koder QR sprawdzony bit po bicie z biblioteką referencyjną qrcodegen), strona `/pl/aed/<aed_id>`, testy i fikcyjne dane demo | Zakres funkcji; akceptacja działania w demo |
 | Strona akcji i "Najbliższy AED" | Strona akcji z licznikami i mapą pokrycia gmin, wpis "Najbliższy AED" w zakładce PoCoTo | Zakres funkcji; akceptacja działania w demo |
 | Nazwa, hasło, logo, księga znaku | Kierunki nazwy i hasła, rysunki znaku, pliki logo, naklejka z kodem QR i księga znaku (Claude Fable 5.2). Kontur Polski pochodzi z Natural Earth (domena publiczna), krój pisma Figtree (SIL OFL 1.1) | Wybór kierunku nazwy, hasła i znaku; akceptacja finalnych plików |
-| Teksty zgłoszenia i prezentacja | Wersje robocze opisu, listy ograniczeń, slajdów (HTML) i tego oświadczenia; zrzuty ekranu i nagranie demo przygotowane skryptem przeglądarki z lokalnej instancji portalu | Redakcja i akceptacja treści; wygłoszenie prezentacji |
+| Teksty zgłoszenia i prezentacja | Wersje robocze opisu, listy ograniczeń, slajdów (HTML) i tego oświadczenia; zrzuty ekranu przygotowane skryptem przeglądarki z lokalnej instancji portalu; nagranie demo [do uzupełnienia] | Redakcja i akceptacja treści; wygłoszenie prezentacji |
 | Kontrola jakości | Testy automatyczne i przeglądy kodu oraz treści w osobnych sesjach AI; kontrola modułów AED w przeglądarce | Przegląd końcowy materiałów przed wysłaniem [do wykonania] i odpowiedzialność za całość |
 
 ## Czego AI nie robiło
