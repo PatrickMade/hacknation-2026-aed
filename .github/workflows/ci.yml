@@ -15,6 +15,9 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+      # This disposable hosted runner does not build mobile apps.
+      - name: Remove the unused preinstalled Android SDK
+        run: sudo rm -rf /usr/local/lib/android
       - name: Generate ephemeral local configuration
         run: python3 scripts/init-env.py
       - name: Build the portal and prepare its test dependencies

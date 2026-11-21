@@ -33,3 +33,7 @@ Funkcje i dane AED, branding, zmiany treści i layoutu, produkcja oraz hosting p
 2. Test RED wymaganej zawartości seedowania, potem seed i GREEN; potwierdzić powtórzenie, uprawnienia i brak haseł.
 3. Zatrzymać badawczy stack; zbudować i uruchomić własny; sprawdzić HTTP i przeglądarkę.
 4. Usunąć Flutter, zaktualizować dokumentację i gate CI; uruchomić pełny gate, niezależny review i merge.
+
+## Przygotowanie runnera CI
+
+Pełna budowa na jednorazowym runnerze GitHub Actions wymaga usunięcia preinstalowanego, nieużywanego przez portal Android SDK z /usr/local/lib/android przed budową. Zaobserwowano ENOSPC podczas pierwszej budowy. Zmiana dotyczy wyłącznie efemerycznego runnera workflow ubuntu-latest; wszystkie obrazy i validation.commands nadal są wymagane.
