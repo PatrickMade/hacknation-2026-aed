@@ -150,6 +150,20 @@ class ProvenanceTests(SimpleTestCase):
         self.assertIn('postcode', rejected[0][1][0])
 
 
+class MapSchemaTests(SimpleTestCase):
+    def test_x_map_columns_become_portal_map_fields(self):
+        from mcod.aed_aggregate.publish import map_schema
+        inferred = {'fields': [{'name': 'aed_id', 'type': 'string'}, {'name': 'name', 'type': 'string'},
+                               {'name': 'latitude', 'type': 'string'}, {'name': 'longitude', 'type': 'number'},
+                               {'name': 'simc', 'type': 'integer'}], 'missingValues': []}
+        schema = map_schema(inferred)
+        self.assertEqual(schema['geo'], {'label': {'col_name': 'name', 'col_index': 1},
+                                         'b': {'col_name': 'latitude', 'col_index': 2},
+                                         'l': {'col_name': 'longitude', 'col_index': 3}})
+        self.assertEqual([f['type'] for f in schema['fields']], ['string', 'string', 'number', 'number', 'string'])
+        self.assertEqual(schema['missingValues'], [''])
+
+
 PASSWORD_KEYS = ['SEED_{}_PASSWORD'.format(role) for role in ('SUPERADMIN', 'ADMIN', 'USER')]
 PASSWORD_KEYS += ['SEED_{}_{}_PASSWORD'.format(city, role)
                   for city in ('KROSNO', 'MARKI', 'PRZEMYSL', 'WARSZAWA', 'LEGIONOWO', 'DEMO')

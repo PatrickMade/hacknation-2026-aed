@@ -25,12 +25,15 @@ docker compose run --rm manage python manage.py migrate --noinput
 docker compose run --rm manage python manage.py seed_jury
 docker compose run --rm manage python manage.py collectstatic --noinput
 docker compose run --rm manage python manage.py search_index --rebuild -f
+docker compose run --rm manage python manage.py aed_refresh
 docker compose up -d admin api cms celery frontend nginx
 ```
 
 Generator tworzy `.env` z losowymi hasłami i kluczami, z uprawnieniami 0600. Można zamiast tego skopiować `.env.example` do `.env` i samodzielnie wypełnić puste wartości. `.env` jest ignorowany przez Git i nie trafia do kontekstu budowy. Nie publikuj jego zawartości. Nie używaj haseł ani kluczy z rzeczywistych kont. Hasła odczytaj lokalnie z `.env` w edytorze.
 
 Seed wymaga wszystkich 15 haseł przed zapisem. Można go uruchamiać ponownie: zachowuje identyfikatory kont i instytucji, ustawia hasła zgodnie z `.env` oraz odtwarza przypisania kont demo. Nie uruchamiaj go na bazie produkcyjnej. Nie ładuje kont ani przykładowego zbioru z upstream `basic_data.json`.
+
+`aed_refresh` (po `seed_jury`) wczytuje datowane kopie pięciu zbiorów AED z dane.gov.pl (`backend/data/aed/sources/`) jako zbiory instytucji demo, mapuje je do wzorcowego zakresu `aed-standard/`, waliduje i deduplikuje, a potem publikuje zbiór „Raport zbiorczy AED” instytucji operatora portalu: CSV z podglądem mapy, GeoJSON oraz osobny zasób punktów AED z OpenStreetMap na licencji ODbL 1.0. Polecenie można uruchamiać ponownie; zmienione pliki zastępują poprzednie wersje tych samych zasobów. Tę samą aktualizację wykonuje zadanie Celery `mcod.aed_aggregate.tasks.aed_refresh_task` (harmonogram dzienny wymaga procesu celery beat, którego lokalny Compose nie uruchamia).
 
 Frontend kompiluje się po starcie kontenera. Postęp: `docker compose logs -f frontend`. Gotowość sprawdzisz przez `curl -f http://localhost:4200/` oraz `curl -f http://localhost:4200/api/1.4/institutions`.
 

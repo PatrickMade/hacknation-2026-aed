@@ -10,6 +10,7 @@ from mcod.aed_aggregate import sources, standard
 from mcod.datasets.models import Dataset
 from mcod.organizations.models import Organization
 from mcod.resources.models import Resource, ResourceFile
+from mcod.special_signs.models import SpecialSign
 from mcod.tags.models import Tag
 
 logger = logging.getLogger('mcod')
@@ -50,6 +51,17 @@ def tags():
     return [Tag.objects.get_or_create(name=name, language='pl')[0] for name in TAGS]
 
 
+def empty_cell_sign(user):
+    """The portal's own way to declare a missing value: the AED profile leaves unknown values empty."""
+    sign = SpecialSign.objects.filter(symbol='').first()
+    if sign is None:
+        sign = SpecialSign.objects.create(
+            symbol='', name='brak danych', status='published', created_by=user, modified_by=user,
+            description='Pusta komórka: wartość nieznana albo celowo niepublikowana (np. współrzędne poza gminą '
+                        'dysponenta, zob. quality_flags). Zgodnie z wzorcowym zakresem danych AED.')
+    return sign
+
+
 def upsert_dataset(ext_ident, organization, user, **fields):
     dataset = Dataset.raw.filter(ext_ident=ext_ident).first()
     if dataset is None:
@@ -84,6 +96,8 @@ def upsert_resource(ext_ident, dataset, user, title, description, data_date, fil
         resource.save()
         return resource
     resource.save()
+    if geo:
+        resource.special_signs.set([empty_cell_sign(user)])
     main = resource.files.filter(is_main=True).first()
     digest = hashlib.sha256(content).hexdigest()
     changed = main is None or _digest(main) != digest
@@ -93,8 +107,9 @@ def upsert_resource(ext_ident, dataset, user, title, description, data_date, fil
         main.file.save(filename, ContentFile(content), save=False)
         main.save()
         Resource.raw.filter(pk=resource.pk).update(tabular_data_schema=None)
-        if process:
-            transaction.on_commit(lambda: run_pipeline(resource.pk, main.pk, geo))
+    # Also re-run when an earlier run left the file without a table (for example a failed pipeline).
+    if process and (changed or not Resource.raw.filter(pk=resource.pk, has_table=True).exists()):
+        transaction.on_commit(lambda: run_pipeline(resource.pk, main.pk, geo))
     if resource.status != 'published':
         transaction.on_commit(lambda: _publish(resource.pk))
     return resource
@@ -115,27 +130,30 @@ def _publish(resource_pk):
 
 
 def map_schema(schema):
-    """Mark the profile's x-map columns (l/b/label) in the portal's inferred table schema."""
+    """Profile columns as text, coordinates as numbers, x-map columns marked l/b/label for the portal map."""
     schema = dict(schema)
+    schema['missingValues'] = ['']
     schema['geo'] = {}
     for index, field in enumerate(schema['fields']):
         geo = standard.MAP_COLUMNS.get(field['name'])
         field.pop('geo', None)
+        field['type'], field['format'] = ('number' if geo in ('l', 'b') else 'string'), 'default'
         if geo:
-            if geo in ('l', 'b'):
-                field['type'] = 'number'
             field['geo'] = geo
             schema['geo'][geo] = {'col_name': field['name'], 'col_index': index}
     return schema
 
 
 def run_pipeline(resource_pk, file_pk, geo):
-    """The portal's own file + data pipeline, run in-process so the table and map exist when the command ends."""
+    """The portal's own file + data pipeline, run in-process so the table and map exist when the command ends.
+
+    Original source files keep the portal's inferred schema; a failed preview there is logged, not fatal.
+    Report files get the profile's column types and must pass, or the refresh fails.
+    """
     from mcod.resources.tasks.entrypoint_res_file import entrypoint_process_resource_file_validation_task
     from mcod.resources.tasks.process_resource_file_data import process_resource_file_data_task
 
-    entrypoint_process_resource_file_validation_task.apply(args=(file_pk,), kwargs={'update_file_archive': True},
-                                                           throw=True)
+    entrypoint_process_resource_file_validation_task.apply(args=(file_pk,), kwargs={'update_file_archive': True})
     if geo:
         resource = Resource.raw.get(pk=resource_pk)
         if not resource.tabular_data_schema:
