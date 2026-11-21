@@ -91,6 +91,7 @@ docker compose up -d
 - `frontend/`: oficjalny Angular, lokalny proxy, Sentry i Matomo wyłączone.
 - `compose.yaml`: PostgreSQL, Elasticsearch, Redis, RabbitMQ, Fuseki, MailHog, flagi, aplikacje i nginx.
 - `local/`, `scripts/`: konfiguracja i sprawdzenie pochodzenia źródeł.
+- `backend/mcod/aed_wizard/`: kreator „Dodaj dane AED” w panelu dostawcy (`https://admin.mcod.local/aed/kreator/`, konta pełnomocnika i edytora instytucji) oraz publiczny walidator „Sprawdź swój plik” (`https://admin.mcod.local/aed/sprawdz-plik/`). Reguły zgodności pochodzą z `aed-standard/validate.py`. Testy: `docker compose run --rm manage python manage.py test mcod.aed_wizard --noinput --keepdb`.
 
 Po budowie obrazów i przygotowaniu usług/bazy z instrukcji startu uruchom bramkę w tej kolejności:
 
@@ -108,4 +109,4 @@ Test obejmuje seed, ponowienie, brak hasła, logowanie edytorów i odmowę dost�
 
 Portal i nasze modyfikacje są udostępniane na GNU GPL v3.0. Wyjątek: datowane kopie danych źródłowych w `backend/data/aed/sources/` nie są objęte GPL v3.0; zachowują licencje źródeł (CC0 1.0, CC BY 4.0, OpenStreetMap: ODbL 1.0), opisane w `backend/data/aed/sources/LICENSES.md`. Zobacz `LICENSE`, `NOTICE.upstream.txt` i `UPSTREAM.md` z wersjami, sumami archiwów i listą zmian. Zachowano oryginalne notices i licencje zależności.
 
-AI wspierało analizę, konfigurację lokalną, seed kont, agregator raportu zbiorczego AED (mapowanie, deduplikacja, publikacja), testy i dokumentację tej wersji. Oficjalny kod portalu pochodzi z dystrybucji dane.gov.pl. Zakres użycia AI należy aktualizować w materiałach zgłoszenia zgodnie z regulaminem HackNation §2 ust. 8; końcowy rezultat wymaga przeglądu i odpowiedzialności zespołu.
+AI wspierało analizę, konfigurację lokalną, seed kont, agregator raportu zbiorczego AED (mapowanie, deduplikacja, publikacja), kod kreatora AED i walidatora, testy i dokumentację tej wersji. Oficjalny kod portalu pochodzi z dystrybucji dane.gov.pl. Zakres użycia AI należy aktualizować w materiałach zgłoszenia zgodnie z regulaminem HackNation §2 ust. 8; końcowy rezultat wymaga przeglądu i odpowiedzialności zespołu.

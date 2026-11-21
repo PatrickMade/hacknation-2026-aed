@@ -4,6 +4,7 @@ import io
 import uuid
 
 from django.conf import settings
+from django.contrib import admin
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
@@ -62,8 +63,8 @@ def save_state(request, state):
 
 
 def context(request, step, **extra):
-    data = {"step": step, "title": "Dodaj dane AED", "standard_version": standard.version(),
-            "site_header": "Dodaj dane AED", "has_permission": True}
+    data = admin.site.each_context(request)
+    data.update({"step": step, "title": "Dodaj dane AED", "standard_version": standard.version()})
     data.update(extra)
     return data
 

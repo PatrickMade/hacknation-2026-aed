@@ -54,9 +54,11 @@ class MappingForm(forms.Form):
             )
             self.target_names.append(name)
         self.default_names = []
+        titles = {field["name"]: field.get("title", field["name"]) for field in standard.fields()}
         for field, value in mapping.DEFAULTS.items():
             name = "default_" + field
-            self.fields[name] = forms.ChoiceField(label=field, choices=enum_choices(field), initial=value)
+            self.fields[name] = forms.ChoiceField(label="{} ({})".format(titles[field], field),
+                                                  choices=enum_choices(field), initial=value)
             self.default_names.append(name)
         self.fields["operator_name"] = forms.CharField(
             label="Dysponent (operator_name), gdy brak kolumny", initial=organization.title, max_length=300
@@ -66,7 +68,8 @@ class MappingForm(forms.Form):
             widget=forms.RadioSelect,
         )
         self.fields["data_date"] = forms.DateField(
-            label="Data danych (RRRR-MM-DD)", initial=timezone.localdate, widget=forms.DateInput(attrs={"type": "date"})
+            label="Data danych (RRRR-MM-DD)", initial=timezone.localdate,
+            widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
         )
         self.fields["swap_axes"] = forms.BooleanField(
             label="Zamień szerokość i długość w wierszach z prawdopodobnie zamienionymi osiami", required=False
@@ -87,7 +90,8 @@ class MappingForm(forms.Form):
 
 class PublishForm(forms.Form):
     title = forms.CharField(label="Tytuł zasobu", max_length=300)
-    description = forms.CharField(label="Opis zasobu (opcjonalnie)", required=False, widget=forms.Textarea(attrs={"rows": 3}))
+    description = forms.CharField(label="Opis zasobu (opcjonalnie)", required=False,
+                                  widget=forms.Textarea(attrs={"rows": 3}))
     update_frequency = forms.ChoiceField(
         label="Częstotliwość aktualizacji",
         choices=[choice for choice in UPDATE_FREQUENCY if choice[0] != "notApplicable"], initial="monthly",

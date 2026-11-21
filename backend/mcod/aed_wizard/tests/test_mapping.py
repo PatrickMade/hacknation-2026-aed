@@ -117,7 +117,8 @@ class MappingTests(SimpleTestCase):
         }]}).encode("utf-8")
         result = convert(readers.read("przemysl.geojson", geojson))
         self.assertEqual(standard.validate_bytes(result.csv_bytes()), [])
-        self.assertEqual((result.records[0]["latitude"], result.records[0]["public_phone"]), ("49.7838", "+48166752100"))
+        record = result.records[0]
+        self.assertEqual((record["latitude"], record["public_phone"]), ("49.7838", "+48166752100"))
 
         from openpyxl import Workbook
 

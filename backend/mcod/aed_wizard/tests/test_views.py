@@ -104,6 +104,12 @@ class WizardTests(TestCase):
         main.file.close()
         self.assertEqual(standard.validate_bytes(content), [])
         self.assertIn(b"https://creativecommons.org/licenses/by/4.0/", content)
+        schema = resource.tabular_data_schema
+        self.assertEqual(schema["missingValues"], resource.special_signs_symbols_list)
+        self.assertEqual({role: item["col_name"] for role, item in schema["geo"].items()},
+                         {"b": "latitude", "l": "longitude", "label": "name"})
+        types = {field["name"]: field["type"] for field in schema["fields"]}
+        self.assertEqual((types["latitude"], types["longitude"], types["house_number"]), ("number", "number", "string"))
 
         self.run_wizard()
         self.assertEqual(AedPublication.objects.count(), 2)

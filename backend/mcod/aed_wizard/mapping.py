@@ -255,11 +255,10 @@ def convert(table, mapping, defaults, context, swap_axes=False):
                 if swap_axes:
                     record["latitude"], record["longitude"] = record["longitude"], record["latitude"]
                     lat, lon = lon, lat
-                    warnings.append(warning(index, "latitude/longitude", "Zamieniono szerokość i długość "
-                                                                         "geograficzną (oznaczenie suspected_axis_swap)."))
+                    message = "Zamieniono szerokość i długość geograficzną (oznaczenie suspected_axis_swap)."
                 else:
-                    warnings.append(warning(index, "latitude/longitude", "Prawdopodobnie zamienione osie: po zamianie "
-                                                                         "punkt leży w Polsce."))
+                    message = "Prawdopodobnie zamienione osie: po zamianie punkt leży w Polsce."
+                warnings.append(warning(index, "latitude/longitude", message))
             else:
                 flags.append("outside_expected_area")
 

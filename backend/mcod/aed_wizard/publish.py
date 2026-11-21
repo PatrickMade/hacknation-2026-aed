@@ -1,4 +1,7 @@
 """Publish a validated profile CSV as a resource in the dysponent's AED dataset."""
+import csv
+import io
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import transaction
 
@@ -68,6 +71,31 @@ def aed_dataset(organization, user, license_key, update_frequency):
     return dataset
 
 
+def tabular_schema(csv_bytes):
+    """Table schema preset for the portal: text columns, numeric coordinates and map roles.
+
+    The portal keeps a preset schema when its missingValues equal the resource's special
+    signs (none here), instead of guessing types from the first rows. The roles follow the
+    profile's x-map (latitude=b, longitude=l, name=label) and are set only when every record
+    has coordinates, because empty cells are not valid numbers without missing values.
+    """
+    rows = list(csv.reader(io.StringIO(csv_bytes.decode("utf-8"), newline="")))
+    header, records = rows[0], rows[1:]
+    roles = standard.schema().get("x-map", {})
+    with_points = all(header.count(name) for name in roles) and all(
+        row[header.index("latitude")] and row[header.index("longitude")] for row in records
+    )
+    schema = {"fields": [], "missingValues": []}
+    for index, name in enumerate(header):
+        numeric = with_points and name in ("latitude", "longitude")
+        field = {"name": name, "type": "number" if numeric else "string", "format": "default"}
+        if with_points and name in roles:
+            field["geo"] = roles[name]
+            schema.setdefault("geo", {})[roles[name]] = {"col_name": name, "col_index": index}
+        schema["fields"].append(field)
+    return schema
+
+
 def publish(organization, user, csv_bytes, records_count, warnings_count, meta):
     """meta: title, description, license (cc0|cc-by), update_frequency, data_date (date), source_name."""
     with transaction.atomic():
@@ -88,6 +116,7 @@ def publish(organization, user, csv_bytes, records_count, warnings_count, meta):
             has_high_value_data_from_ec_list=False,
             has_research_data=False,
             contains_protected_data=False,
+            tabular_data_schema=tabular_schema(csv_bytes),
         )
         filename = "aed-{}-{}.csv".format(organization.slug, meta["data_date"].isoformat())
         ResourceFile.objects.create(

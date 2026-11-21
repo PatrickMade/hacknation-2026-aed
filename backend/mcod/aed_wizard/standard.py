@@ -48,7 +48,9 @@ def version():
     return schema().get("x-version", "")
 
 
-ROW_MESSAGE = re.compile(r"^wiersz (?P<line>\d+)(?:, (?P<field>[a-z_]+(?:\[\d+\](?:\.[a-z_]+)?)?(?:/[a-z_]+)?))?: (?P<message>.*)$")
+ROW_MESSAGE = re.compile(
+    r"^wiersz (?P<line>\d+)(?:, (?P<field>[a-z_]+(?:\[\d+\](?:\.[a-z_]+)?)?(?:/[a-z_]+)?))?: (?P<message>.*)$"
+)
 
 
 def parse_message(text):
