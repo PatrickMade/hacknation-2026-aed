@@ -1,0 +1,28 @@
+export const APP_CONFIG = {
+  name: 'Otwarte Dane',
+  dateTime: 'D MMMM YYYY, HH:mm',
+  domain: 'dane.gov.pl',
+  gaTag: '',
+  availableLanguages: ['pl', 'en'],
+  searchInputMaxLength: 1000,
+  csrfCookieName: 'mcod_csrf_token',
+  csrfToken: 'X-Mcod-Csrf-Token',
+  statsHighContrastEventName: 'theme_changed',
+  urls: {
+    adminPanelDev: 'https://admin.dev.dane.gov.pl',
+    forumInt: 'https://forum.int.dane.gov.pl',
+    doc: 'https://api.dane.gov.pl/doc',
+    flags: {
+      features: '/flags/api/client/features',
+      register: '/flags/api/client/register',
+    },
+    gitlab: 'https://gitlab.dane.gov.pl/otwarte-dane',
+    gov: 'https://www.gov.pl',
+    stats: '/pn-apps/stats/',
+    daneGovPl: 'https://www.dane.gov.pl',
+    facebook: 'https://facebook.com/danegovpl',
+    metaPolicy: 'https://www.facebook.com/privacy/policy',
+  },
+  contactEmail: 'kontakt@dane.gov.pl',
+  matomoTrackerUrl: '',
+};

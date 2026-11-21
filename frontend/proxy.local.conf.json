@@ -1,0 +1,35 @@
+{
+  "/api/**": {
+    "target": "https://api.mcod.local",
+    "secure": false,
+    "pathRewrite": {
+      "^/api": ""
+    },
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/media": {
+    "target": "https://api.mcod.local",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/flags": {
+    "target": "http://flags",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/flags": ""
+    }
+  },
+  "/cms": {
+    "target": "https://cms.mcod.local",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/cms": ""
+    }
+  }
+}

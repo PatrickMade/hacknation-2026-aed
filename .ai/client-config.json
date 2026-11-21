@@ -13,7 +13,7 @@
     ".claude/settings.local.json"
   ],
   "files": {
-    "AGENTS.md": "7590fc522992de212990a3006b71fd0fc8c5574bdc6c75b5642fbaac3c8d5990",
+    "AGENTS.md": "837b6507402aa91ee059ec13bf0e4cae70b322a628142f9c31aa7fa8f4bc37c0",
     "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
     ".ai/scripts/push_guard.py": "7062fbf4b641a371b54a8bd4b6005ab97dd78ff09ff7cb21326e72f35c121561"
   }
