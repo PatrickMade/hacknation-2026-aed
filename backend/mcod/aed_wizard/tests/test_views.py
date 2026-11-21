@@ -1,4 +1,5 @@
 """Provider-panel publication and public validator of the AED wizard (APP-43, 2026-11-21)."""
+import datetime
 import glob
 import os
 import secrets
@@ -71,6 +72,7 @@ class WizardTests(TestCase):
         self.assertContains(page, "Kryta pływalnia")
         data = form_data(page.context["form"])
         data["license"] = "cc-by"
+        data["data_date"] = "2024-02-19"  # the Krosno layout carries no date: the dysponent enters it
         response = self.client.post(reverse("aed_wizard:mapping"), data)
         self.assertRedirects(response, reverse("aed_wizard:report"), fetch_redirect_response=False)
         report = self.client.get(reverse("aed_wizard:report"))
@@ -137,12 +139,46 @@ class WizardTests(TestCase):
         self.upload(self.org)
         data = form_data(self.client.get(reverse("aed_wizard:mapping")).context["form"])
         data.pop("map_latitude")
+        data["data_date"] = "2024-02-19"
         self.client.post(reverse("aed_wizard:mapping"), data)
         report = self.client.get(reverse("aed_wizard:report"))
         self.assertTrue(report.context["errors"])
         self.assertNotContains(report, "Opublikuj zasób")
         self.client.post(reverse("aed_wizard:report"), {"title": "x", "update_frequency": "monthly"})
         self.assertFalse(AedPublication.objects.exists())
+
+    def test_data_date_is_required_when_the_file_has_none(self):
+        self.client.force_login(self.agent)
+        self.upload(self.org)
+        page = self.client.get(reverse("aed_wizard:mapping"))
+        self.assertIn(page.context["form"]["data_date"].value(), (None, ""))
+        self.assertContains(page, "Plik nie zawiera daty danych")
+        response = self.client.post(reverse("aed_wizard:mapping"), form_data(page.context["form"]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context["form"].errors["data_date"])
+
+    def test_future_data_date_is_refused(self):
+        self.client.force_login(self.agent)
+        self.upload(self.org)
+        data = form_data(self.client.get(reverse("aed_wizard:mapping")).context["form"])
+        data["data_date"] = (timezone.localdate() + datetime.timedelta(days=1)).isoformat()
+        response = self.client.post(reverse("aed_wizard:mapping"), data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context["form"].errors["data_date"])
+
+    def test_data_date_from_the_file_reaches_the_report_and_the_resource(self):
+        self.client.force_login(self.agent)
+        dated = CITY_CSV.decode("cp1250").replace("; Godziny\r\n", "; Godziny; updated_at\r\n", 1)
+        dated = dated.replace("całodobowo\r\n", "całodobowo;2024-02-19T08:00:00Z\r\n")
+        dated = dated.replace("Mo-Fr 08:00-16:00\r\n", "Mo-Fr 08:00-16:00;2024-02-18T08:00:00Z\r\n")
+        self.upload(self.org, dated.encode("utf-8"))
+        page = self.client.get(reverse("aed_wizard:mapping"))
+        self.assertEqual(str(page.context["form"]["data_date"].value()), "2024-02-19")
+        self.client.post(reverse("aed_wizard:mapping"), form_data(page.context["form"]))
+        report = self.client.get(reverse("aed_wizard:report"))
+        self.assertContains(report, "Data danych: 2024-02-19 (z pliku: updated_at)")
+        self.client.post(reverse("aed_wizard:report"), {"title": "AED Krosno", "update_frequency": "monthly"})
+        self.assertEqual(Resource.objects.get().data_date, datetime.date(2024, 2, 19))
 
     def test_public_check_reports_without_storing_anything(self):
         before = (Dataset.objects.count(), Resource.objects.count(), AedPublication.objects.count())

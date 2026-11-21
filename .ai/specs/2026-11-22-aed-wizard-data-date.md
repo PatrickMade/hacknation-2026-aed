@@ -26,5 +26,10 @@ Testy RED przed zmianą, potem GREEN; `docker compose run --rm manage python man
 
 ## Progress
 1. [x] Task record.
-2. [ ] Testy RED, implementacja, GREEN.
+2. [x] Testy RED, implementacja, GREEN.
 3. [ ] Pełna bramka, PR, niezależny review, merge.
+
+## Evidence
+- RED (unfixed code): `manage.py test` of the 6 new tests - `AttributeError: ... no attribute 'detect_data_date'` (3 mapping tests), `datetime.date(2026, 11, 22) not found in (None, '')`, `302 != 200` for a future date, `'2026-11-22' != '2024-02-19'` for the file date.
+- GREEN: `mcod.aed_wizard` 27 tests OK.
+- Browser (isolated stack, krosno.agent, real Krosno file): empty date field with help text linked by `aria-describedby`; submit without a date shows "Podaj datę danych..." and stays on step 2; with 2024-02-19 the report shows "Data danych: 2024-02-19 (podana przez dysponenta)".
