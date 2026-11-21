@@ -150,6 +150,10 @@ class PublishComplianceTests(TestCase):
         self.assertIn('/pl/dataset/{}'.format(report.pk), osm.notes)
         self.assertIn('/pl/dataset/{}'.format(osm.pk), report.notes)
         self.assertIn('Ostatnie odświeżenie:', report.notes)
+        for phrase in ('operator_from_location', 'publisher_name', '(dane demonstracyjne)', 'CC BY 4.0', 'ODbL 1.0'):
+            self.assertIn(phrase, report.notes)
+        self.assertNotIn('nieustalony', report.notes)
+        self.assertNotIn('Każdy rekord wskazuje dysponenta', report.notes)
         self.assertTrue(Category.objects.filter(code='HEAL').exists())
         for dataset in (report, osm):
             self.assertEqual(list(dataset.categories.values_list('code', flat=True)), ['HEAL'])
