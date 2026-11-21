@@ -1,0 +1,7 @@
+/* Mapa Serc - kolory akcji. Źródło: brand/ksiega-znaku-mapa-serc.pdf */
+:root {
+  --mapa-serc-zielen: #087F45;        /* znak, przyciski, akcenty; biały tekst na tym tle: 5.1:1 */
+  --mapa-serc-ciemna-zielen: #0B2E20; /* tekst i nazwa; na białym tle: 14.7:1 */
+  --mapa-serc-jasna-zielen: #DDF3E6;  /* tła sekcji; ciemna zieleń na tym tle: 12.6:1 */
+  --mapa-serc-bialy: #FFFFFF;
+}
