@@ -38,7 +38,7 @@ Decyzje: koordynator (opcja B), zmiana Patryka i mentora (bez „nieustalony”)
 1. [x] Issue APP-59, claim, spec.
 2. [x] RED: testy liczników, wydawców i wyszukiwania OSM (2 asercje nie przechodzą na zaślepce).
 3. [x] GREEN: obliczenia, serwis, komponent, teksty; korekty po zmianie decyzji i po kontrakcie pól od L4 (RED: 2 asercje, potem GREEN).
-4. [x] Przeglądarka (atrapa z polami L4: flagi `operator_from_location`, 4 dysponentów demonstracyjnych `dysponent:`, OSM w osobnym zbiorze; liczniki 7 / 4 / 170 / 6 z 2479): axe-core 4.10.2 0 naruszeń (WCAG 2.x A/AA) na desktopie i 360 px, 360 px bez przewijania w poziomie, 10 elementów fokusowalnych z widocznym fokusem.
-5. [ ] Sprawdzenie na danych L4 po scaleniu jego PR; rebase na main.
+4. [x] Przeglądarka na atrapie z polami L4 (przed poprawkami po review): zastąpione sprawdzeniem z punktu 5.
+5. [x] Dane L4 (lokalnie: main + PR L4 + ta gałąź; `seed_jury`, `seed_aed_demo`, `aed_refresh` ze źródłami pobranymi na żywo): CSV raportu ma 86 rekordów, 8 wydawców (4 urzędy miast i 4 dysponentów demonstracyjnych) i 4 potwierdzonych dysponentów; strona `/pl/aed` pokazuje 8 / 4 / 86 / 8 z 2479 gmin i 2120 luk z osobnego zbioru OSM; każda z 8 gmin ma wydawcę w tabeli. axe-core 4.10.2 (WCAG 2.x A/AA) w sekcji strony AED: 0 naruszeń na desktopie i przy 360 px; na całej stronie zostają naruszenia w niezmienionych elementach portalu (`#dropdownMenuLink` w nagłówku, `ng-progress`). 360 px bez przewijania w poziomie, żaden element strony AED nie wychodzi poza ekran.
 6. [x] Poprawki po review 6008985147 (RED: 4 asercje w lookup/serwisie i 1 w komponencie, potem GREEN): wydawca publikacji dysponenta, błąd OSM bez utraty liczników, nieczytelne flagi, nazwy i tekst.
-7. [ ] Pełna bramka, niezależny review, CI, merge gate.
+7. [ ] Pełna bramka (na drzewie main + PR L4 + ta gałąź: 5 poleceń, kod 0, Django 85 testów OK), niezależny review, CI, aktualizacja z main po scaleniu PR L4, merge gate.
