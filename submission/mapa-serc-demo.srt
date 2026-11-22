@@ -1,140 +1,144 @@
 1
-00:00:00,300 --> 00:00:05,100
+00:00:00,300 --> 00:00:02,200
 W dane.gov.pl dane o AED ma 4 z 2479 gmin.
-W 2124 gminach AED zna tylko OpenStreetMap.
 
 2
-00:00:05,500 --> 00:00:11,100
+00:00:02,300 --> 00:00:06,100
+W 2124 gminach wolontariusze OpenStreetMap zaznaczyli AED,
+a dane.gov.pl nie ma o nich danych.
+
+3
+00:00:06,500 --> 00:00:12,100
 W portalu dane.gov.pl jest pięć zbiorów z danymi
 o defibrylatorach AED. Każdy ma inny układ.
 
-3
-00:00:11,500 --> 00:00:15,500
+4
+00:00:12,500 --> 00:00:16,500
 Mapa Serc łączy je w jeden zbiór:
 44 pola wzorcowego zakresu danych AED.
 
-4
-00:00:15,900 --> 00:00:19,100
+5
+00:00:16,900 --> 00:00:20,100
 Mapa Serc. Wszystkie AED pod ręką.
 
-5
-00:00:19,300 --> 00:00:23,833
+6
+00:00:20,300 --> 00:00:24,833
 Dysponent wgrywa swój plik AED w dowolnym układzie:
 CSV, XLSX albo GeoJSON.
 
-6
-00:00:23,967 --> 00:00:26,967
+7
+00:00:24,967 --> 00:00:27,967
 Kreator sam proponuje przypisanie kolumn.
 
-7
-00:00:27,100 --> 00:00:30,867
+8
+00:00:28,100 --> 00:00:31,867
 Walidator: 21 rekordów przechodzi kontrole.
 Każdy dostaje aed_id.
 
-8
-00:00:31,000 --> 00:00:35,067
+9
+00:00:32,000 --> 00:00:36,067
 Publikacja w zbiorze instytucji,
 z oznaczeniem zgodności.
 
-9
-00:00:35,200 --> 00:00:38,200
+10
+00:00:36,200 --> 00:00:39,200
 Opublikowano: zasób jest w portalu i w jego API.
 
-10
-00:00:38,333 --> 00:00:42,200
+11
+00:00:39,333 --> 00:00:43,200
 Raport zbiorczy AED łączy źródła
 i pliki z kreatora.
 
-11
-00:00:42,333 --> 00:00:46,100
+12
+00:00:43,333 --> 00:00:47,100
 Dwa zasoby: CSV i GeoJSON.
 Punkty z OpenStreetMap: osobny zbiór, ODbL.
 
-12
-00:00:46,233 --> 00:00:49,600
+13
+00:00:47,233 --> 00:00:50,600
 Licencja raportu: CC BY 4.0,
 z zachowaniem warunków źródeł.
 
-13
-00:00:49,733 --> 00:00:55,600
+14
+00:00:50,733 --> 00:00:56,600
 Podgląd na mapie portalu.
 Po kliknięciu punktu widać nazwę miejsca.
 
-14
-00:00:55,733 --> 00:00:59,433
-Kolumny tabeli to pola wzorcowego zakresu.
-Puste pole oznacza brak danych.
-
 15
-00:00:59,567 --> 00:01:04,333
+00:00:56,733 --> 00:01:01,433
+Kolumny tabeli to pola wzorcowego zakresu.
+Brak danych: „unknown” w polu wymaganym, puste pole w opcjonalnym.
+
+16
+00:01:01,567 --> 00:01:06,333
 API portalu zwraca 86 rekordów raportu,
 ze źródłem i licencją każdego.
 
-16
-00:01:04,467 --> 00:01:09,233
+17
+00:01:06,467 --> 00:01:11,233
 Kod QR z naklejki otwiera kartę urządzenia.
 Rekord w nagraniu jest przykładowy.
 
-17
-00:01:09,367 --> 00:01:13,733
+18
+00:01:11,367 --> 00:01:15,733
 Przechodzień zgłasza problem,
 na przykład zamkniętą szafkę z AED.
 
-18
-00:01:13,867 --> 00:01:17,733
+19
+00:01:15,867 --> 00:01:19,733
 Wymagane: rodzaj problemu i opis.
 Podpis i kontakt są dobrowolne.
 
-19
-00:01:17,867 --> 00:01:21,067
+20
+00:01:19,867 --> 00:01:23,067
 Formularz nie wzywa pomocy.
 Od tego jest numer 112.
 
-20
-00:01:21,200 --> 00:01:24,767
+21
+00:01:23,200 --> 00:01:26,767
 Zgłoszenie przyjęte
 i przekazane dysponentowi.
 
-21
-00:01:24,900 --> 00:01:29,367
+22
+00:01:26,900 --> 00:01:31,367
 Dysponent widzi zgłoszenie w panelu.
 Inne instytucje go nie widzą.
 
-22
-00:01:29,500 --> 00:01:34,267
+23
+00:01:31,500 --> 00:01:36,267
 Dostaje też e-mail. Imię i kontakt portal usuwa
 30 dni po rozwiązaniu sprawy.
 
-23
-00:01:34,400 --> 00:01:36,233
+24
+00:01:36,400 --> 00:01:38,233
 Strona akcji w portalu.
 
-24
-00:01:36,367 --> 00:01:40,233
-Liczniki strony akcji podają osobno
-dane demonstracyjne (fikcyjne).
-
 25
-00:01:40,367 --> 00:01:43,433
+00:01:38,367 --> 00:01:42,233
+Dane demonstracyjne są liczone osobno.
+Krosno opublikowało dane w kreatorze: stąd 9 wydawców.
+
+26
+00:01:42,367 --> 00:01:45,433
 Luki: 2124 gminy z AED w OpenStreetMap,
 bez danych w dane.gov.pl.
 
-26
-00:01:43,567 --> 00:01:47,633
+27
+00:01:45,567 --> 00:01:49,633
 Warszawa: 1078 AED w OpenStreetMap,
 0 w raporcie: miasto podaje tylko odnośnik.
 
-27
-00:01:47,967 --> 00:01:50,367
+28
+00:01:49,967 --> 00:01:52,367
 Lista AED w szufladzie nikogo nie uratuje.
 
-28
-00:01:50,467 --> 00:01:53,467
+29
+00:01:52,467 --> 00:01:55,467
 Masz AED w swojej instytucji?
 Udostępnij dane o nim w dane.gov.pl.
 
-29
-00:01:53,567 --> 00:01:56,567
+30
+00:01:55,567 --> 00:01:58,567
 Kod otwarty na licencji GPL v3:
 github.com/PatrickMade/hacknation-2026-aed
 
