@@ -1,5 +1,17 @@
 <!-- AED device record and incident report form (APP-45, 2026-11-21). -->
-<section class="container vertical-spacing">
+<section class="container vertical-spacing aed-device">
+  <!-- Mapa Serc identity (APP-58): same campaign as the QR sticker at the device. -->
+  <div class="aed-device__brand">
+    <img class="aed-device__brand-logo" [src]="brand.logoSrc" [alt]="brand.name" width="198" height="70" />
+    <div>
+      <p class="aed-device__brand-slogan">{{ brand.slogan }}</p>
+      <p class="aed-device__brand-text">
+        Ten AED jest na Mapie Serc.
+        <a [routerLink]="brand.campaignLink">Czym jest akcja {{ brand.name }}?</a>
+      </p>
+    </div>
+  </div>
+
   @switch (state()) {
     @case ('loading') {
       <p role="status">Wczytywanie danych urządzenia…</p>
@@ -48,9 +60,7 @@
 
       <div class="aed-device__actions d-flex flex-wrap gap-2 mb-4">
         @if (!formOpen()) {
-          <button type="button" class="btn btn-primary" (click)="openForm()" aria-controls="aed-report-form">
-            Zgłoś problem
-          </button>
+          <button type="button" class="btn btn-primary" (click)="openForm()">Zgłoś problem</button>
         }
         @if (d.latitude !== null && d.longitude !== null) {
           <a class="btn btn-outline-primary" [href]="mapUrl(d)" target="_blank" rel="noopener">
@@ -124,7 +134,7 @@
             </div>
 
             <div class="form-field">
-              <label for="reporter_name" class="form-label">Imię lub podpis <small>(pole wymagane)</small></label>
+              <label for="reporter_name" class="form-label">Imię lub podpis <small>(opcjonalnie)</small></label>
               <div class="input-wrapper" [class.is-invalid]="invalid('reporter_name')">
                 <input
                   id="reporter_name"
@@ -139,7 +149,7 @@
               </div>
               <div class="invalid-feedback" id="reporter_name-error">
                 @if (invalid('reporter_name')) {
-                  Podaj imię lub podpis.
+                  Imię lub podpis może mieć najwyżej 200 znaków.
                 }
               </div>
             </div>
@@ -186,11 +196,12 @@
 
             <p class="small">
               <strong>Informacja o przetwarzaniu danych</strong> (wzór do weryfikacji prawnej): administratorem danych
-              ze zgłoszenia (imię lub podpis i opcjonalny kontakt) jest dysponent tego AED: {{ d.organization.title }}.
-              Operator portalu wyłącznie przekazuje zgłoszenie dysponentowi. Dane służą tylko obsłudze zgłoszenia. Imię
-              i kontakt są usuwane z portalu 30 dni po oznaczeniu zgłoszenia jako rozwiązane; treść zgłoszenia zostaje
-              bez danych osobowych. Kopia zgłoszenia wysłana e-mailem do dysponenta podlega jego zasadom przechowywania.
-              Podanie kontaktu jest dobrowolne; bez niego zgłoszenie też zostanie przyjęte.
+              ze zgłoszenia (jeśli je podasz: imię lub podpis i kontakt) jest dysponent tego AED:
+              {{ d.organization.title }}. Operator portalu wyłącznie przekazuje zgłoszenie dysponentowi. Dane służą
+              tylko obsłudze zgłoszenia. Imię i kontakt są usuwane z portalu 30 dni po oznaczeniu zgłoszenia jako
+              rozwiązane; treść zgłoszenia zostaje bez danych osobowych. Kopia zgłoszenia wysłana e-mailem do dysponenta
+              podlega jego zasadom przechowywania. Podanie imienia i kontaktu jest dobrowolne; zgłoszenie bez danych
+              osobowych też zostanie przyjęte.
             </p>
 
             <button type="submit" class="btn btn-primary" [disabled]="submitting()">
@@ -200,10 +211,20 @@
         </div>
       }
 
-      <details class="mt-5">
+      <details class="mt-5 aed-device__qr-details">
         <summary>Kod QR tego urządzenia (dla dysponenta)</summary>
-        <img class="aed-device__qr mt-2" [src]="'/api' + d.qr_url" alt="Kod QR prowadzący do tej strony" />
-        <p><a [href]="'/api' + d.qr_url" download>Pobierz kod QR (SVG)</a></p>
+        <!-- Styled like brand/naklejka-qr: frame, logo, scan line, footer with ID and dysponent. -->
+        <div class="aed-device__sticker">
+          <img class="aed-device__sticker-logo" [src]="brand.logoSrc" [alt]="brand.name" width="170" height="60" />
+          <img class="aed-device__qr" [src]="'/api' + d.qr_url" alt="Kod QR prowadzący do tej strony" />
+          <p class="aed-device__sticker-title">Ten AED jest na Mapie Serc</p>
+          <p class="aed-device__sticker-hint">Zeskanuj: sprawdź dane albo zgłoś usterkę</p>
+          <div class="aed-device__sticker-footer">
+            <span class="aed-device__sticker-id">ID {{ d.aed_id }}</span>
+            <span>{{ d.organization.title }}</span>
+          </div>
+        </div>
+        <p class="mt-2"><a [href]="'/api' + d.qr_url" download>Pobierz kod QR (SVG)</a></p>
       </details>
     }
   }

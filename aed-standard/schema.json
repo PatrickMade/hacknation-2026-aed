@@ -1,7 +1,7 @@
 {
   "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
   "title": "Wzorcowy zakres danych AED - profil PL 1.0.0",
-  "description": "43 pola do publikacji przez dysponentów. Dodatkowe reguły profilu w README i validate.py.",
+  "description": "44 pola do publikacji przez dysponentów. Dodatkowe reguły profilu w README i validate.py.",
   "fields": [
     {
       "name": "aed_id",
@@ -382,12 +382,24 @@
       "name": "operator_name",
       "title": "Dysponent urządzenia",
       "type": "string",
-      "description": "Instytucja odpowiedzialna za urządzenie i odbiór zgłoszeń o nim. Wymagana; potwierdź u dysponenta. Nie kopiuj automatycznie wydawcy zbioru lub właściciela budynku.",
+      "description": "Instytucja odpowiedzialna za urządzenie i odbiór zgłoszeń o nim. Wymagana; potwierdź u dysponenta. Nie kopiuj automatycznie wydawcy zbioru lub właściciela budynku. W raporcie zbiorczym ze źródeł zewnętrznych nazwa przejęta z opisu lokalizacji ma flagę operator_from_location, a nieznany dysponent wartość \"nieustalony\" z flagą operator_unconfirmed; publikacja dysponenta nie może użyć żadnej z nich.",
       "x-requirement": "R",
       "example": "Fikcyjna Instytucja Przykładowa",
       "constraints": {
         "required": true,
         "minLength": 1
+      }
+    },
+    {
+      "name": "operator_regon",
+      "title": "REGON dysponenta",
+      "type": "string",
+      "description": "Numer REGON instytucji z operator_name: 9 lub 14 cyfr z poprawną cyfrą kontrolną. Jednoznacznie identyfikuje dysponenta niezależnie od pisowni nazwy. Opcjonalny; pusty, gdy dysponent jest nieustalony.",
+      "x-requirement": "O",
+      "example": "000000000",
+      "constraints": {
+        "minLength": 1,
+        "pattern": "^[0-9]{9}([0-9]{5})?$"
       }
     },
     {
@@ -570,7 +582,9 @@
     "ambiguous_hours",
     "geocoded",
     "teryt_incomplete",
-    "conflicting_sources"
+    "conflicting_sources",
+    "operator_unconfirmed",
+    "operator_from_location"
   ],
   "x-sourceRecord": {
     "required": [
@@ -586,12 +600,18 @@
       "attribution",
       "source_version",
       "original_values",
-      "field_provenance"
+      "field_provenance",
+      "publisher_name"
     ]
   },
   "x-map": {
     "latitude": "b",
     "longitude": "l",
     "name": "label"
+  },
+  "x-operatorUnconfirmed": {
+    "placeholder": "nieustalony",
+    "flag": "operator_unconfirmed",
+    "forbiddenSourcePrefix": "dysponent:"
   }
 }

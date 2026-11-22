@@ -4,7 +4,7 @@ Prototyp konkursowy HackNation 2026 do zadania Ministerstwa Cyfryzacji „Misja 
 
 Co zawiera ta wersja:
 
-- **Wzorcowy zakres danych AED** (`aed-standard/`): słownik 43 pól (XLSX), szablon CSV, schemat Table Schema, przykładowy rekord i walidator.
+- **Wzorcowy zakres danych AED** (`aed-standard/`): słownik 44 pól (XLSX), szablon CSV, schemat Table Schema, przykładowy rekord i walidator.
 - **Kreator „Dodaj dane AED” i walidator „Sprawdź swój plik”** (`backend/mcod/aed_wizard/`): dysponent w panelu dostawcy wgrywa plik CSV, XLSX lub GeoJSON, przypisuje kolumny do pól standardu, czyta raport walidacji i publikuje zasób. Walidator działa bez logowania i niczego nie zapisuje.
 - **Raport zbiorczy AED** (`backend/mcod/aed_aggregate/`): pięć zbiorów AED z dane.gov.pl zmapowanych do standardu, zwalidowanych i zdeduplikowanych. Zasoby: CSV z podglądem na mapie portalu, GeoJSON oraz osobny zasób punktów AED z OpenStreetMap na licencji ODbL 1.0.
 - **Zgłoszenia AED i kody QR** (`backend/mcod/aed_reports/`): kod QR przy urządzeniu prowadzi do jego strony z formularzem „Zgłoś problem”. Zgłoszenie trafia do panelu i na adres e-mail właściwego dysponenta.
@@ -34,15 +34,16 @@ docker compose run --rm manage python manage.py migrate --noinput
 docker compose run --rm manage python manage.py seed_jury
 docker compose run --rm manage python manage.py collectstatic --noinput
 docker compose run --rm manage python manage.py search_index --rebuild -f
+docker compose run --rm manage python manage.py seed_aed_demo
 docker compose run --rm manage python manage.py aed_refresh
-docker compose up -d admin api cms celery frontend nginx
+docker compose up -d admin api cms celery aed-beat frontend nginx
 ```
 
 Generator tworzy `.env` z losowymi hasłami i kluczami, z uprawnieniami 0600. Można zamiast tego skopiować `.env.example` do `.env` i samodzielnie wypełnić puste wartości. `.env` jest ignorowany przez Git i nie trafia do kontekstu budowy. Nie publikuj jego zawartości. Nie używaj haseł ani kluczy z rzeczywistych kont. Hasła odczytaj lokalnie z `.env` w edytorze.
 
 Seed wymaga wszystkich 15 haseł przed zapisem. Można go uruchamiać ponownie: zachowuje identyfikatory kont i instytucji, ustawia hasła zgodnie z `.env` oraz odtwarza przypisania kont demo. Nie uruchamiaj go na bazie produkcyjnej. Nie ładuje kont ani przykładowego zbioru z upstream `basic_data.json`.
 
-`aed_refresh` (po `seed_jury`) wczytuje datowane kopie pięciu zbiorów AED z dane.gov.pl (`backend/data/aed/sources/`) jako zbiory instytucji demo, mapuje je do wzorcowego zakresu `aed-standard/`, waliduje i deduplikuje, a potem publikuje zbiór „Raport zbiorczy AED” instytucji operatora portalu: CSV z podglądem mapy, GeoJSON oraz osobny zasób punktów AED z OpenStreetMap na licencji ODbL 1.0. Polecenie można uruchamiać ponownie; zmienione pliki zastępują poprzednie wersje tych samych zasobów. Tę samą aktualizację wykonuje zadanie Celery `mcod.aed_aggregate.tasks.aed_refresh_task` (harmonogram dzienny wymaga procesu celery beat, którego lokalny Compose nie uruchamia).
+`aed_refresh` (po `seed_jury`) pobiera pięć zbiorów AED na żywo z publicznego API dane.gov.pl (tylko odczyt); gdy API nie odpowiada, używa datowanych kopii z `backend/data/aed/sources/` i zapisuje, które źródło i kiedy zostało użyte (wynik polecenia, opis zbioru, `source_records`). Zbiory źródłowe trafiają do instytucji demo, rekordy są mapowane do wzorcowego zakresu `aed-standard/`, walidowane i deduplikowane, a gmina (`terc`) wynika z granic PRG. Polecenie publikuje zbiór „Raport zbiorczy AED” instytucji operatora portalu (kategoria Zdrowie, CSV z podglądem mapy i GeoJSON, CC BY 4.0) oraz osobny zbiór punktów AED z OpenStreetMap (ODbL 1.0). `--offline` pomija API. `seed_aed_demo` (przed `aed_refresh`) tworzy cztery fikcyjne instytucje oznaczone „(dane demonstracyjne)” (szpital, szkoła, centrum sportu, spółka), które publikują po trzy fikcyjne rekordy AED tą samą ścieżką co kreator dysponenta; pokazują przepływ „dysponent publikuje dane, raport zbiorczy je przejmuje” i nie wskazują rzeczywistych AED. Rekordy źródeł miejskich nie nazywają dysponenta: `operator_name` to instytucja z opisu lokalizacji (flaga `operator_from_location`), a urząd miasta jest wydawcą danych (`source_records[].publisher_name`). Polecenie można uruchamiać ponownie; zmienione pliki zastępują poprzednie wersje tych samych zasobów. Usługa `aed-beat` uruchamia codziennie o 03:30 UTC zadanie Celery `mcod.aed_aggregate.tasks.aed_refresh_task` (tylko zadania AED, bez okresowych zadań portalu).
 
 ### Cache API po `aed_refresh`
 
@@ -150,6 +151,14 @@ docker compose run --rm manage python manage.py load_aed_devices mcod/aed_report
 docker compose run --rm manage python manage.py load_aed_devices mcod/aed_reports/data/demo-jury-legionowo.csv --organization jury-legionowo
 ```
 
+Po `aed_refresh` zarejestruj urządzenia ze wszystkich rekordów opublikowanego „Raportu zbiorczego AED”, aby każdy rekord miał stronę urządzenia, kod QR i ścieżkę zgłoszenia do swojego dysponenta:
+
+```sh
+docker compose run --rm manage python manage.py load_aed_report_devices
+```
+
+Instytucję odpowiedzialną wskazują źródła rekordu (`source_records`): plik opublikowany kreatorem (`dysponent:<slug>`) ma pierwszeństwo, w drugiej kolejności zbiór źródłowy instytucji demo (`dane:dataset:<id>`). Rekordy bez takiego źródła (np. OSM) są pomijane. Komendę można uruchamiać ponownie.
+
 Plik każdego dysponenta musi mieć układ standardu i przejść jego walidator; komenda aktualizuje urządzenia po `aed_id` i odrzuca identyfikator należący do innej instytucji.
 
 | Adres | Zastosowanie |
@@ -163,7 +172,7 @@ Wpis „Najbliższy AED” w sekcji PoCoTo wskazuje mapę zasobu zbioru „Rapor
 
 Ograniczenia prototypu: strona urządzenia wywołuje API przez lokalny proxy `/api` serwera frontendu (konfiguracja Compose), a nieznany identyfikator pokazuje komunikat na stronie zamiast przekierowania na stronę 404 portalu; brak limitu zgłoszeń z jednego adresu.
 
-Klauzula pod formularzem (wzór do weryfikacji prawnej): administratorem danych zgłaszającego (imię lub podpis, opcjonalny kontakt) jest dysponent urządzenia; operator portalu wyłącznie przekazuje zgłoszenie. Imię i kontakt są usuwane z portalu 30 dni po oznaczeniu zgłoszenia jako „rozwiązane”; treść zgłoszenia zostaje bez danych osobowych. Kopia zgłoszenia wysłana e-mailem do dysponenta podlega jego zasadom przechowywania. Usuwanie wykonuje `docker compose run --rm manage python manage.py purge_aed_reporter_data` oraz dzienne zadanie Celery `mcod.aed_reports.tasks.purge_reporter_data_task` (wymaga procesu celery beat, którego lokalny Compose nie uruchamia). Ponowne otwarcie zgłoszenia liczy 30 dni od nowa.
+Klauzula pod formularzem (wzór do weryfikacji prawnej): formularz nie wymaga danych osobowych; administratorem danych podanych przez zgłaszającego (opcjonalnie imię lub podpis i kontakt) jest dysponent urządzenia; operator portalu wyłącznie przekazuje zgłoszenie. Imię i kontakt są usuwane z portalu 30 dni po oznaczeniu zgłoszenia jako „rozwiązane”; treść zgłoszenia zostaje bez danych osobowych. Kopia zgłoszenia wysłana e-mailem do dysponenta podlega jego zasadom przechowywania. Usuwanie wykonuje `docker compose run --rm manage python manage.py purge_aed_reporter_data` oraz dzienne zadanie Celery `mcod.aed_reports.tasks.purge_reporter_data_task` (wymaga procesu celery beat, którego lokalny Compose nie uruchamia). Ponowne otwarcie zgłoszenia liczy 30 dni od nowa.
 
 ## Licencja i użycie AI
 
