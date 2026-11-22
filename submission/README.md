@@ -6,10 +6,10 @@ w HackTribe: https://hacknation2026.hacktribe.co/mapa-serc/
 
 | Plik | Zawartość |
 |---|---|
-| [mapa-serc-prezentacja.pdf](mapa-serc-prezentacja.pdf) | Prezentacja zgłoszenia (PDF, 14 slajdów) |
+| [mapa-serc-prezentacja.pdf](mapa-serc-prezentacja.pdf) | Prezentacja zgłoszenia (PDF, 13 slajdów i 2 załączniki) |
 | [mapa-serc-demo.mp4](mapa-serc-demo.mp4) | Nagranie demo: 1 min 57 s, muzyka bez lektora, napisy w obrazie i w pliku [mapa-serc-demo.srt](mapa-serc-demo.srt); opis montażu w [nagranie-demo.md](nagranie-demo.md) |
 | [mapa-serc-okladka-hacktribe.png](mapa-serc-okladka-hacktribe.png) | Okładka projektu w HackTribe (800 x 600 px) |
-| [prezentacja/](prezentacja/) | Źródła slajdów: HTML, CSS, zrzuty ekranu, znak, krój pisma i skrypt budujący PDF |
+| [prezentacja/](prezentacja/) | Źródła slajdów: HTML, CSS, zrzuty ekranu, krój pisma i skrypt budujący PDF; znak i plakat są czytane z `brand/` |
 | [opis-projektu.md](opis-projektu.md) | Tytuł, krótki i szczegółowy opis, kroki użytkownika, teksty do formularza HackTribe |
 | [oswiadczenie-ai.md](oswiadczenie-ai.md) | Zakres wykorzystania AI według obszarów (regulamin zadania, par. 2 ust. 8) |
 | [ograniczenia.md](ograniczenia.md) | Ograniczenia prototypu |

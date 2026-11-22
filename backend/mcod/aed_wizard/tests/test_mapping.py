@@ -210,3 +210,18 @@ class DataDateTests(SimpleTestCase):
 
     def test_a_file_without_dates_has_no_data_date(self):
         self.assertEqual(mapping.detect_data_date(readers.read("krosno.csv", CITY_CSV)), (None, None))
+
+
+class OperatorTests(SimpleTestCase):
+    """APP-63: the dysponent comes from the file or the uploader's entry, never from the uploading institution."""
+
+    def test_no_dysponent_column_and_no_entry_leaves_the_field_empty(self):
+        table = readers.read("krosno.csv", CITY_CSV)
+        result = mapping.convert(table, mapping.suggest(table.columns), mapping.DEFAULTS,
+                                 dict(CONTEXT, operator_name=""))
+        self.assertEqual({record.get("operator_name", "") for record in result.records}, {""})
+        errors = standard.validate_bytes(result.csv_bytes())
+        self.assertIn("operator_name", {error["field"] for error in errors})
+
+    def test_owner_column_is_not_taken_as_the_dysponent(self):
+        self.assertNotIn("operator_name", mapping.suggest(["nazwa", "właściciel", "szerokosc", "dlugosc"]))

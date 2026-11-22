@@ -4,25 +4,30 @@ Każdy punkt akceptuje autor po własnym sprawdzeniu. Zaznacz `[x]` i wpisz
 uwagi albo "OK". Punkt z uwagami wraca do poprawy przed wysłaniem
 zgłoszenia.
 
-Stan na 2026-11-21, 22:27 UTC. Wszystkie sprawdzane elementy są w gałęzi `main`.
+Stan na 2026-11-22, 02:00 UTC. Wszystkie sprawdzane elementy są w gałęzi `main`.
 
 ## 1. Demo lokalne
 
 Uruchomienie według `README.md`: sekcja "Uruchomienie od zera", a dla
-punktów 1.6 i 1.8 także "Zgłoszenia AED i kody QR" (`load_aed_devices`,
+punktów 1.6 i 1.8 także "Zgłoszenia AED i kody QR"
+(`load_aed_report_devices` po `aed_refresh`, `load_aed_devices`,
 `seed_aed_showcase`). Potem:
 
 - [ ] 1.1 Portal działa pod https://mcod.local/ bez zmian wyglądu poza
       obszarami AED.
-- [ ] 1.2 Zbiór "Raport zbiorczy AED" ma zasoby CSV, GeoJSON i OSM (ODbL);
-      zakładka Mapa pokazuje punkty.
+- [ ] 1.2 Zbiór "Raport zbiorczy AED" ma kategorię Zdrowie i zasoby CSV
+      oraz GeoJSON; zakładka Mapa pokazuje punkty. Punkty z OpenStreetMap
+      są osobnym zbiorem z opisem licencji ODbL 1.0. Opis raportu podaje,
+      że źródła pobrano na żywo z api.dane.gov.pl.
 - [ ] 1.3 API zwraca rekordy raportu: `https://api.mcod.local/1.4/resources/<id CSV>/data`.
 - [ ] 1.4 Kreator: konto pełnomocnika Krosna, "Dodaj dane AED",
-      plik Krosna, przypisanie kolumn, raport walidacji, publikacja.
+      plik Krosna, przypisanie kolumn, data danych podana ręcznie (plik
+      jej nie zawiera), raport walidacji, publikacja.
 - [ ] 1.5 Walidator "Sprawdź swój plik" pokazuje błędy pliku
       z błędami bez logowania.
-- [ ] 1.6 Karta urządzenia i "Zgłoś problem": zgłoszenie widzi tylko
-      dysponent urządzenia, e-mail w MailHog.
+- [ ] 1.6 Karta urządzenia i "Zgłoś problem" dla rekordu raportu i dla
+      urządzenia demo: zgłoszenie bez imienia i kontaktu przechodzi, widzi
+      je tylko dysponent urządzenia, e-mail w MailHog.
 - [ ] 1.7 Strona akcji `/pl/aed`: liczniki i mapa pokrycia gmin,
       także na telefonie.
 - [ ] 1.8 "Najbliższy AED" w zakładce PoCoTo.
@@ -35,8 +40,8 @@ Uwagi:
 
 - [ ] 2.1 Treść slajdów zgodna z prototypem i opisem.
 - [ ] 2.2 Zrzuty ekranu aktualne, w tym strona akcji z licznikami i mapą.
-- [ ] 2.3 Slajd 10: wynik automatycznej kontroli dostępności (axe-core)
-      nowych stron AED, w tym jedno naruszenie w kreatorze.
+- [ ] 2.3 Załącznik A prezentacji: stan każdej zasady portalu (spełnione,
+      częściowo, wymaga decyzji) i wynik automatycznej kontroli dostępności.
 - [ ] 2.4 Rozmiar do 10 MB, co najmniej 5 slajdów.
 
 Uwagi:
@@ -56,7 +61,7 @@ Uwagi:
 
 `aed-standard/field-dictionary.xlsx`
 
-- [ ] 4.1 43 pola z polską etykietą, typem, wymagalnością, formatem,
+- [ ] 4.1 44 pola z polską etykietą, typem, wymagalnością, formatem,
       przykładem i opisem.
 - [ ] 4.2 Brak danych osobowych w zakresie; kontakt tylko instytucjonalny.
 
@@ -87,6 +92,7 @@ Uwagi:
 - [ ] 7.1 Treść klauzuli RODO w formularzu "Zgłoś problem" (strona
       urządzenia `/pl/aed/<aed_id>`).
 - [ ] 7.2 Okres przechowywania danych zgłaszającego: imię lub podpis
-      i kontakt są usuwane 30 dni po oznaczeniu zgłoszenia jako rozwiązane.
+      i kontakt (oba opcjonalne) są usuwane 30 dni po oznaczeniu zgłoszenia
+      jako rozwiązane.
 
 Uwagi:
