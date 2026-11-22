@@ -14,6 +14,7 @@ w HackTribe: https://hacknation2026.hacktribe.co/mapa-serc/
 | [oswiadczenie-ai.md](oswiadczenie-ai.md) | Zakres wykorzystania AI według obszarów (regulamin zadania, par. 2 ust. 8) |
 | [ograniczenia.md](ograniczenia.md) | Ograniczenia prototypu |
 | [akceptacja.md](akceptacja.md) | Lista akceptacji autora: demo, PDF, księga znaku, XLSX, oświadczenie AI, nagranie, decyzje o danych zgłaszających |
+| [pitch/](pitch/) | Scenariusz 5-minutowego wystąpienia ([scenariusz.md](pitch/scenariusz.md)) i prawdopodobne pytania jury z odpowiedziami ([pytania-jury.md](pitch/pytania-jury.md)); materiał roboczy autora, nie wchodzi do treści zgłoszenia |
 | [lista-kontrolna.md](lista-kontrolna.md) | Lista robocza: siedem wymaganych rezultatów ze statusem i kontrola przed wysłaniem; nie wchodzi do treści zgłoszenia |
 
 Wzorcowy zakres danych AED (słownik XLSX, szablon, schemat, walidator)
