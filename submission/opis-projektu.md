@@ -15,9 +15,11 @@ publiczne). Projekt w HackTribe: https://hacknation2026.hacktribe.co/mapa-serc/
 
 ## Krótki opis
 
-Każdy dysponent defibrylatora (gmina, szpital, szkoła, uczelnia, firma,
-straż, policja, przewoźnik) może w kilka minut opublikować dane o swoich AED
-w portalu dane.gov.pl, w jednym wspólnym standardzie. Portal sam łączy te
+Każdy dysponent defibrylatora, który ma konto dostawcy w portalu
+dane.gov.pl (gmina, szpital, szkoła, uczelnia, straż, policja), może
+w kilka minut opublikować dane o swoich AED w jednym wspólnym standardzie.
+Dysponent bez konta, na przykład firma, występuje o konto dostawcy albo
+przekazuje dane swojej gminie. Portal sam łączy te
 dane w ogólnopolski raport zbiorczy AED, dostępny w API, na mapie i do
 pobrania dla służb ratunkowych, twórców aplikacji i obywateli. Akcja z własną
 nazwą, hasłem i znakiem zachęca dysponentów do udostępniania danych, a ten
@@ -59,8 +61,8 @@ i prowadzi do jego zbioru źródłowego.
 
 ### Elementy rozwiązania
 
-1. **Wzorcowy zakres danych AED** (`aed-standard/`): słownik 43 pól w XLSX
-   (15 wymaganych, 3 warunkowe, 25 opcjonalnych), szablon CSV, schemat
+1. **Wzorcowy zakres danych AED** (`aed-standard/`): słownik 44 pól w XLSX
+   (15 wymaganych, 3 warunkowe, 26 opcjonalnych), szablon CSV, schemat
    maszynowy Table Schema, przykładowy rekord, mapowania pięciu istniejących
    zbiorów i OSM oraz walidator z testami. Lokalizacja w WGS84, adres z kodami
    TERYT, opis miejsca, dostępność i godziny w notacji `opening_hours`,
@@ -77,16 +79,19 @@ i prowadzi do jego zbioru źródłowego.
 4. **Agregator i raport zbiorczy AED**: mapowanie istniejących układów do
    standardu, walidacja, deduplikacja z zachowaniem pochodzenia rekordu,
    flagi jakości (np. zamienione współrzędne). Zasoby raportu: CSV
-   ze współrzędnymi, z którego korzysta wbudowana mapa portalu, GeoJSON do
-   pobrania oraz punkty AED z OSM jako osobny zasób na licencji ODbL.
-   Odświeżanie: zadanie okresowe w tle, w demo uruchamiane ręcznie.
+   ze współrzędnymi, z którego korzysta wbudowana mapa portalu, i GeoJSON
+   do pobrania. Punkty AED z OSM są osobnym zbiorem z licencją ODbL.
+   Źródła raport pobiera na żywo z API dane.gov.pl (gdy API nie odpowiada,
+   z datowanych kopii) i odświeża je codziennie zadaniem w tle.
 5. **Strona akcji w portalu**: kampania, liczniki (dysponenci, rekordy AED,
-   gminy z danymi na tle 2479 gmin), mapa pokrycia gmin z lukami ("OSM zna
-   AED, wpisu urzędowego brak") i przycisk prowadzący do kreatora.
+   gminy z danymi na tle 2479 gmin), mapa pokrycia gmin z lukami (gminy,
+   w których OpenStreetMap ma punkty AED, a dane.gov.pl nie ma o nich danych;
+   mapa porównuje tylko te dwa źródła) i przycisk prowadzący do kreatora.
 6. **Zgłoszenie problemu do konkretnego dysponenta**: kod QR na naklejce przy
    AED prowadzi do wpisu urządzenia i formularza "Zgłoś problem" (zamknięty,
-   brak urządzenia, uszkodzony, złe dane lub lokalizacja). Kontakt do
-   zgłaszającego jest opcjonalny i wymaga wyraźnej zgody (RODO). Zgłoszenie
+   brak urządzenia, uszkodzony, złe dane lub lokalizacja). Taką stronę ma
+   każdy rekord raportu zbiorczego. Formularz nie wymaga danych osobowych;
+   kontakt do zgłaszającego jest opcjonalny i wymaga wyraźnej zgody (RODO). Zgłoszenie
    trafia do panelu właściwego dysponenta ze statusem nowe, w trakcie,
    rozwiązane.
 7. **"Najbliższy AED"**: wpis w zakładce PoCoTo portalu, oparty na
@@ -128,8 +133,8 @@ i prowadzi do jego zbioru źródłowego.
 - Mapa portalu: kolumny `longitude`, `latitude`, `name` przypisane do ról
   `l`, `b`, `label`.
 - Nowe strony AED: projektowane pod WCAG 2.2 na poziomie AA, układ
-  responsywny od 360 px. Wynik automatycznej kontroli i znane naruszenie
-  (rozmiar trzech linków w kreatorze) opisuje `ograniczenia.md`.
+  responsywny od 360 px. Wynik automatycznej kontroli dostępności opisuje
+  `ograniczenia.md`.
 
 ## Architektura i technologie
 
@@ -147,7 +152,7 @@ w repozytorium.
 
 ## Stan prototypu
 
-Stan na 2026-11-21, 22:27 UTC: wszystkie elementy są w gałęzi `main`.
+Stan na 2026-11-22, 02:00 UTC: wszystkie elementy są w gałęzi `main`.
 
 | Element | Stan |
 |---|---|
@@ -171,7 +176,7 @@ i obywatele nie mają jednego aktualnego, maszynowo czytelnego źródła, które
 mówi, gdzie jest AED, kiedy jest dostępny i kto za niego odpowiada.
 
 **Rozwiązanie:** Mechanizm w portalu dane.gov.pl, na jego oficjalnym kodzie:
-wzorcowy zakres danych AED (43 pola, XLSX, CSV, schemat), kreator, w którym
+wzorcowy zakres danych AED (44 pola, XLSX, CSV, schemat), kreator, w którym
 dysponent wgrywa plik, dopasowuje kolumny, poprawia błędy i publikuje dane
 we własnym zbiorze, oraz automatyczny raport zbiorczy AED z mapą, API
 i pochodzeniem każdego rekordu. Zgłoszenia problemów z urządzeniem trafiają
