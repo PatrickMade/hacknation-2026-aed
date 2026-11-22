@@ -25,7 +25,7 @@ Wymagania z pełnej treści zadania, pkt 2-5.
 
 | Element | Status | Uwagi |
 |---|---|---|
-| Lista ograniczeń | gotowe | `submission/ograniczenia.md`; skrót na slajdzie 12 |
+| Lista ograniczeń | gotowe | `submission/ograniczenia.md`; skrót na slajdzie 13 |
 | Nagranie demo | gotowe | `submission/mapa-serc-demo.mp4`: 1 min 57 s, 14,8 MB, 1080p, muzyka bez lektora, napisy w obrazie i w `mapa-serc-demo.srt`; opis w `nagranie-demo.md`; materiał dodatkowy w HackTribe |
 | Okładka HackTribe | gotowe do akceptacji | `submission/mapa-serc-okladka-hacktribe.png` (800 x 600 px) |
 | Lista akceptacji autora | gotowe do akceptacji | `submission/akceptacja.md` |
