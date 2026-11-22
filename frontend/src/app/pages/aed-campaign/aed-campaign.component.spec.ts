@@ -54,4 +54,16 @@ describe('AedCampaignComponent', () => {
       '2122 gminy',
     ]);
   });
+
+  it('words the demo part of a counter with the Polish plural', () => {
+    const component = new AedCampaignComponent({} as never, {} as never, 'browser' as never, document);
+
+    expect(component.demoPart(0, 'person')).toBe('');
+    expect(component.demoPart(1, 'person')).toBe('w tym 1 demonstracyjny');
+    expect(component.demoPart(4, 'person')).toBe('w tym 4 demonstracyjnych');
+    expect(component.demoPart(1, 'thing')).toBe('w tym 1 demonstracyjny');
+    expect(component.demoPart(3, 'thing')).toBe('w tym 3 demonstracyjne');
+    expect(component.demoPart(12, 'thing')).toBe('w tym 12 demonstracyjnych');
+    expect(component.demoPart(22, 'thing')).toBe('w tym 22 demonstracyjne');
+  });
 });

@@ -59,6 +59,26 @@ export function hasConfirmedOperator(
   return !names.includes('operator_from_location') && !names.includes('operator_unconfirmed');
 }
 
+/**
+ * Suffix that seed_aed_demo appends to the attribution of every source it writes
+ * (backend/mcod/aed_aggregate/demo.py: '{title} - ' + DEMO_LABEL); the aggregator keeps source_records unchanged.
+ */
+const DEMO_ATTRIBUTION_SUFFIX = ' - dane demonstracyjne';
+
+/**
+ * True for a fictional demo record from seed_aed_demo: one of its sources is a dysponent publication whose
+ * attribution carries the demo label. The institution name does not decide.
+ */
+export function isDemoRecord(sourceRecordsCell: string | null | undefined): boolean {
+  return parseJsonArray(sourceRecordsCell).some((entry) => {
+    if (!entry || typeof entry !== 'object' || !isDysponentSource(entry as SourceEntry)) {
+      return false;
+    }
+    const attribution = (entry as { attribution?: unknown }).attribution;
+    return typeof attribution === 'string' && attribution.trim().endsWith(DEMO_ATTRIBUTION_SUFFIX.trim());
+  });
+}
+
 /** True for a real operator name: not empty and not a "nieustalony" placeholder (e.g. "nieustalony (OpenStreetMap)"). */
 export function hasOperatorName(name: string | null | undefined): boolean {
   const text = (name || '').trim();

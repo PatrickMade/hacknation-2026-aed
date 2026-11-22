@@ -2,11 +2,11 @@
   <div class="container">
     <!-- Hero: name, slogan and mark come from aed-campaign.brand.ts -->
     <div class="aed-campaign__hero">
-      <!-- Decorative: the campaign name is the h1 next to it. -->
-      <img class="aed-campaign__mark" [src]="brand.markSrc" alt="" width="120" height="115" />
       <div>
-        <h1 id="aed-campaign-title" class="heading heading--md mb-2">{{ brand.name }}</h1>
-        <p class="aed-campaign__slogan">{{ brand.slogan }}</p>
+        <!-- Official lockup (symbol, name and slogan) from brand/logo; the brand book forbids typing the name. -->
+        <h1 id="aed-campaign-title" class="aed-campaign__lockup mb-3">
+          <img [src]="brand.lockupSrc" [alt]="brand.name + '. ' + brand.slogan" width="453" height="160" />
+        </h1>
         <p class="aed-campaign__lead">
           Defibrylator AED pomaga uratować osobę, której nagle zatrzymało się serce. Liczy się każda minuta, dlatego
           trzeba szybko wiedzieć, gdzie jest najbliższe urządzenie. Mapa Serc pokazuje, gdzie w Polsce są AED znane z
@@ -47,21 +47,43 @@
             <dl class="aed-campaign__counters">
               <div class="aed-campaign__counter">
                 <dt>Wydawcy danych o AED</dt>
-                <dd>{{ fmt(summary.publishers) }}</dd>
+                <dd>
+                  {{ fmt(summary.publishers) }}
+                  @if (summary.demoPublishers) {
+                    <span class="aed-campaign__counter-demo">({{ demoPart(summary.demoPublishers, 'person') }})</span>
+                  }
+                </dd>
               </div>
               <div class="aed-campaign__counter">
                 <dt>Potwierdzeni dysponenci AED</dt>
-                <dd>{{ fmt(summary.confirmedOperators) }}</dd>
+                <dd>
+                  {{ fmt(summary.confirmedOperators) }}
+                  @if (summary.demoConfirmedOperators) {
+                    <span class="aed-campaign__counter-demo"
+                      >({{ demoPart(summary.demoConfirmedOperators, 'person') }})</span
+                    >
+                  }
+                </dd>
               </div>
               <div class="aed-campaign__counter">
-                <dt>Defibrylatory AED w oficjalnych danych</dt>
-                <dd>{{ fmt(summary.records) }}</dd>
+                <dt>Defibrylatory AED w raporcie zbiorczym</dt>
+                <dd>
+                  {{ fmt(summary.records) }}
+                  @if (summary.demoRecords) {
+                    <span class="aed-campaign__counter-demo">({{ demoPart(summary.demoRecords, 'thing') }})</span>
+                  }
+                </dd>
               </div>
               <div class="aed-campaign__counter">
                 <dt>Gminy z oficjalnymi danymi o AED</dt>
                 <dd>
                   {{ fmt(summary.gminyCovered) }}
                   <span class="aed-campaign__counter-total">z {{ fmt(summary.gminyTotal) }}</span>
+                  @if (summary.gminyDemoOnly) {
+                    <span class="aed-campaign__counter-demo"
+                      >i {{ gminyLabel(summary.gminyDemoOnly) }} tylko z danymi demonstracyjnymi</span
+                    >
+                  }
                 </dd>
               </div>
             </dl>
@@ -82,6 +104,13 @@
               Dysponent jest potwierdzony, gdy sam publikuje w portalu dane o swoich urządzeniach; wtedy jest też ich
               wydawcą.
             </p>
+            @if (summary.demoRecords) {
+              <p class="aed-campaign__demo-note">
+                <strong>Dane demonstracyjne.</strong> Fikcyjne instytucje oznaczone „dane demonstracyjne” pokazują, jak
+                dysponent sam publikuje dane o AED. Nie opisują rzeczywistych urządzeń, dlatego liczniki podają je
+                osobno, a gminy, w których są tylko takie dane, mają na mapie osobny kolor.
+              </p>
+            }
           }
         }
       </div>
@@ -109,6 +138,9 @@
           Zielone gminy mają oficjalne dane o AED. Pomarańczowe to luki: wolontariusze OpenStreetMap zaznaczyli tam
           defibrylatory, ale w Raporcie zbiorczym AED nie ma o nich danych. Szare gminy nie mają danych z żadnego z tych
           źródeł. Te same informacje są w tabelach pod mapą.
+          @if (summary.gminyDemoOnly) {
+            Fioletowe gminy mają tylko fikcyjne dane demonstracyjne.
+          }
         </p>
         <p id="aed-campaign-map-scope" class="aed-campaign__source">
           Mapa porównuje tylko dwa źródła: Raport zbiorczy AED i OpenStreetMap. Inne wykazy AED nie są tu liczone, więc
@@ -128,9 +160,19 @@
             <span class="aed-campaign__swatch" [style.background]="statusStyle.gap.fillColor" aria-hidden="true"></span>
             Luka - AED w OpenStreetMap, brak danych w dane.gov.pl: {{ gminyLabel(summary.gaps) }}
           </li>
+          @if (summary.gminyDemoOnly) {
+            <li>
+              <span
+                class="aed-campaign__swatch"
+                [style.background]="statusStyle.demo.fillColor"
+                aria-hidden="true"></span>
+              Tylko dane demonstracyjne (fikcyjne): {{ gminyLabel(summary.gminyDemoOnly) }}
+            </li>
+          }
           <li>
             <span class="aed-campaign__swatch aed-campaign__swatch--none" aria-hidden="true"></span>
-            Brak danych: {{ gminyLabel(summary.gminyTotal - summary.gminyCovered - summary.gaps) }}
+            Brak danych:
+            {{ gminyLabel(summary.gminyTotal - summary.gminyCovered - summary.gminyDemoOnly - summary.gaps) }}
           </li>
         </ul>
         <div

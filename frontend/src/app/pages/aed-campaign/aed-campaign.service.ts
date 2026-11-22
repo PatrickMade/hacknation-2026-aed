@@ -9,6 +9,7 @@ import {
   hasConfirmedOperator,
   isOsmDatasetTitle,
   isOsmResource,
+  isDemoRecord,
   isReportDatasetTitle,
   publishersFromSourceRecords,
 } from '@app/pages/aed-campaign/aed-report-lookup';
@@ -125,6 +126,7 @@ export class AedCampaignService {
               operatorName: row['operator_name'],
               publishers: publishersFromSourceRecords(row['source_records'], row['operator_name']),
               confirmedOperator: hasConfirmedOperator(row['source_records'], row['quality_flags']),
+              demo: isDemoRecord(row['source_records']),
               lat: toNumber(row['latitude']),
               lon: toNumber(row['longitude']),
             })),

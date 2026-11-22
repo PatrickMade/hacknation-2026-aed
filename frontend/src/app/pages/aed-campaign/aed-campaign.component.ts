@@ -33,6 +33,8 @@ const STATUS_STYLE: Record<GminaStatus, { fillColor: string; fillOpacity: number
   // #087f45 = --mapa-serc-zielen in brand/tokens.css.
   published: { fillColor: '#087f45', fillOpacity: 0.75 },
   gap: { fillColor: '#d9480f', fillOpacity: 0.75 },
+  // Fictional demo data only (seed_aed_demo): a colour apart from official green and gap orange.
+  demo: { fillColor: '#7048e8', fillOpacity: 0.6 },
   none: { fillColor: '#ced4da', fillOpacity: 0.35 },
 };
 
@@ -159,6 +161,21 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
     return more > 0 ? `${shown} i jeszcze ${this.fmt(more)}` : shown;
   }
 
+  /**
+   * "w tym N demonstracyjnych" for a counter, empty without demo data. Persons (wydawcy, dysponenci) take
+   * "demonstracyjnych" from 2 up; things (defibrylatory) take "demonstracyjne" for 2-4, 22-24 and so on.
+   */
+  demoPart(count: number, kind: 'person' | 'thing'): string {
+    if (count <= 0) {
+      return '';
+    }
+    const last = count % 10;
+    const lastTwo = count % 100;
+    const fewForm = kind === 'thing' && last >= 2 && last <= 4 && (lastTwo < 12 || lastTwo > 14);
+    const word = count === 1 ? 'demonstracyjny' : fewForm ? 'demonstracyjne' : 'demonstracyjnych';
+    return `w tym ${this.fmt(count)} ${word}`;
+  }
+
   fmt(value: number): string {
     return value.toLocaleString('pl-PL');
   }
@@ -228,6 +245,7 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
     const list = (label: string, names: string[]) =>
       names.length ? `<br>${label}: ${names.slice(0, 5).map(escape).join(', ')}${names.length > 5 ? '…' : ''}` : '';
     const institutions = list('Potwierdzeni dysponenci', gmina.operators) + list('Wydawcy danych', gmina.publishers);
-    return `<strong>${escape(gmina.name)}</strong><br>AED w oficjalnych danych: ${gmina.officialCount}<br>AED w OpenStreetMap: ${gmina.osmCount}${institutions}`;
+    const demo = gmina.demoCount ? `<br>AED w danych demonstracyjnych (fikcyjnych): ${gmina.demoCount}` : '';
+    return `<strong>${escape(gmina.name)}</strong><br>AED w oficjalnych danych: ${gmina.officialCount}${demo}<br>AED w OpenStreetMap: ${gmina.osmCount}${institutions}`;
   }
 }
