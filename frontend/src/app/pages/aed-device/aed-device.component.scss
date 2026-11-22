@@ -1,3 +1,8 @@
+// Mapa Serc colours, values from brand/tokens.css (APP-58). Scoped to the device page only.
+$mapa-serc-zielen: #087f45; // white text on it: 5.1:1
+$mapa-serc-ciemna-zielen: #0b2e20; // on white: 14.7:1
+$mapa-serc-jasna-zielen: #ddf3e6; // dark green on it: 12.6:1
+
 .aed-device__details {
   display: grid;
   grid-template-columns: minmax(8rem, max-content) 1fr;
@@ -26,11 +31,6 @@
   min-height: 44px;
 }
 
-.aed-device__qr {
-  width: 160px;
-  height: 160px;
-}
-
 .aed-device__types .form-check {
   min-height: 44px;
   display: flex;
@@ -50,4 +50,118 @@
     flex-shrink: 0;
     border: 1px solid #6c757d;
   }
+}
+
+.aed-device__brand {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid $mapa-serc-zielen;
+  background: $mapa-serc-jasna-zielen;
+  color: $mapa-serc-ciemna-zielen;
+}
+
+.aed-device__brand-logo {
+  width: 198px;
+  max-width: 100%;
+  height: auto;
+}
+
+.aed-device__brand-slogan {
+  margin: 0 0 0.25rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.aed-device__brand-text {
+  margin: 0;
+
+  a {
+    color: $mapa-serc-ciemna-zielen;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+}
+
+// Campaign colour for this page's own buttons; the portal's global button styles stay unchanged.
+.aed-device .btn-primary {
+  border-color: $mapa-serc-zielen;
+  background-color: $mapa-serc-zielen;
+  color: #fff;
+
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: $mapa-serc-ciemna-zielen;
+    background-color: $mapa-serc-ciemna-zielen;
+    color: #fff;
+  }
+}
+
+.aed-device .btn-outline-primary {
+  border-color: $mapa-serc-zielen;
+  color: $mapa-serc-zielen;
+
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: $mapa-serc-zielen;
+    background-color: $mapa-serc-zielen;
+    color: #fff;
+  }
+}
+
+.aed-device__sticker {
+  max-width: 300px;
+  margin-top: 0.75rem;
+  overflow: hidden;
+  border: 3px solid $mapa-serc-zielen;
+  border-radius: 16px;
+  background: #fff;
+  color: $mapa-serc-ciemna-zielen;
+  text-align: center;
+}
+
+.aed-device__sticker-logo {
+  display: block;
+  width: 170px;
+  height: auto;
+  margin: 0.5rem auto 0;
+}
+
+.aed-device__qr {
+  display: block;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto;
+}
+
+.aed-device__sticker-title {
+  margin: 0.5rem 1rem 0;
+  font-weight: 700;
+}
+
+.aed-device__sticker-hint {
+  margin: 0.25rem 1rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.aed-device__sticker-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+  padding: 0.5rem 1rem;
+  background: $mapa-serc-zielen;
+  color: #fff;
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.aed-device__sticker-id {
+  font-weight: 700;
+  word-break: break-all;
 }
