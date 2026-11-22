@@ -80,7 +80,7 @@ Uwagi:
 
 ## 6. Nagranie demo
 
-`submission/mapa-serc-demo.mp4` (1 min 57 s, z muzyką, napisy w obrazie
+`submission/mapa-serc-demo.mp4` (1 min 59 s, z muzyką, napisy w obrazie
 i w pliku `mapa-serc-demo.srt`; opis montażu: `nagranie-demo.md`)
 
 - [ ] 6.1 Nagranie pokazuje kroki dysponenta i odbiorcy danych.

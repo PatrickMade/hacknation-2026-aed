@@ -115,7 +115,9 @@ Stan na 2026-11-22.
     uwagi w niezmienionej powłoce portalu, obecne także na stronach
     zbiorów: pasek postępu `ng-progress` bez nazwy
     (`aria-progressbar-name`) i atrybut odnośnika menu w nagłówku
-    (`aria-allowed-attr`).
+    (`aria-allowed-attr`). Kontrola ręczna wykazała trzecią uwagę w tej
+    samej powłoce: obsługę fokusu klawiatury w oknie informacji o RODO
+    i plikach cookie.
     Kontrola automatyczna obejmuje tylko część kryteriów; nie wykonano
     testu z czytnikiem ekranu.
 21. Kod portalu pochodzi z oficjalnego wydania (backend 2.62.3, frontend
