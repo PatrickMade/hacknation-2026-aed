@@ -4,6 +4,9 @@ Odpowiedzi są krótkie, do powiedzenia w 20-30 sekund. Liczby i stan
 prototypu według `main` z 22.11.2026. Pełna lista ograniczeń:
 `submission/ograniczenia.md`.
 
+Wersję roboczą tego dokumentu przygotowało narzędzie AI (Claude Code) na
+podstawie materiałów z repozytorium; autor wygłasza ją własnymi słowami.
+
 ## Zgodność z dane.gov.pl
 
 **1. Dlaczego moduł w portalu, a nie osobna aplikacja?**

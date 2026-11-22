@@ -5,6 +5,9 @@ i nagranie są planem awaryjnym. Założenie: 5 minut na wystąpienie; format
 finału nie jest potwierdzony, więc niżej jest też wariant, w którym jury
 samo wybiera przypadek użycia.
 
+Wersję roboczą tego dokumentu przygotowało narzędzie AI (Claude Code) na
+podstawie materiałów z repozytorium; autor wygłasza ją własnymi słowami.
+
 ## Jedno zdanie
 
 Mapa Serc to mechanizm w kodzie portalu dane.gov.pl, dzięki któremu każda
