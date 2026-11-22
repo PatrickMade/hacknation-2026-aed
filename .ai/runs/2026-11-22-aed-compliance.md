@@ -17,3 +17,5 @@ Source doc: .ai/specs/2026-11-22-aed-compliance.md
 
 - 45433fe: aed-standard part. RED on main for the new validator tests (operator_regon unknown field; placeholder rule missing), GREEN after.
 - Aggregator/publish/demo tests in test_compliance.py were written with the code (no separate RED run; on main they fail at import of the new functions).
+- 5cf2f8f..14e7608: review 6008929853 blocker (merge conflict) and major (report description) fixed; schema text 44 fields; review 6009200731 APPROVE on 14e7608.
+- Follow-ups 4 and 5 of review 6008929853 fixed while #20 lands: two different dysponenci now take the conflict path (RED: operator became "Dysponent B"); a live file in a changed layout falls back to the snapshot for that source (RED: KeyError: 'Lokalizacja'). GREEN: 9 tests.

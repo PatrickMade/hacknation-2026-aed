@@ -63,6 +63,19 @@ class LiveSourceTests(SimpleTestCase):
         note = records[0]['source_records'][0]['field_provenance']['source_records']
         self.assertTrue(note.startswith('kopia z {} (api.dane.gov.pl niedostępne'.format(sources.retrieved_at())))
 
+    def test_live_file_in_a_changed_layout_falls_back_for_that_source_only(self):
+        def renamed_column(url):
+            content = snapshot_api(url)
+            return content.replace(b' Lokalizacja', b' Miejsce') if url.endswith('Defibrylator_jAmxQcp.csv') else content
+        with patch.object(sources, 'http_get', side_effect=renamed_column):
+            loaded = sources.load_sources(use_live=True)
+        records = sources.official_records(loaded)
+        self.assertEqual(len(records), 74)
+        origins = {item['source']['slug']: item['origin'] for item in loaded}
+        self.assertEqual(origins['krosno'], 'snapshot')
+        self.assertIn('zmienionym układzie', loaded[0]['reason'])
+        self.assertEqual({origins[slug] for slug in ('marki', 'przemysl', 'legionowo')}, {'live'})
+
     def test_empty_live_file_is_not_used(self):
         def empty_file(url):
             return b'' if url.endswith('.csv') else snapshot_api(url)
@@ -91,6 +104,18 @@ class OperatorAndGminaTests(SimpleTestCase):
             self.assertIn('operator_from_location', record['quality_flags'])
             self.assertNotIn('operator_unconfirmed', record['quality_flags'])
             self.assertNotEqual(record['operator_name'], 'nieustalony')
+
+    def test_two_different_dysponenci_are_flagged_not_overwritten(self):
+        base = self.record(4581, '744')
+        first, second = copy.deepcopy(base), copy.deepcopy(base)
+        first['source_records'] = [{**base['source_records'][0], 'source_id': 'dysponent:a', 'source_record_id': '1'}]
+        second['source_records'] = [{**base['source_records'][0], 'source_id': 'dysponent:b', 'source_record_id': '1'}]
+        first.update(operator_name='Dysponent A', operator_regon='123456785', quality_flags=[])
+        second.update(operator_name='Dysponent B', quality_flags=[])
+        second.pop('operator_regon', None)
+        merged = aggregate.deduplicate([first, second])[0]
+        self.assertEqual((merged['operator_name'], merged['operator_regon']), ('Dysponent A', '123456785'))
+        self.assertIn('conflicting_sources', merged['quality_flags'])
 
     def test_prg_boundaries_place_legionowo_points_in_legionowo(self):
         legionowo = [r for r in self.records if r['source_records'][0]['source_id'] == 'dane:dataset:40593']

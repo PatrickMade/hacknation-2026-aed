@@ -343,10 +343,18 @@ def official_records(loaded=None):
     default the committed snapshots (deterministic, offline)."""
     loaded = loaded if loaded is not None else load_sources(use_live=False)
     records = []
-    for item in loaded:
-        if item['source']['reader'] and item['content'] is not None:
-            raw = item['content'].decode('utf-8')
-            records.extend(READERS[item['source']['reader']](item, raw))
+    for index, item in enumerate(loaded):
+        if not item['source']['reader'] or item['content'] is None:
+            continue
+        try:
+            records.extend(READERS[item['source']['reader']](item, item['content'].decode('utf-8')))
+        except Exception as error:  # a live file in a changed layout: use the dated snapshot for this source
+            if item['origin'] != 'live':
+                raise
+            fallback = snapshot(item['source'], reason='plik w zmienionym układzie: {}: {}'.format(
+                type(error).__name__, error)[:200])
+            loaded[index] = fallback  # publish_sources then republishes the snapshot file as well
+            records.extend(READERS[item['source']['reader']](fallback, fallback['content'].decode('utf-8')))
     return records
 
 

@@ -44,7 +44,10 @@ def merge(target, other):
     """Fold `other` into `target`: union of provenance, conflicting values flagged, never overwritten.
     A confirmed dysponent (a `dysponent:` source) supplies operator_name/operator_regon and clears the flags of a
     derived or unconfirmed operator."""
-    provider = other if from_provider(other) else (target if from_provider(target) else None)
+    # Exactly one confirmed side decides the operator; two different dysponenci go through the conflict path.
+    other_is_provider, target_is_provider = from_provider(other), from_provider(target)
+    provider = (other if other_is_provider and not target_is_provider
+                else target if target_is_provider and not other_is_provider else None)
     known = source_keys(target)
     target['source_records'].extend(s for s in other['source_records']
                                     if (s['source_id'], s['source_record_id']) not in known)
