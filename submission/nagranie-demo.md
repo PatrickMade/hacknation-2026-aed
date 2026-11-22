@@ -27,7 +27,7 @@ Plik: [mapa-serc-demo.mp4](mapa-serc-demo.mp4), napisy:
 1. **Nagrania ekranu.** Wszystkie ujęcia portalu pochodzą z lokalnej
    instancji `main` w wersji `3c108cc`, uruchomionej według `README.md`
    (Docker Compose, konta i dane demonstracyjne z poleceń opisanych w README).
-   Późniejszy commit `8a83333` zmienia tylko pliki w `brand/`. Przeglądarkę prowadzi skrypt
+   Późniejsze commity na `main` (do `eeee563`) nie zmieniają kodu portalu. Przeglądarkę prowadzi skrypt
    Playwright: klika, przewija i wpisuje tekst w prawdziwym interfejsie.
    Obraz jest zapisywany w rozdzielczości 2560x1440 (telefon: 1125x2001),
    a ruch kursora i przewijanie klatka po klatce w 30 kl./s. Kursor i kółko
