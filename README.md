@@ -61,7 +61,7 @@ docker compose exec redis sh -c "redis-cli --scan --pattern 'falcon-cache*' | xa
 
 Polecenie usuwa tylko zapisane odpowiedzi API (klucze `falcon-cache`), a nie dane portalu.
 
-Frontend kompiluje się po starcie kontenera. Postęp: `docker compose logs -f frontend`. Gotowość sprawdzisz przez `curl -f http://localhost:4200/` oraz `curl -f http://localhost:4200/api/1.4/institutions`.
+Frontend kompiluje się po starcie kontenera. Postęp: `docker compose logs -f frontend`. Gotowość sprawdzisz przez `curl -f http://localhost:4200/` oraz `curl -f http://localhost:4200/api/1.4/institutions`. Na świeżym stacku pierwsze otwarcie każdej strony (np. `/pl/aed`) może trwać 1-2 minuty, bo serwer deweloperski Angulara kompiluje ją przy pierwszym wejściu; kolejne wejścia są szybkie. Jeśli liczniki są nadal puste, odśwież stronę.
 
 ## Lokalne nazwy i certyfikat
 
@@ -105,7 +105,7 @@ Portal reprezentuje administratora flagą `is_superuser`; oba konta administracy
 
 Wymaga uruchomienia z sekcji wyżej, wpisu w pliku hosts i załadowania urządzeń demo z sekcji „Zgłoszenia AED i kody QR” (`load_aed_devices`, `seed_aed_showcase`). Hasła kont są w lokalnym `.env`.
 
-1. **Strona akcji** https://mcod.local/pl/aed: liczniki i mapa pokrycia gmin. Gdy mapa pokazuje 0 luk, zobacz „Cache API po `aed_refresh`”.
+1. **Strona akcji** https://mcod.local/pl/aed: liczniki i mapa pokrycia gmin. Pierwsze otwarcie może trwać 1-2 minuty. Gdy mapa pokazuje 0 luk, zobacz „Cache API po `aed_refresh`”.
 2. **Raport zbiorczy**: w portalu Dane, zbiór „Raport zbiorczy AED”. Zasoby CSV i GeoJSON; zakładka Mapa zasobu CSV pokazuje punkty. Punkty z OpenStreetMap są osobnym zbiorem „Punkty AED z OpenStreetMap - Polska (ODbL 1.0)”. Te same rekordy zwraca API `https://api.mcod.local/1.4/resources/<id zasobu CSV>/data`.
 3. **Walidator bez logowania** https://admin.mcod.local/aed/sprawdz-plik/: wgraj np. `backend/data/aed/sources/marki/Defibrylator_GminaMiastoMarki_1.csv` i przeczytaj raport zgodności ze standardem.
 4. **Kreator dysponenta**: zaloguj się na https://admin.mcod.local/login/ jako `krosno.agent@mcod.local`, wybierz „Dodaj dane AED”, wgraj `backend/data/aed/sources/krosno/Defibrylator_jAmxQcp.csv`, przypisz kolumny, wpisz dysponenta i datę danych (ten plik ich nie zawiera, a bez nich kreator nie przejdzie dalej), sprawdź raport walidacji i opublikuj. Rekordy trafią do raportu zbiorczego po kolejnym `aed_refresh`.
