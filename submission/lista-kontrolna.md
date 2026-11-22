@@ -19,7 +19,7 @@ Wymagania z pełnej treści zadania, pkt 2-5.
 | 4 | Wzorcowy zakres danych | Tabela w formacie XLSX | Wzorcowy zakres danych | gotowe | `aed-standard/field-dictionary.xlsx` |
 | 5 | Kod źródłowy | Kod źródłowy rozwiązania | Wszystkie obszary | gotowe: repozytorium publiczne | https://github.com/PatrickMade/hacknation-2026-aed |
 | 6 | Nazwa akcji, hasło, logo, księga znaku | Logo w .jpg, .png, .pdf i formacie otwartym (np. .svg); księga znaku PDF: kolorystyka, pole ochronne, minimalna wielkość, niedozwolone użycia, opis koncepcji w 3-5 zdaniach | Marka akcji "Mapa Serc" | gotowe | `brand/` |
-| 7 | Oświadczenie o użyciu AI | Zakres wykorzystania AI (regulamin zadania, par. 2 ust. 8) | Pakiet zgłoszenia | gotowe; przegląd końcowy autora do wykonania | `submission/oswiadczenie-ai.md` |
+| 7 | Oświadczenie o użyciu AI | Zakres wykorzystania AI (regulamin zadania, par. 2 ust. 8) | Pakiet zgłoszenia | gotowe; przegląd końcowy autora wykonany 22.11.2026 | `submission/oswiadczenie-ai.md` |
 
 ## Elementy uzupełniające
 
@@ -54,9 +54,8 @@ Projekt: https://hacknation2026.hacktribe.co/mapa-serc/
       sekcjami (`brand/`).
 - [ ] Opis, ograniczenia, oświadczenie AI i slajdy odpowiadają scalonemu
       stanowi: `grep -rin -E "do uzupełnienia|do wykonania|w realizacji|w przeglądzie" submission/*.md submission/prezentacja/slajdy.html`
-      nie zwraca wyników poza tą listą (do czasu akceptacji pozostają
-      w `oswiadczenie-ai.md` przegląd końcowy autora i cztery wiersze
-      o akceptacji działania w demo).
+      nie zwraca wyników poza tą listą (akceptację działania w demo
+      i przegląd końcowy autor wykonał 22.11.2026).
 - [ ] Teksty w pierwszej osobie liczby pojedynczej lub bezosobowo.
 - [ ] Wszystkie linki w zgłoszeniu działają.
 - [ ] Repozytorium nie zawiera haseł ani prywatnych danych; informacje
