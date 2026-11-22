@@ -9,24 +9,25 @@ Plik: [mapa-serc-demo.mp4](mapa-serc-demo.mp4), napisy:
 | Obraz | 1920x1080, 30 kl./s, H.264 (High), yuv420p |
 | Dźwięk | AAC 48 kHz stereo, sama muzyka, bez lektora; -16,0 LUFS, szczyt -3,4 dBFS |
 | Napisy | polskie, wypalone w obrazie; ten sam tekst w pliku `.srt` |
-| Rozmiar pliku | 14,5 MB |
+| Rozmiar pliku | 14,8 MB |
 
 ## Układ nagrania
 
 | Czas | Część | Co widać |
 |---|---|---|
-| 0:00-0:18 | Problem | Plansze: ile gmin ma oficjalne dane o AED, pięć zbiorów AED w dane.gov.pl i ich układy, jeden zbiór w 44 polach wzorcowego zakresu danych, znak akcji |
+| 0:00-0:18 | Problem | Plansze: ile gmin ma dane o AED w dane.gov.pl, pięć zbiorów AED w dane.gov.pl i ich układy, jeden zbiór w 44 polach wzorcowego zakresu danych, znak akcji |
 | 0:18-0:38 | 1. Dysponent publikuje dane | Kreator "Dodaj dane AED": plik Krosna, przypisanie kolumn, wynik walidacji, publikacja |
 | 0:38-1:04 | 2. Raport zbiorczy: mapa i API | Zbiór "Raport zbiorczy AED", zasoby, licencja, mapa portalu, tabela, odpowiedź API |
 | 1:04-1:34 | 3. Zgłoszenie z kodu QR | Naklejka i karta urządzenia na telefonie, formularz zgłoszenia, panel dysponenta, e-mail |
-| 1:34-1:46 | 4. Strona akcji | Strona Mapa Serc: liczniki, mapa luk, przykład Warszawy |
-| 1:46-1:56 | Wezwanie do działania | Plansza końcowa z adresem repozytorium i kodem QR |
+| 1:34-1:47 | 4. Strona akcji | Strona Mapa Serc: liczniki, mapa luk, przykład Warszawy |
+| 1:47-1:56 | Wezwanie do działania | Plansza końcowa z adresem repozytorium i kodem QR |
 
 ## Jak powstało
 
 1. **Nagrania ekranu.** Wszystkie ujęcia portalu pochodzą z lokalnej
-   instancji uruchomionej według `README.md` (Docker Compose, konta i dane
-   demonstracyjne z poleceń opisanych w README). Przeglądarkę prowadzi skrypt
+   instancji `main` w wersji `3c108cc`, uruchomionej według `README.md`
+   (Docker Compose, konta i dane demonstracyjne z poleceń opisanych w README).
+   Późniejszy commit `8a83333` zmienia tylko pliki w `brand/`. Przeglądarkę prowadzi skrypt
    Playwright: klika, przewija i wpisuje tekst w prawdziwym interfejsie.
    Obraz jest zapisywany w rozdzielczości 2560x1440 (telefon: 1125x2001),
    a ruch kursora i przewijanie klatka po klatce w 30 kl./s. Kursor i kółko
@@ -69,16 +70,18 @@ repozytorium.
   fikcyjne; tworzy je `seed_aed_demo`.
 - Plik wgrywany w kreatorze to kopia zbioru Krosna
   (`backend/data/aed/sources/krosno/Defibrylator_jAmxQcp.csv`, CC0 1.0).
-  Plik nie zawiera daty, więc w kreatorze wpisano datę danych tego zbioru
-  z dane.gov.pl: 2024-02-19.
+  Plik nie zawiera daty ani kolumny dysponenta, więc w kreatorze wpisano datę
+  danych tego zbioru z dane.gov.pl (2024-02-19), a jako dysponenta instytucję
+  konta demonstracyjnego. To założenie pokazu, a nie potwierdzenie
+  rzeczywistego dysponenta urządzeń.
 - Urządzenie na karcie z kodem QR i zgłoszenie są przykładowe. Konta,
   instytucje i adresy e-mail pochodzą z `seed_jury`.
 - Liczby w napisach są odczytane z ekranu w chwili nagrania: rekordy w
   kreatorze (21), rekordy w API (86), na stronie akcji
-  8 z 2479 gmin z oficjalnymi danymi, gminy z lukami: 2120 (stan
-  raportu na 22.11.2026). Plansza otwierająca pomija 4 gminy, w których
-  jedynym wydawcą jest fikcyjna instytucja demonstracyjna: 4 z
-  2479 gmin z oficjalnymi danymi, gminy z lukami: 2124.
+  4 z 2479 gmin z oficjalnymi danymi, gminy z lukami: 2124 (stan
+  raportu na 22.11.2026). Strona akcji liczy dane demonstracyjne osobno
+  (gminy tylko z takimi danymi: 4), więc plansza otwierająca podaje te same
+  liczby.
 
 ## Muzyka
 

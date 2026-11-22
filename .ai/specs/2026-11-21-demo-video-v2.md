@@ -77,4 +77,8 @@ i materiały robocze w repozytorium.
 6. [x] Ponowne nagranie na świeżej instancji z `main` 8dcdf64 (po APP-57 i
    zmianie liczników strony akcji): 44 pola, raport bez zasobu OSM, cztery
    instytucje demonstracyjne pominięte na planszy otwierającej.
-7. [ ] Bramka walidacji, PR, niezależny przegląd, merge gate.
+7. [x] Niezależny przegląd (CHANGES_REQUESTED na ab0d65d): poprawione napisy
+   o pustych polach, e-mailu, API i Warszawie, ciaśniejsze obwódki; końcowe
+   nagranie z `main` 3c108cc (dane demonstracyjne liczone osobno, dysponent
+   wpisywany w kreatorze, znak z hasłem na karcie urządzenia).
+8. [ ] Bramka walidacji, przegląd różnicowy, merge gate.
