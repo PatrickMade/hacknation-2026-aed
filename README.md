@@ -151,6 +151,14 @@ docker compose run --rm manage python manage.py load_aed_devices mcod/aed_report
 docker compose run --rm manage python manage.py load_aed_devices mcod/aed_reports/data/demo-jury-legionowo.csv --organization jury-legionowo
 ```
 
+Po `aed_refresh` zarejestruj urządzenia ze wszystkich rekordów opublikowanego „Raportu zbiorczego AED”, aby każdy rekord miał stronę urządzenia, kod QR i ścieżkę zgłoszenia do swojego dysponenta:
+
+```sh
+docker compose run --rm manage python manage.py load_aed_report_devices
+```
+
+Instytucję odpowiedzialną wskazują źródła rekordu (`source_records`): plik opublikowany kreatorem (`dysponent:<slug>`) ma pierwszeństwo, w drugiej kolejności zbiór źródłowy instytucji demo (`dane:dataset:<id>`). Rekordy bez takiego źródła (np. OSM) są pomijane. Komendę można uruchamiać ponownie.
+
 Plik każdego dysponenta musi mieć układ standardu i przejść jego walidator; komenda aktualizuje urządzenia po `aed_id` i odrzuca identyfikator należący do innej instytucji.
 
 | Adres | Zastosowanie |
@@ -164,7 +172,7 @@ Wpis „Najbliższy AED” w sekcji PoCoTo wskazuje mapę zasobu zbioru „Rapor
 
 Ograniczenia prototypu: strona urządzenia wywołuje API przez lokalny proxy `/api` serwera frontendu (konfiguracja Compose), a nieznany identyfikator pokazuje komunikat na stronie zamiast przekierowania na stronę 404 portalu; brak limitu zgłoszeń z jednego adresu.
 
-Klauzula pod formularzem (wzór do weryfikacji prawnej): administratorem danych zgłaszającego (imię lub podpis, opcjonalny kontakt) jest dysponent urządzenia; operator portalu wyłącznie przekazuje zgłoszenie. Imię i kontakt są usuwane z portalu 30 dni po oznaczeniu zgłoszenia jako „rozwiązane”; treść zgłoszenia zostaje bez danych osobowych. Kopia zgłoszenia wysłana e-mailem do dysponenta podlega jego zasadom przechowywania. Usuwanie wykonuje `docker compose run --rm manage python manage.py purge_aed_reporter_data` oraz dzienne zadanie Celery `mcod.aed_reports.tasks.purge_reporter_data_task` (wymaga procesu celery beat, którego lokalny Compose nie uruchamia). Ponowne otwarcie zgłoszenia liczy 30 dni od nowa.
+Klauzula pod formularzem (wzór do weryfikacji prawnej): formularz nie wymaga danych osobowych; administratorem danych podanych przez zgłaszającego (opcjonalnie imię lub podpis i kontakt) jest dysponent urządzenia; operator portalu wyłącznie przekazuje zgłoszenie. Imię i kontakt są usuwane z portalu 30 dni po oznaczeniu zgłoszenia jako „rozwiązane”; treść zgłoszenia zostaje bez danych osobowych. Kopia zgłoszenia wysłana e-mailem do dysponenta podlega jego zasadom przechowywania. Usuwanie wykonuje `docker compose run --rm manage python manage.py purge_aed_reporter_data` oraz dzienne zadanie Celery `mcod.aed_reports.tasks.purge_reporter_data_task` (wymaga procesu celery beat, którego lokalny Compose nie uruchamia). Ponowne otwarcie zgłoszenia liczy 30 dni od nowa.
 
 ## Licencja i użycie AI
 

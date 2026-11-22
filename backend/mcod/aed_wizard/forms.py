@@ -42,7 +42,7 @@ def enum_choices(name):
 class MappingForm(forms.Form):
     """One select per profile target, defaults for required fields, licence and data date."""
 
-    def __init__(self, columns, organization, *args, **kwargs):
+    def __init__(self, columns, organization, *args, detected_date=(None, None), **kwargs):
         super().__init__(*args, **kwargs)
         suggested = mapping.suggest(columns)
         choices = [NOT_MAPPED] + [(column, column) for column in columns]
@@ -67,13 +67,24 @@ class MappingForm(forms.Form):
             label="Licencja danych", choices=[(key, value[2]) for key, value in LICENSES.items()], initial="cc0",
             widget=forms.RadioSelect,
         )
+        day, origin = detected_date
         self.fields["data_date"] = forms.DateField(
-            label="Data danych (RRRR-MM-DD)", initial=timezone.localdate,
-            widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
+            label="Data danych (RRRR-MM-DD)", initial=day,
+            help_text=("Wykryto w pliku (pole {}). Zmień, jeśli dane dotyczą innego dnia.".format(origin) if day else
+                       "Plik nie zawiera daty danych. Wpisz dzień, którego dotyczą dane, np. datę ostatniej "
+                       "aktualizacji ewidencji AED."),
+            error_messages={"required": "Podaj datę danych: dzień, którego dotyczą dane w pliku."},
+            widget=forms.DateInput(attrs={"type": "date", "aria-describedby": "data-date-help"}, format="%Y-%m-%d"),
         )
         self.fields["swap_axes"] = forms.BooleanField(
             label="Zamień szerokość i długość w wierszach z prawdopodobnie zamienionymi osiami", required=False
         )
+
+    def clean_data_date(self):
+        day = self.cleaned_data["data_date"]
+        if day > timezone.localdate():
+            raise forms.ValidationError("Data danych nie może być późniejsza niż dzisiaj.")
+        return day
 
     def target_fields(self):
         return [self[name] for name in self.target_names]

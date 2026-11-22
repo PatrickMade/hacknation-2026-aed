@@ -69,10 +69,10 @@ class RetentionTests(TestCase):
         from mcod.aed_reports.tasks import purge_reporter_data_task
         self.assertEqual(purge_reporter_data_task(), {'cleaned': 1})
 
-    def test_public_form_still_requires_the_reporter_name(self):
+    def test_public_form_does_not_require_the_reporter_name(self):
+        # Coordinator decision (APP-60): the form requires no personal data.
         form = ReportForm({'type': 'closed', 'description': 'x', 'reporter_name': ''})
-        self.assertFalse(form.is_valid())
-        self.assertIn('reporter_name', form.errors)
+        self.assertTrue(form.is_valid(), form.errors)
 
 
 class BeatScheduleTests(TestCase):

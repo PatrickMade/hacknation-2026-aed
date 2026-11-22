@@ -37,6 +37,7 @@
     <legend><h2>Licencja i data danych</h2></legend>
     <p><strong>{{ form.license.label }}</strong></p>{{ form.license }}
     <p><label for="{{ form.data_date.id_for_label }}"><strong>{{ form.data_date.label }}</strong></label><br>{{ form.data_date }}
+      <br><span id="data-date-help">{{ form.data_date.help_text }}</span>
       {% if form.data_date.errors %}<span class="aed-error" role="alert">{{ form.data_date.errors|join:" " }}</span>{% endif %}</p>
     <p><label for="{{ form.swap_axes.id_for_label }}">{{ form.swap_axes }} {{ form.swap_axes.label }}</label></p>
   </fieldset>

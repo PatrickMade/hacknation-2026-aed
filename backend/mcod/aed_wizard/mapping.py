@@ -4,6 +4,7 @@ Only conversion and non-blocking diagnostics live here. Whether the result is
 compliant is decided by aed-standard/validate.py (see standard.validate_bytes).
 """
 import csv
+import datetime
 import io
 import json
 import re
@@ -104,6 +105,46 @@ def targets():
             options.append((name, "{} ({})".format(titles[name], name)))
     options.append((ADDRESS, "Adres w jednej kolumnie (ulica numer, kod miejscowość)"))
     return options
+
+
+DATE_ORIGINS = ("source_records.source_data_date", "updated_at", "retrieved_at")
+
+
+def iso_day(value):
+    """YYYY-MM-DD of a profile date or UTC timestamp; None for anything else."""
+    value = (value or "").strip() if isinstance(value, str) else ""
+    if len(value) < 10 or (len(value) > 10 and value[10] != "T"):
+        return None
+    try:
+        return datetime.date.fromisoformat(value[:10]).isoformat()
+    except ValueError:
+        return None
+
+
+def detect_data_date(table):
+    """The day the data describe, read from profile columns of the source file (APP-61).
+
+    Order: latest source_records[].source_data_date, then latest updated_at, then latest retrieved_at.
+    Returns (YYYY-MM-DD, origin) or (None, None) when the file carries no such date.
+    """
+    found = {origin: set() for origin in DATE_ORIGINS}
+    for row in table.rows:
+        try:
+            items = json.loads(row.get("source_records") or "[]")
+        except ValueError:
+            items = []
+        for item in items if isinstance(items, list) else []:
+            day = iso_day(item.get("source_data_date")) if isinstance(item, dict) else None
+            if day:
+                found["source_records.source_data_date"].add(day)
+        for field in ("updated_at", "retrieved_at"):
+            day = iso_day(row.get(field))
+            if day:
+                found[field].add(day)
+    for origin in DATE_ORIGINS:
+        if found[origin]:
+            return max(found[origin]), origin
+    return None, None
 
 
 def suggest(columns):
