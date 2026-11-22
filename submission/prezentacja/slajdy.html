@@ -162,9 +162,9 @@
 <section class="s">
   <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>kreatywność i innowacyjność</b>, waga 15%</span></div>
   <h1>Każdy rekord raportu ma kartę z&nbsp;kodem QR. Zgłoszenie trafia do instytucji, która odpowiada za jego dane.</h1>
-  <div class="tresc kroki" style="grid-template-columns: 200px 232px 1fr; gap: 26px; margin-top:16px; align-items:start">
-    <div class="krok"><p class="tyt"><span class="n">1</span>Karta rekordu z&nbsp;raportu</p><figure class="kadr"><div class="adres">telefon, 360 px</div><div class="okno"><img src="img/zrzuty/telefon-karta.jpg" alt="Karta urządzenia AED z Urzędu Miasta Krosna na telefonie: znak Mapa Serc, adres, dysponent i przycisk Zgłoś problem"></div></figure></div>
-    <div class="krok"><p class="tyt"><span class="n">2</span>Zgłoszenie bez danych osobowych</p><figure class="kadr"><div class="adres">telefon, 360 px</div><div class="okno"><img src="img/zrzuty/telefon-formularz.jpg" alt="Formularz zgłoszenia problemu z AED na telefonie: imię lub podpis jest opcjonalne"></div></figure></div>
+  <div class="tresc" style="grid-template-columns: 200px 232px 1fr; gap: 26px; margin-top:16px; align-items:start">
+    <div class="krok"><p class="tyt"><span class="n">1</span>Karta rekordu z&nbsp;raportu</p><figure class="kadr"><div class="adres">/pl/aed/4b6e…, 360 px</div><div class="okno"><img src="img/zrzuty/telefon-karta.jpg" alt="Karta urządzenia AED z Urzędu Miasta Krosna na telefonie: znak Mapa Serc z hasłem, adres, dysponent i przycisk Zgłoś problem"></div></figure></div>
+    <div class="krok"><p class="tyt"><span class="n">2</span>Zgłoszenie bez danych osobowych</p><figure class="kadr"><div class="adres">formularz, 360 px</div><div class="okno"><img src="img/zrzuty/telefon-formularz.jpg" alt="Formularz zgłoszenia problemu z AED na telefonie: imię lub podpis jest opcjonalne"></div></figure></div>
     <div class="krok"><p class="tyt"><span class="n">3</span>Zgłoszenie widzi tylko ta instytucja; dostaje też e-mail</p>
       <figure class="kadr" style="max-width:630px"><div class="adres">admin.mcod.local/aed_reports/aedincidentreport/</div><div class="okno"><img src="img/zrzuty/zgloszenia-panel.jpg" alt="Lista zgłoszeń w panelu dysponenta"></div></figure>
       <figure class="kadr" style="max-width:630px; margin-top:10px"><div class="adres">e-mail do dysponenta, lokalna skrzynka testowa</div><div class="okno"><img src="img/zrzuty/zgloszenie-email.jpg" alt="E-mail ze zgłoszeniem do dysponenta: zgłaszający i kontakt nie podano"></div></figure>
@@ -272,7 +272,7 @@
 <section class="s">
   <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>zgodność z tematem wyzwania</b>, waga 15%</span></div>
   <h1>Do wdrożenia potrzeba decyzji operatora portalu, a&nbsp;nie nowego systemu.</h1>
-  <p class="lid" style="font-size:21px; max-width:1000px">Mechanizm korzysta z&nbsp;tego, co dane.gov.pl już ma: instytucji, kont pełnomocnika i&nbsp;edytora, zbiorów, zasobów, mapy i&nbsp;API. W&nbsp;kodzie portalu doszły 3 moduły z&nbsp;testami automatycznymi i&nbsp;4 ekrany: strona akcji, karta urządzenia, walidator i&nbsp;kreator.</p>
+  <p class="lid" style="font-size:21px; max-width:1000px">Mechanizm korzysta z&nbsp;tego, co dane.gov.pl już ma: instytucji, kont pełnomocnika i&nbsp;edytora, zbiorów, zasobów, mapy i&nbsp;API. W&nbsp;kodzie portalu doszły 3 moduły z&nbsp;testami automatycznymi i&nbsp;5 ekranów: strona akcji, karta urządzenia, walidator, kreator i&nbsp;lista zgłoszeń.</p>
   <div class="tresc" style="grid-template-columns: 1fr 1fr 1fr; gap: 34px; margin-top:16px; align-items:start">
     <div>
       <p class="etykieta">Kto publikuje już dziś</p>
@@ -350,7 +350,7 @@
       <tr><td><span class="stan pelny"></span><b>Aktualność</b></td><td>Codziennie o&nbsp;03:30 UTC raport pobiera 5 zbiorów z&nbsp;api.dane.gov.pl; przy braku dostępu datowana kopia</td><td>Slajd 5; opis zbioru</td></tr>
       <tr><td><span class="stan pelny"></span><b>Dostęp przez API portalu</b></td><td><code>/1.4/resources/{id}/data</code>, 86 rekordów</td><td>Slajd 6</td></tr>
       <tr><td><span class="stan pelny"></span><b>Zbiór bez danych osobowych</b></td><td>Tylko kontakt instytucjonalny; bez nazwisk i&nbsp;prywatnych telefonów</td><td>Słownik pól</td></tr>
-      <tr><td><span class="stan decyzja"></span><b>Dane zgłaszającego problem</b></td><td>Bez wymaganych danych osobowych; opcjonalny podpis i&nbsp;kontakt usuwane 30 dni po rozwiązaniu. Klauzula i&nbsp;okres czekają na prawnika</td><td>Slajd 8</td></tr>
+      <tr><td><span class="stan decyzja"></span><b>Dane zgłaszającego problem</b></td><td>Bez wymaganych danych osobowych; podpis i&nbsp;kontakt usuwane 30 dni po rozwiązaniu. Klauzula i&nbsp;okres: do prawnika</td><td>Slajd 8</td></tr>
     </table>
   </div>
   <p class="zrodla"><span class="legenda"><span class="stan pelny"></span>spełnione &nbsp; <span class="stan pol"></span>częściowo &nbsp; <span class="stan decyzja"></span>wymaga decyzji operatora.</span> Dostępność: axe-core (WCAG 2.0-2.2 A i&nbsp;AA) bez naruszeń w&nbsp;treści czterech ekranów AED; stronę akcji i&nbsp;kartę urządzenia sprawdzono też przy 360 px. Dwa zastrzeżenia dotyczą niezmienionej powłoki portalu (<code>submission/ograniczenia.md</code>).</p>
