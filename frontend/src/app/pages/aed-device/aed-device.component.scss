@@ -64,16 +64,11 @@ $mapa-serc-jasna-zielen: #ddf3e6; // dark green on it: 12.6:1
   color: $mapa-serc-ciemna-zielen;
 }
 
+// Lockup width keeps the slogan inside the mark legible; the file already includes its clear space.
 .aed-device__brand-logo {
-  width: 198px;
+  width: 300px;
   max-width: 100%;
   height: auto;
-}
-
-.aed-device__brand-slogan {
-  margin: 0 0 0.25rem;
-  font-size: 1.125rem;
-  font-weight: 700;
 }
 
 .aed-device__brand-text {
