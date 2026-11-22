@@ -83,3 +83,4 @@ prezentacji i tekstach zgłoszenia.
 - [x] 3. Plakat: pole na adres strony - 9cd2b38
 - [x] 4. Księga znaku 1.2 i `brand/README.md` - 9cd2b38
 - [x] 5. Bramka walidacji i PR (cztery polecenia lokalnie; test portalu i cała bramka w kontroli CI na PR)
+- [x] 6. Poprawki po niezależnym przeglądzie: zdanie o uproszczeniu konturu dotyczy wersji pełnej (księga i `brand/README.md`), zakresy druku w tabeli wielkości nie nakładają się, linia na naklejce jest w zieleni akcji

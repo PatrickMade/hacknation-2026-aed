@@ -97,8 +97,8 @@ się nie zmienia.
 
 - Krój pisma: Figtree, licencja SIL Open Font License 1.1.
 - Kontur Polski: Natural Earth, granice państw w skali 1:10 000 000, domena
-  publiczna; odwzorowanie PL-1992 (EPSG:2180). Uproszczenie konturu
-  na potrzeby znaku nie przekracza 3 km.
+  publiczna; odwzorowanie PL-1992 (EPSG:2180). Uproszczenie konturu w wersji
+  pełnej nie przekracza 3 km; wersja mała ma kontur uproszczony do 15 punktów.
 - Nazwę, hasło i wariant znaku wybrał autor projektu. Rysunki, pliki i księgę
   znaku przygotowano z użyciem AI; zakres opisuje
   [oświadczenie o wykorzystaniu AI](../submission/oswiadczenie-ai.md).
