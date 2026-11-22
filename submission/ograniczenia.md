@@ -18,7 +18,10 @@ Stan na 2026-11-21.
    więc pierwsze uruchomienie trwa dłużej.
 5. Publiczne API portalu (`/1.4`) służy do odczytu. Publikacja odbywa się
    przez panel dostawcy albo mechanizm importu (harvester), a nie przez
-   ogólne API zapisu.
+   ogólne API zapisu. Kreator wymaga konta dostawcy w portalu. Dysponent
+   bez takiego konta (na przykład firma lub wspólnota) występuje o konto
+   dostawcy w dane.gov.pl albo przekazuje dane gminie, która publikuje je
+   w swoim zbiorze; prototyp nie dodaje dla niego osobnej funkcji.
 
 ## Dane
 

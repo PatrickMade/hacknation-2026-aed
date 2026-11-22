@@ -15,9 +15,11 @@ publiczne). Projekt w HackTribe: https://hacknation2026.hacktribe.co/mapa-serc/
 
 ## Krótki opis
 
-Każdy dysponent defibrylatora (gmina, szpital, szkoła, uczelnia, firma,
-straż, policja, przewoźnik) może w kilka minut opublikować dane o swoich AED
-w portalu dane.gov.pl, w jednym wspólnym standardzie. Portal sam łączy te
+Każdy dysponent defibrylatora, który ma konto dostawcy w portalu
+dane.gov.pl (gmina, szpital, szkoła, uczelnia, straż, policja), może
+w kilka minut opublikować dane o swoich AED w jednym wspólnym standardzie.
+Dysponent bez konta, na przykład firma, występuje o konto dostawcy albo
+przekazuje dane swojej gminie. Portal sam łączy te
 dane w ogólnopolski raport zbiorczy AED, dostępny w API, na mapie i do
 pobrania dla służb ratunkowych, twórców aplikacji i obywateli. Akcja z własną
 nazwą, hasłem i znakiem zachęca dysponentów do udostępniania danych, a ten
