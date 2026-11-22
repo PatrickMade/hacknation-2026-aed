@@ -21,3 +21,13 @@ Kopia OSM jest wejściem agregatora. Zasób "Punkty AED z OpenStreetMap - Polska
 z uznaniem "© OpenStreetMap contributors", bez telefonów, e-maili i danych
 autorów edycji. Licencja CC BY 4.0 zbioru "Raport zbiorczy AED" nie obejmuje
 tego zasobu.
+
+## Granice gmin (PRG)
+
+`../prg/gminy_dysponentow.geojson` zawiera dokładne granice czterech gmin
+dysponentów źródeł miejskich (Krosno 1861011, Marki 1434021, Przemyśl 1862011,
+Legionowo 1408011) z Państwowego Rejestru Granic, pobrane z usługi GUGiK ULDK
+(https://uldk.gugik.gov.pl/) 2026-11-21 (czas UTC w pliku). Źródło: Główny
+Urząd Geodezji i Kartografii, PRG; dane udostępniane przez GUGiK bez opłat.
+To ten sam rejestr, z którego pochodzą uproszczone granice strony akcji
+(`frontend/src/assets/aed/gminy.geojson`).

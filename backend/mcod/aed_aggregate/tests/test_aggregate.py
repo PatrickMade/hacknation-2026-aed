@@ -40,7 +40,7 @@ class MappingTests(SimpleTestCase):
     def test_marki_axis_swap_is_per_record_and_flagged(self):
         record = by_source(self.records, 4955, '1')
         self.assertEqual((record['latitude'], record['longitude']), (52.326697, 21.107557))
-        self.assertEqual(record['quality_flags'], ['encoded_csv', 'suspected_axis_swap'])
+        self.assertEqual(sorted(record['quality_flags']), ['encoded_csv', 'operator_from_location', 'suspected_axis_swap'])
         self.assertEqual(record['coordinate_method'], 'unknown')
         # Row 7 carries Krosno's coordinates: no swap can place it in Marki, so no position is published.
         wrong = by_source(self.records, 4955, '7')
@@ -48,11 +48,11 @@ class MappingTests(SimpleTestCase):
         self.assertIn('outside_expected_area', wrong['quality_flags'])
         self.assertEqual(wrong['source_records'][0]['original_values']['Długość geograficzna'], '21.72034402175176')
 
-    def test_legionowo_codes_stay_text_and_incomplete_terc_is_flagged(self):
+    def test_legionowo_codes_stay_text_and_terc_comes_from_prg(self):
         record = next(r for r in self.records if r['name'] == 'Urząd Miasta Legionowo')
         self.assertEqual(record['simc'], '0920806')
-        self.assertNotIn('terc', record)
-        self.assertIn('teryt_incomplete', record['quality_flags'])
+        self.assertEqual(record['terc'], '1408011')  # source has 6-digit 140801; the dated PRG register completes it
+        self.assertNotIn('teryt_incomplete', record['quality_flags'])
         self.assertTrue(record['source_records'][0]['source_record_id'].startswith('lokalny:'))
 
     def test_osm_mapping_drops_contacts_and_keeps_odbl(self):
@@ -76,7 +76,8 @@ class MappingTests(SimpleTestCase):
                                   'defibrillator:location': 'Numer telefonu do portiera 513-077-416',
                                   'level': '0', 'manufacturer': 'kontakt: aed@example.org'}}
         record = sources.osm_record(feature, '2026-11-21T17:32:40Z')
-        self.assertEqual(record['operator_name'], 'nieustalony (OpenStreetMap)')
+        self.assertEqual(record['operator_name'], 'nieustalony')
+        self.assertIn('operator_unconfirmed', record['quality_flags'])
         self.assertEqual((record['name'], record['level']), ('Apteka', '0'))
         for field in ('model', 'location_description', 'manufacturer'):
             self.assertNotIn(field, record)
@@ -150,12 +151,14 @@ class ProvenanceTests(SimpleTestCase):
         report, rejected = aggregate.check(aggregate.deduplicate(sources.official_records()))
         self.assertEqual(rejected, [])
         for record in report:
-            self.assertTrue(record['operator_name'].startswith('Urząd'))
+            self.assertIn('operator_from_location', record['quality_flags'])
+            self.assertNotEqual(record['operator_name'], 'nieustalony')
             for source in record['source_records']:
                 for key in ('source_id', 'source_record_id', 'source_url', 'retrieved_at', 'license_url',
-                            'source_version', 'source_data_date', 'original_values'):
+                            'source_version', 'source_data_date', 'original_values', 'publisher_name'):
                     self.assertTrue(source.get(key), (record['name'], key))
-                self.assertEqual(source['field_provenance']['operator_name'], sources.OPERATOR_NOTE)
+                self.assertTrue(source['publisher_name'].startswith('Urząd'))
+                self.assertIn('nie jest potwierdzeniem dysponenta', source['field_provenance']['operator_name'])
         marki = by_source(report, 4955, '1')['source_records'][0]
         self.assertEqual(marki['license_url'], sources.CC_BY_URL)
         self.assertEqual(marki['attribution'], 'Urząd Miasta Marki, dane.gov.pl zbiór 4955')
@@ -182,11 +185,10 @@ class ProvenanceTests(SimpleTestCase):
                 refresh.build()
 
     def test_unknown_source_licence_fails_closed(self):
-        source = sources.SOURCES[0]
-        meta = sources.source_meta(source)
-        meta['dataset']['license_name'] = 'CC BY-NC 4.0'
+        loaded = sources.snapshot(sources.SOURCES[0])
+        loaded['meta']['dataset']['license_name'] = 'CC BY-NC 4.0'
         with self.assertRaises(KeyError):
-            sources.source_record(source, meta, '1', {}, {}, '2026-11-21T17:32:40Z')
+            sources.source_record(loaded, '1', {}, {})
 
     def test_validator_rejection_is_reported_not_published(self):
         record = copy.deepcopy(sources.official_records()[0])
@@ -226,7 +228,7 @@ class PublishTests(TestCase):
 
         with patch.dict(os.environ, {key: secrets.token_urlsafe(24) for key in PASSWORD_KEYS}):
             call_command('seed_jury', verbosity=0)
-        result = refresh(process=False)
+        result = refresh(process=False, use_live=False)
         self.assertEqual(result['records'], 74)
         self.assertEqual(result['osm_records'], 18298)
         sources_ = Dataset.raw.filter(ext_ident__startswith='aed-src-')
@@ -235,17 +237,16 @@ class PublishTests(TestCase):
         report = Dataset.raw.get(ext_ident='aed-raport-zbiorczy')
         self.assertEqual(report.organization.slug, 'aed-operator-portalu')
         self.assertEqual(report.license_name, 'CC BY 4.0')
-        self.assertIn('ODbL 1.0', report.license_condition_custom_description)
+        self.assertIn('nie zawiera danych z OpenStreetMap', report.license_condition_custom_description)
         resources = {r.ext_ident: r for r in Resource.raw.filter(dataset=report)}
-        self.assertEqual(set(resources), {'aed-raport-csv', 'aed-raport-geojson', 'aed-osm-csv'})
-        self.assertIn('ODbL', resources['aed-osm-csv'].title)
+        self.assertEqual(set(resources), {'aed-raport-csv', 'aed-raport-geojson'})
         main = resources['aed-raport-csv'].files.get(is_main=True)
         with main.file.open('rb') as handle:
             self.assertTrue(handle.read().startswith(b'aed_id,name,location_kind,latitude,longitude'))
         warsaw = Resource.raw.get(ext_ident='aed-src-res-2512040')
         self.assertTrue(warsaw.link.startswith('https://dane.um.warszawa.pl/'))
         counts = (Dataset.raw.count(), Resource.raw.count())
-        refresh(process=False)
+        refresh(process=False, use_live=False)
         self.assertEqual(counts, (Dataset.raw.count(), Resource.raw.count()))
 
 

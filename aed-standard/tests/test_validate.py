@@ -68,6 +68,52 @@ class ValidatorTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 1, result.stdout)
                 self.assertIn(message, result.stderr)
 
+    def test_operator_regon_check_digit(self):
+        # 123456785 and 12345678512347 carry valid GUS check digits; the last digit is changed in the bad ones.
+        for value in ("123456785", "12345678512347"):
+            with self.subTest(value=value):
+                result = self.run_csv(self.altered({"operator_regon": value}))
+                self.assertEqual(result.returncode, 0, result.stderr)
+        result = self.run_csv(self.altered(omit=("operator_regon",)))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        for value in ("123456789", "12345678512340", "12345", "1234567851"):
+            with self.subTest(value=value):
+                result = self.run_csv(self.altered({"operator_regon": value}))
+                self.assertEqual(result.returncode, 1, result.stdout)
+                self.assertIn("operator_regon", result.stderr)
+
+    def test_unconfirmed_operator_only_in_reports_and_only_flagged(self):
+        report_source = json.dumps([{"source_id": "dane:dataset:3624", "source_record_id": "1",
+                                     "source_url": "https://example.org/aed.csv",
+                                     "retrieved_at": "2026-11-21T13:42:00Z",
+                                     "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+                                     "publisher_name": "Urząd Miasta Przykładowego"}])
+        own_source = json.dumps([{"source_id": "dysponent:jury-demo", "source_record_id": "AED-1",
+                                  "source_url": "https://example.org/aed.csv",
+                                  "retrieved_at": "2026-11-21T13:42:00Z",
+                                  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"}])
+        flagged = '["operator_unconfirmed"]'
+        ok = self.run_csv(self.altered({"operator_name": "nieustalony", "quality_flags": flagged,
+                                        "source_records": report_source}, omit=("operator_regon",)))
+        self.assertEqual(ok.returncode, 0, ok.stderr)
+        derived = self.run_csv(self.altered({"operator_name": "Szkoła Podstawowa nr 1",
+                                             "quality_flags": '["operator_from_location"]',
+                                             "source_records": report_source}, omit=("operator_regon",)))
+        self.assertEqual(derived.returncode, 0, derived.stderr)
+        cases = [
+            ({"operator_name": "nieustalony", "source_records": report_source},
+             "wymaga flagi operator_unconfirmed"),
+            ({"operator_name": "nieustalony", "quality_flags": flagged, "source_records": own_source},
+             "publikacja dysponenta"),
+            ({"quality_flags": flagged, "source_records": own_source}, "publikacja dysponenta"),
+            ({"quality_flags": '["operator_from_location"]', "source_records": own_source}, "publikacja dysponenta"),
+        ]
+        for changes, message in cases:
+            with self.subTest(changes=changes):
+                result = self.run_csv(self.altered(changes))
+                self.assertEqual(result.returncode, 1, result.stdout)
+                self.assertIn(message, result.stderr)
+
     def test_scalar_errors_fail(self):
         cases = [
             ("aed_id", "not-a-uuid"), ("operator_name", ""), ("operator_name", "   "),

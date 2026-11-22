@@ -124,6 +124,13 @@ services:
       <<: *app-env
       COMPONENT: celery
     command: ['python', '-m', 'celery', '--app=mcod.celeryapp:app', 'worker', '-l', 'INFO']
+  aed-beat:
+    <<: *app
+    environment:
+      <<: *app-env
+      COMPONENT: celery
+      AED_BEAT_ONLY: '1'
+    command: ['python', '-m', 'celery', '--app=mcod.celeryapp:app', 'beat', '-l', 'INFO', '--schedule', '/tmp/aed-celerybeat-schedule']
   frontend:
     build:
       context: frontend

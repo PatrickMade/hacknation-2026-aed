@@ -6,11 +6,11 @@ państwowy standard ani potwierdzony rejestr sprawnych urządzeń.
 
 | Plik | Zastosowanie |
 |---|---|
-| [field-dictionary.xlsx](field-dictionary.xlsx) | Słownik 43 pól: polska etykieta, typ, wymagalność, format, przykład i opis |
+| [field-dictionary.xlsx](field-dictionary.xlsx) | Słownik 44 pól: polska etykieta, typ, wymagalność, format, przykład i opis |
 | [schema.json](schema.json) | Table Schema 2.0: typy i ograniczenia oraz rozszerzenia profilu `x-*` |
-| [template.csv](template.csv) | Pełny nagłówek 43 pól do wypełnienia; bez przykładowego rekordu |
+| [template.csv](template.csv) | Pełny nagłówek 44 pól do wypełnienia; bez przykładowego rekordu |
 | [example.csv](example.csv) | Poprawny, całkowicie fikcyjny rekord, pokazujący format każdego pola |
-| [mappings.csv](mappings.csv) | Wszystkie 43 pola dla pięciu zbiorów miejskich i OSM |
+| [mappings.csv](mappings.csv) | Wszystkie 44 pola dla pięciu zbiorów miejskich i OSM |
 | [mappings.md](mappings.md) | Źródła, zasady konwersji, potwierdzone braki i ograniczenia |
 | [validate.py](validate.py) | Lokalna kontrola CSV, bez pobierania danych i bez zależności zewnętrznych |
 | [tests/test_validate.py](tests/test_validate.py) | Testy publicznego CLI: poprawny przykład i typowe błędy |
@@ -30,6 +30,16 @@ państwowy standard ani potwierdzony rejestr sprawnych urządzeń.
    instytucja odpowiedzialna za AED i obsługę zgłoszeń. Nazwa obiektu,
    wydawca katalogu ani autor wpisu OSM nie stanowią takiego potwierdzenia.
    Nieznanego dysponenta trzeba ustalić przed przyjęciem rekordu.
+   Publikacja dysponenta (`source_id` zaczyna się od `dysponent:`) zawsze
+   wskazuje potwierdzonego dysponenta; walidator odrzuca w niej wartość
+   `nieustalony` i flagę `operator_unconfirmed`. Wyjątek dotyczy wyłącznie
+   raportu zbiorczego ze źródeł zewnętrznych: gdy źródło nazywa instytucję
+   w opisie lokalizacji, `operator_name` przejmuje tę nazwę z flagą
+   `operator_from_location` (to nie jest potwierdzenie dysponenta); gdy nie
+   nazywa żadnej, pozostaje wydawca z tą samą flagą; nieznany dysponent bez
+   żadnej nazwy ma `nieustalony` i flagę `operator_unconfirmed`. Wydawca
+   danych źródłowych jest w `source_records[].publisher_name`. Opcjonalny `operator_regon` (9 lub 14
+   cyfr z cyfrą kontrolną GUS) jednoznacznie identyfikuje dysponenta.
 4. Nieznane wartości opcjonalne pozostaw puste. `unknown` jest dozwolone
    tylko w określonych słownikach; nie oznacza `false`, `working` ani `24/7`.
    Jeśli opcjonalna lub warunkowa kolumna jest pusta we wszystkich rekordach,
@@ -153,7 +163,7 @@ współrzędne nie dowodzą, że dwa rekordy opisują to samo urządzenie.
 
 ## Podstawa i użycie AI
 
-Propozycja zachowuje 43 pola z badań do zadania; wzmacnia wymagalność
+Propozycja zachowuje 43 pola z badań do zadania i dodaje opcjonalny `operator_regon` (2026-11-22); wzmacnia wymagalność
 dysponenta i licencji dla każdego źródła. Podstawy: [standard techniczny
 dane.gov.pl (2020)](https://dane.gov.pl/media/ckeditor/2020/06/16/standard-techniczny.pdf),
 [Table Schema 2.0](https://datapackage.org/standard/table-schema/)
