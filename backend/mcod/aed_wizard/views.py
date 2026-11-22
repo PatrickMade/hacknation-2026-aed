@@ -114,6 +114,14 @@ def conversion_context(organization, state, cleaned):
     }
 
 
+def data_date_origin(day, detected, origin):
+    if detected == day:
+        return "z pliku: {}".format(origin)
+    if detected:
+        return "podana przez dysponenta; w pliku: {} ({})".format(detected, origin)
+    return "podana przez dysponenta"
+
+
 @wizard_view
 def mapping_step(request):
     state = load_state(request)
@@ -121,7 +129,9 @@ def mapping_step(request):
         return redirect("aed_wizard:source")
     organization = Organization.objects.get(pk=state["organization"])
     table = readers.Table.from_dict(state["table"])
-    form = MappingForm(table.columns, organization, request.POST or None, initial=state.get("mapping_initial"))
+    detected_date = mapping.detect_data_date(table)
+    form = MappingForm(table.columns, organization, request.POST or None, initial=state.get("mapping_initial"),
+                       detected_date=detected_date)
     if request.method == "POST" and form.is_valid():
         conversion = mapping.convert(table, form.mapping(), form.defaults(),
                                      conversion_context(organization, state, form.cleaned_data),
@@ -137,6 +147,7 @@ def mapping_step(request):
             "columns": conversion.columns,
             "license": form.cleaned_data["license"],
             "data_date": form.cleaned_data["data_date"].isoformat(),
+            "data_date_origin": data_date_origin(form.cleaned_data["data_date"].isoformat(), *detected_date),
         })
         save_state(request, state)
         return redirect("aed_wizard:report")
@@ -169,6 +180,7 @@ def report(request):
         request, 3, organization=organization, form=form, errors=state["errors"], warnings=state["warnings"],
         records=state["records"], generated_ids=state["generated_ids"], columns=state["columns"],
         license_name=LICENSES[state["license"]][2], data_date=state["data_date"], mark=mark(),
+        data_date_origin=state.get("data_date_origin", ""),
         preview=preview,
     ))
 

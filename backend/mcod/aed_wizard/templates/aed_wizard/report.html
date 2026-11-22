@@ -2,7 +2,7 @@
 {% block step %}
 <div class="aed-box" aria-live="polite">
   <h2>Raport walidacji</h2>
-  <p>Instytucja: <strong>{{ organization.title }}</strong>. Rekordów: {{ records }}. Licencja: {{ license_name }}. Data danych: {{ data_date }}.</p>
+  <p>Instytucja: <strong>{{ organization.title }}</strong>. Rekordów: {{ records }}. Licencja: {{ license_name }}. Data danych: {{ data_date }} ({{ data_date_origin }}).</p>
   {% if generated_ids %}<p>Nadano {{ generated_ids }} identyfikatorów <code>aed_id</code> (UUID). Zachowaj je w ewidencji; przy kolejnym wgraniu tego samego źródła kreator nada te same wartości.</p>{% endif %}
   {% if not errors %}<p class="aed-ok">Plik przechodzi kontrole walidatora standardu AED.</p>{% endif %}
   {% include "aed_wizard/report_tables.html" %}
