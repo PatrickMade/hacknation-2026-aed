@@ -2,14 +2,17 @@
 <section class="container vertical-spacing aed-device">
   <!-- Mapa Serc identity (APP-58): same campaign as the QR sticker at the device. -->
   <div class="aed-device__brand">
-    <img class="aed-device__brand-logo" [src]="brand.logoSrc" [alt]="brand.name" width="198" height="70" />
-    <div>
-      <p class="aed-device__brand-slogan">{{ brand.slogan }}</p>
-      <p class="aed-device__brand-text">
-        Ten AED jest na Mapie Serc.
-        <a [routerLink]="brand.campaignLink">Czym jest akcja {{ brand.name }}?</a>
-      </p>
-    </div>
+    <!-- Official lockup with slogan from brand/logo (APP-64): name and slogan are never typed next to the mark. -->
+    <img
+      class="aed-device__brand-logo"
+      [src]="brand.logoWithSloganSrc"
+      [alt]="brand.name + '. ' + brand.slogan"
+      width="300"
+      height="106" />
+    <p class="aed-device__brand-text">
+      Ten AED jest na Mapie Serc.
+      <a [routerLink]="brand.campaignLink">Czym jest akcja {{ brand.name }}?</a>
+    </p>
   </div>
 
   @switch (state()) {

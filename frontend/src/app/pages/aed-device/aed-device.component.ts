@@ -48,6 +48,7 @@ export class AedDeviceComponent implements OnInit {
   readonly brand = {
     ...AED_CAMPAIGN_BRAND,
     logoSrc: '/assets/aed/mapa-serc-logo-kolor.svg',
+    logoWithSloganSrc: '/assets/aed/mapa-serc-logo-haslo-kolor.svg',
     campaignLink: '/pl/aed',
   };
 
