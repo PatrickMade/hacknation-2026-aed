@@ -36,8 +36,9 @@ Stan na 2026-11-21.
 7. Dla Warszawy nie potwierdzono metody i struktury odpowiedzi API z danymi
    AED; mapowanie tego zbioru jest oznaczone jako niepotwierdzone.
 8. Wpisy ze stron gov.pl i BIP (739 wpisów z 20 źródeł, w tym 137 ze
-   współrzędnymi) służą tylko jako **oznaczone dane demonstracyjne**. Warunki
-   ponownego wykorzystania części stron gminnych nie są rozstrzygnięte.
+   współrzędnymi) posłużyły tylko do rozpoznania problemu. Nie weszły do
+   raportu ani do repozytorium, bo warunki ponownego wykorzystania części
+   stron gminnych nie są rozstrzygnięte.
 9. Żaden rekord nie potwierdza fizycznego istnienia, sprawności ani
    aktualnej dostępności AED. Nie przeprowadzono oględzin ani weryfikacji
    u dysponentów. W rekordach z plików miejskich dysponentem jest
@@ -73,7 +74,7 @@ Stan na 2026-11-21.
 
 16. Formularz zgłoszenia nie zastępuje numeru alarmowego 112 i nie gwarantuje
     czasu reakcji dysponenta. Kartę urządzenia, kod QR i ścieżkę zgłoszenia
-    ma każdy z 74 rekordów raportu zbiorczego (po poleceniu
+    ma każdy z 86 rekordów raportu zbiorczego (po poleceniu
     `load_aed_report_devices`); punkty z OpenStreetMap ich nie mają, bo nie
     mają potwierdzonego dysponenta.
 17. Powiadomienia e-mail w demo trafiają do lokalnej skrzynki testowej
