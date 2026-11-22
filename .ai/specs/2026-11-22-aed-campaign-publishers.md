@@ -19,6 +19,7 @@ Decyzje: koordynator (opcja B), zmiana Patryka i mentora (bez „nieustalony”)
 - Krótkie wyjaśnienie: wydawca opublikował zbiór, dysponent odpowiada za urządzenie, a potwierdzony jest wtedy, gdy sam publikuje w portalu dane o swoich urządzeniach (wtedy jest też ich wydawcą).
 - Tabela gmin z danymi: kolumna „Wydawcy danych” (do 3 nazw i „i jeszcze N”); dymek mapy: potwierdzeni dysponenci i wydawcy danych (po 5).
 - Pokrycie gmin: `terc` (gdy wskazuje gminę z PRG), inaczej współrzędne.
+- Legenda mapy (decyzja Patryka przez L8): „Luka - AED w OpenStreetMap, brak danych w dane.gov.pl: N gmin” (odmiana „gmina/gminy/gmin”) zamiast „Luka - AED tylko w OpenStreetMap”, bo dawny tekst sugerował, że OSM to jedyne źródło AED. Przy mapie krótka uwaga: mapa porównuje tylko Raport zbiorczy AED i OpenStreetMap, inne wykazy nie są liczone, a szara gmina nie oznacza braku AED.
 - OSM: najpierw zasób OSM w zbiorze raportu; gdy go tam nie ma, zbiór, którego tytuł (bez znaczników `<mark>`) zawiera „OpenStreetMap” i „AED”, i jego zasób CSV. Błąd wyszukiwania zbioru OSM nie ukrywa liczników z danych oficjalnych: strona pokazuje je i komunikat o błędzie OSM.
 
 ## Zakres
@@ -27,7 +28,7 @@ Decyzje: koordynator (opcja B), zmiana Patryka i mentora (bez „nieustalony”)
 ## Kryteria akceptacji i weryfikacja
 1. Test Jest (RED, potem GREEN): licznik wydawców i potwierdzonych dysponentów; nazwa z tekstu lokalizacji (`operator_from_location`) nie jest dysponentem; wydawcy i dysponenci per gmina; puste i „nieustalony…” pomijane.
 2. Test Jest serwisu (RED, potem GREEN): `publisher_name` z `source_records`, a dla źródła `dysponent:` bez `publisher_name` (kształt L4) wydawcą jest dysponent; potwierdzenie dysponenta z `source_id`/flag, nieczytelne flagi nie potwierdzają; OSM znaleziony w osobnym zbiorze; błąd wyszukiwania OSM zostawia rekordy oficjalne, a komponent pokazuje liczniki i stan błędu OSM.
-3. Przeglądarka: axe 0 naruszeń na `/pl/aed`, 360 px bez przewijania w poziomie, klawiatura.
+3. Przeglądarka: axe 0 naruszeń na `/pl/aed`, 360 px bez przewijania w poziomie, klawiatura; nowa legenda luk i uwaga o dwóch źródłach widoczne przy mapie.
 4. Sprawdzenie na danych L4 po `aed_refresh` (stos tylko do odczytu) po publikacji PR L4.
 5. Pełna bramka `validation.commands` i wymagane CI.
 

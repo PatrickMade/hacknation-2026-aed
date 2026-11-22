@@ -40,4 +40,18 @@ describe('AedCampaignComponent', () => {
     expect(service.getOsmPoints).not.toHaveBeenCalled();
     component.ngOnDestroy();
   });
+
+  it('uses the Polish plural of "gmina" in the map legend counts', () => {
+    const component = new AedCampaignComponent({} as never, {} as never, 'browser' as never, document);
+
+    expect([1, 2, 5, 12, 22, 2120, 2122].map((count) => component.gminyLabel(count))).toEqual([
+      '1 gmina',
+      '2 gminy',
+      '5 gmin',
+      '12 gmin',
+      '22 gminy',
+      '2120 gmin',
+      '2122 gminy',
+    ]);
+  });
 });

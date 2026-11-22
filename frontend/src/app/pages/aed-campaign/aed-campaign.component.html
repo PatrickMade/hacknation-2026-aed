@@ -110,6 +110,10 @@
           defibrylatory, ale żadna instytucja nie opublikowała o nich oficjalnych danych. Szare gminy nie mają danych z
           żadnego z tych źródeł. Te same informacje są w tabelach pod mapą.
         </p>
+        <p class="aed-campaign__source">
+          Mapa porównuje tylko dwa źródła: Raport zbiorczy AED i OpenStreetMap. Inne wykazy AED nie są tu liczone, więc
+          szara gmina nie oznacza, że nie ma w niej defibrylatorów.
+        </p>
         <ul class="aed-campaign__legend list-unstyled">
           <li>
             <span
@@ -122,7 +126,7 @@
           </li>
           <li>
             <span class="aed-campaign__swatch" [style.background]="statusStyle.gap.fillColor" aria-hidden="true"></span>
-            Luka - AED tylko w OpenStreetMap: {{ gminyLabel(summary.gaps) }}
+            Luka - AED w OpenStreetMap, brak danych w dane.gov.pl: {{ gminyLabel(summary.gaps) }}
           </li>
           <li>
             <span class="aed-campaign__swatch aed-campaign__swatch--none" aria-hidden="true"></span>
