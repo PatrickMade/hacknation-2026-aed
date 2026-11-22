@@ -26,8 +26,9 @@ a portal składa z nich jeden otwarty zbiór z mapą i API.
 | 4:15-4:45 | Czego nie ma | Bez przełączania ekranu | "To prototyp na lokalnej kopii portalu. Żaden rekord nie potwierdza, że urządzenie działa. Dysponenci 74 rekordów z plików miast nie są potwierdzeni. Licencja punktów OpenStreetMap wymaga decyzji operatora. Wszystko to jest opisane w ograniczeniach." |
 | 4:45-5:00 | Prośba | Slajd 14 albo strona repozytorium | "Do wdrożenia potrzeba decyzji operatora portalu, nie nowego systemu. Kod, dane, znak i nagranie są w jednym publicznym repozytorium. Dziękuję." |
 
-Suma: 5 minut. Przy limicie 3 minut pomijam scenariusz 3 i skracam mapę
-luk do jednego zdania.
+Suma: 5 minut. Przy limicie 3 minut pomijam scenariusz 3, mapę luk
+skracam do jednego zdania, a w scenariuszu 2 pokazuję tylko zbiór i mapę
+(bez filtra odległości i API, 30 s).
 
 ## Scenariusz 1: dysponent publikuje dane (75 s)
 
@@ -78,7 +79,8 @@ Okno przeglądarki zwężone do szerokości telefonu.
    Mówię: "Formularz nie wymaga danych osobowych i nie zastępuje numeru 112."
 3. Drugie okno, konto `demo.agent@mcod.local`:
    https://admin.mcod.local/aed_reports/aedincidentreport/ - zgłoszenie
-   widzi tylko instytucja odpowiedzialna za dane tego urządzenia.
+   widzą konta instytucji odpowiedzialnej za dane tego urządzenia
+   i administratorzy portalu; konta innych instytucji go nie widzą.
 4. http://localhost:8025/ - e-mail do tej instytucji (lokalna skrzynka
    testowa).
 
@@ -108,7 +110,9 @@ Najpóźniej 30 minut wcześniej:
    "Zgłoszenia AED i kody QR").
 3. Otworzyć raz każdą stronę z tego scenariusza. Pierwsze otwarcie trwa
    1-2 minuty, bo frontend kompiluje się przy pierwszym wejściu.
-4. Sprawdzić stronę akcji: liczniki 8 / 4 / 86 / 4 z 2479 i mapa z lukami.
+4. Sprawdzić stronę akcji: liczniki 8 (w tym 4 demonstracyjnych), 4 (w tym
+   4 demonstracyjnych), 86 (w tym 12 demonstracyjnych), 4 z 2479 i mapa
+   z lukami.
    Gdy mapa pokazuje 0 luk, wyczyścić cache API (README, "Cache API po
    `aed_refresh`").
 5. Zalogować dwa konta w dwóch oknach: `krosno.agent@mcod.local` (kreator)
@@ -126,7 +130,8 @@ Najpóźniej 30 minut wcześniej:
 - Portal nie działa albo nie ma rzutnika z moim komputerem: nagranie
   `submission/mapa-serc-demo.mp4` (1 min 59 s) i trzy zdania o tym, czego
   w nim nie widać (ograniczenia, prośba do operatora).
-- Jest tylko PDF: slajdy 4-9 w kolejności scenariuszy, potem 13 i 14.
+- Jest tylko PDF: slajdy 4, 5, 6, potem 8, 7 i 9 (kolejność scenariuszy),
+  na koniec 13 i 14.
 - Brak czasu: jedno zdanie z początku tego dokumentu, scenariusz 1,
   prośba.
 

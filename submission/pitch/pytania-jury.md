@@ -40,9 +40,12 @@ CSV, GeoJSON, JSON-LD i JSON z API portalu; metadane zbioru w RDF ze
 słownikami DCAT. Zasób CSV ma w portalu 4 z 5 gwiazdek otwartości.
 
 **6. Co z dostępnością (WCAG)?**
-Automatyczna kontrola axe-core nie wykazała naruszeń w treści nowych
-ekranów AED, także przy szerokości 360 px. Trzy uwagi dotyczą
-niezmienionej powłoki portalu. Nie robiłem testu z czytnikiem ekranu.
+Automatyczna kontrola axe-core nie wykazała naruszeń w treści czterech
+ekranów AED: strony akcji, karty urządzenia z formularzem, walidatora
+i pierwszego kroku kreatora. Stronę akcji i kartę urządzenia sprawdziłem
+też przy szerokości 360 px. Trzy uwagi dotyczą niezmienionej powłoki
+portalu. Kontrola automatyczna obejmuje tylko część kryteriów; nie
+robiłem testu z czytnikiem ekranu.
 
 ## Dane i wzorcowy zakres
 
@@ -96,9 +99,12 @@ jest najpierw wiarygodny zbiór, i to on jest przedmiotem tej pracy.
 **15. Co się dzieje ze zgłoszeniem z kodu QR?**
 Trafia do panelu instytucji, która odpowiada za dane tego urządzenia,
 i na jej e-mail. Formularz nie wymaga danych osobowych. Podpis i kontakt,
-jeśli ktoś je poda, są usuwane 30 dni po rozwiązaniu zgłoszenia. Formularz
-nie zastępuje numeru 112. Brakuje jeszcze limitu zgłoszeń z jednego
-adresu, a treść klauzuli informacyjnej wymaga weryfikacji prawnej.
+jeśli ktoś je poda, mechanizm usuwa z portalu 30 dni po rozwiązaniu
+zgłoszenia; kopia w e-mailu do dysponenta zostaje poza portalem. Formularz
+nie zastępuje numeru 112. Do zrobienia przed wdrożeniem: limit zgłoszeń
+z jednego adresu, weryfikacja prawna klauzuli i okresu 30 dni oraz
+uruchamianie zadania usuwającego przez operatora (lokalna instancja nie
+uruchamia go sama).
 
 **16. Co trzeba zrobić, żeby to wdrożyć?**
 Trzy kroki: operator włącza moduły AED na testowym środowisku portalu;
@@ -107,8 +113,8 @@ instytucje ze swoich plików o potwierdzenie danych; prawnicy portalu
 rozstrzygają publikację punktów OSM na ODbL i treść klauzuli.
 
 **17. Jak zachęcić dysponentów?**
-Mapa luk daje listę gmin do zaproszenia, od największych: Warszawa,
-Wrocław, Kraków, Poznań, Gdańsk. Akcja ma do nich własne hasło, wzór
+Mapa luk daje listę gmin do zaproszenia, od tych z największą liczbą AED
+w OpenStreetMap: Warszawa, Wrocław, Kraków, Poznań, Gdańsk. Akcja ma do nich własne hasło, wzór
 plakatu i naklejkę. Dysponent dostaje oznaczenie zgodności przy zasobie
 i zieloną gminę na mapie.
 
@@ -130,15 +136,16 @@ stronie akcji. Dla dysponentów jest drugie hasło, które mówi o ich roli:
 
 **20. Jaki był udział AI?**
 Kod modułów, wzorcowy zakres danych, pliki znaku, prezentację i nagranie
-przygotowały narzędzia AI (Claude Code, Codex). Decyzje należały do mnie:
+przygotowały narzędzia AI (Claude Code, Codex; muzykę do nagrania Suno). Decyzje należały do mnie:
 moduł wewnątrz portalu, raport zbiorczy, punkty OSM jako osobny zbiór,
 nazwa, hasła i wariant znaku. Dane o prawdziwych urządzeniach pochodzą
 tylko z plików urzędów i z OpenStreetMap. Szczegóły:
 `submission/oswiadczenie-ai.md`.
 
 **21. Skąd pewność, że kod działa?**
-Każda zmiana przeszła bramkę w CI, w tym 93 testy automatyczne modułów
-AED i kont demonstracyjnych, oraz niezależny przegląd w osobnej sesji.
+Po utworzeniu szkieletu repozytorium każda zmiana przeszła przez pull
+request z bramką CI i przegląd w osobnej sesji AI. Bramka uruchamia dziś
+93 testy automatyczne modułów AED i kont demonstracyjnych.
 Portal uruchamia się z repozytorium według README; każdy może to
 powtórzyć.
 
