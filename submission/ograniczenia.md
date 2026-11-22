@@ -89,7 +89,9 @@ Stan na 2026-11-22.
     czasu reakcji dysponenta. Kartę urządzenia, kod QR i ścieżkę zgłoszenia
     ma każdy z 86 rekordów raportu zbiorczego (po poleceniu
     `load_aed_report_devices`); punkty z OpenStreetMap ich nie mają, bo nie
-    mają potwierdzonego dysponenta.
+    mają potwierdzonego dysponenta. Wiersz "W nagłym zatrzymaniu krążenia
+    dzwoń 112" i pole na adres ma wzór naklejki do druku w `brand/`;
+    naklejka drukowana ze strony urządzenia w portalu jeszcze ich nie ma.
 17. Powiadomienia e-mail w demo trafiają do lokalnej skrzynki testowej
     (MailHog), a nie do prawdziwych adresów.
 18. Publiczny formularz zgłoszeń nie ma limitu liczby zgłoszeń z jednego
