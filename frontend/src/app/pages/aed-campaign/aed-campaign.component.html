@@ -46,8 +46,12 @@
             }
             <dl class="aed-campaign__counters">
               <div class="aed-campaign__counter">
-                <dt>Instytucje, które udostępniły dane o AED</dt>
-                <dd>{{ fmt(summary.operators) }}</dd>
+                <dt>Wydawcy danych o AED</dt>
+                <dd>{{ fmt(summary.publishers) }}</dd>
+              </div>
+              <div class="aed-campaign__counter">
+                <dt>Potwierdzeni dysponenci AED</dt>
+                <dd>{{ fmt(summary.confirmedOperators) }}</dd>
               </div>
               <div class="aed-campaign__counter">
                 <dt>Defibrylatory AED w oficjalnych danych</dt>
@@ -70,8 +74,13 @@
                   report.datasetId + (report.datasetSlug ? ',' + report.datasetSlug : ''),
                 ]"
                 >Raport zbiorczy AED</a
-              >{{ report.dataDate ? ', stan na ' + report.dataDate : '' }}. Przy każdym urządzeniu wskazano instytucję,
-              która za nie odpowiada (dysponenta).
+              >{{ report.dataDate ? ', stan na ' + report.dataDate : '' }}.
+            </p>
+            <p class="aed-campaign__source">
+              Wydawca danych to instytucja, która opublikowała zbiór, na przykład urząd miasta. Dysponent to instytucja,
+              która odpowiada za konkretne urządzenie i przyjmuje zgłoszenia o nim, na przykład szkoła albo przychodnia.
+              Dysponent jest potwierdzony, gdy sam publikuje w portalu dane o swoich urządzeniach; wtedy jest też ich
+              wydawcą.
             </p>
           }
         }
@@ -98,8 +107,12 @@
         <h2 id="aed-campaign-map" class="heading heading--sm">Gdzie brakuje danych o AED</h2>
         <p id="aed-campaign-map-desc">
           Zielone gminy mają oficjalne dane o AED. Pomarańczowe to luki: wolontariusze OpenStreetMap zaznaczyli tam
-          defibrylatory, ale żadna instytucja nie opublikowała o nich oficjalnych danych. Szare gminy nie mają danych z
-          żadnego z tych źródeł. Te same informacje są w tabelach pod mapą.
+          defibrylatory, ale w Raporcie zbiorczym AED nie ma o nich danych. Szare gminy nie mają danych z żadnego z tych
+          źródeł. Te same informacje są w tabelach pod mapą.
+        </p>
+        <p id="aed-campaign-map-scope" class="aed-campaign__source">
+          Mapa porównuje tylko dwa źródła: Raport zbiorczy AED i OpenStreetMap. Inne wykazy AED nie są tu liczone, więc
+          szara gmina nie oznacza, że nie ma w niej defibrylatorów.
         </p>
         <ul class="aed-campaign__legend list-unstyled">
           <li>
@@ -113,7 +126,7 @@
           </li>
           <li>
             <span class="aed-campaign__swatch" [style.background]="statusStyle.gap.fillColor" aria-hidden="true"></span>
-            Luka - AED tylko w OpenStreetMap: {{ gminyLabel(summary.gaps) }}
+            Luka - AED w OpenStreetMap, brak danych w dane.gov.pl: {{ gminyLabel(summary.gaps) }}
           </li>
           <li>
             <span class="aed-campaign__swatch aed-campaign__swatch--none" aria-hidden="true"></span>
@@ -125,7 +138,7 @@
           class="aed-campaign__map"
           role="region"
           aria-label="Mapa gmin: oficjalne dane o AED i luki"
-          aria-describedby="aed-campaign-map-desc"></div>
+          aria-describedby="aed-campaign-map-desc aed-campaign-map-scope"></div>
 
         <div class="row">
           <div class="col-lg-6">
@@ -168,13 +181,13 @@
             @if (publishedGminy.length) {
               <table class="table table-sm aed-campaign__table">
                 <caption class="visually-hidden">
-                  Gminy z oficjalnymi danymi o AED i instytucje, które za nie odpowiadają
+                  Gminy z oficjalnymi danymi o AED i wydawcy tych danych
                 </caption>
                 <thead>
                   <tr>
                     <th scope="col">Gmina</th>
                     <th scope="col" class="text-end">AED</th>
-                    <th scope="col">Instytucje</th>
+                    <th scope="col">Wydawcy danych</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -185,7 +198,7 @@
                     <tr>
                       <th scope="row">{{ gmina.name }}</th>
                       <td class="text-end">{{ gmina.officialCount }}</td>
-                      <td>{{ gmina.operators.join(', ') }}</td>
+                      <td>{{ shortList(gmina.publishers) }}</td>
                     </tr>
                   }
                 </tbody>
