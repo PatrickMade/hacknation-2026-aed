@@ -1,4 +1,4 @@
-"""Check the delivered files agree on the public 43-field contract."""
+"""Check the delivered files agree on the public 44-field contract."""
 
 import csv
 import json
@@ -18,8 +18,8 @@ class ContractTests(unittest.TestCase):
         self.names = [field["name"] for field in self.fields]
 
     def test_schema_and_csv_headers(self):
-        self.assertEqual(len(self.names), 43)
-        self.assertEqual(len(set(self.names)), 43)
+        self.assertEqual(len(self.names), 44)
+        self.assertEqual(len(set(self.names)), 44)
         self.assertEqual(self.schema["primaryKey"], ["aed_id"])
         self.assertEqual(self.schema["missingValues"], [""])
         self.assertEqual(self.schema["fieldsMatch"], "superset")
@@ -45,7 +45,7 @@ class ContractTests(unittest.TestCase):
                 self.assertIsNone(cell.find("s:f", NS))
                 self.assertNotEqual(cell.get("t"), "e")
             rows.append(["".join(cell.itertext()) for cell in cells])
-        self.assertEqual(len(rows), 44)
+        self.assertEqual(len(rows), 45)
         self.assertEqual(rows[0], ["Pole", "Polska etykieta", "Typ", "Wymagalność",
                                   "Format lub dozwolone wartości", "Przykład", "Opis"])
         requirement = {"R": "wymagane", "O": "opcjonalne", "C": "warunkowe"}

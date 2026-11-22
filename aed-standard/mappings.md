@@ -1,6 +1,6 @@
 # Mapowania źródeł AED
 
-[mappings.csv](mappings.csv) zawiera 43 wiersze, po jednym dla każdego pola
+[mappings.csv](mappings.csv) zawiera 44 wiersze, po jednym dla każdego pola
 profilu, i sześć kolumn źródeł. To instrukcja mapowania, nie wykonany import.
 `BRAK` oznacza brak w sprawdzonym źródle, `NADAJ` czynność dysponenta,
 `POTWIERDŹ` warunek przyjęcia. Żaden brak nie upoważnia do zgadywania.
@@ -65,7 +65,11 @@ a wersja/ID zasobu pozwala odtworzyć konkretny odczyt. Gdy brak trwałego
 klucza, nadaj go raz i utrzymuj rejestr powiązań; adres i numer wiersza
 mogą służyć do ręcznego wyszukania, ale nie są trwałą tożsamością AED.
 
-Brak potwierdzonego dysponenta lub licencji zatrzymuje eksport. To celowe:
+Brak licencji zatrzymuje eksport. Brak potwierdzonego dysponenta zatrzymuje
+publikację dysponenta; raport zbiorczy ze źródeł zewnętrznych może zachować
+taki rekord tylko z flagą `operator_from_location` (nazwa instytucji z opisu
+lokalizacji, a gdy jej brak - wydawca) albo jako `nieustalony` z flagą
+`operator_unconfirmed`; wydawca jest w `source_records[].publisher_name`. To celowe:
 istniejące źródła nie muszą samodzielnie spełniać pełnego profilu.
 Przechowuj je do wyjaśnienia zamiast przedstawiać niepełne rekordy jako
 gotowe do publikacji. Źródła miejskie zwykle nie dowodzą sprawności,
