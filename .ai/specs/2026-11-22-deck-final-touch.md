@@ -17,10 +17,12 @@ jego zakresem; czas nagrania demo zmienia PR #23.
 - `submission/lista-kontrolna.md`: skrót ograniczeń jest na slajdzie 13.
 - `README.md`, krok demo "Kreator dysponenta": dla pliku Krosna dysponenta
   i datę danych wpisuje się ręcznie.
-- Czas nagrania demo na slajdzie 14, w `submission/README.md`
-  i `submission/akceptacja.md` zgadza się z plikiem
-  `submission/mapa-serc-demo.mp4` w `main`: 1 min 57 s po scaleniu PR #23,
-  w przeciwnym razie bez zmiany (1 min 42 s).
+- Czas nagrania demo na slajdzie 14 zgadza się z plikiem
+  `submission/mapa-serc-demo.mp4` w `main`: 1 min 57 s po scaleniu PR #23.
+  Teksty w `submission/*.md` zmienił już PR #23.
+- Podpis naklejki na slajdzie 12 i `submission/ograniczenia.md` mówią, że
+  wiersz o numerze 112 ma wzór do druku z księgi znaku, a naklejka
+  drukowana ze strony urządzenia w portalu jeszcze go nie ma.
 
 Non-goals: kolejna runda jurorów, inne zmiany slajdów, kod portalu, pliki
 marki, samo nagranie.
@@ -38,5 +40,5 @@ marki, samo nagranie.
 
 1. [x] Issue APP-68 i claim.
 2. [x] Kadr, lista kontrolna, README.
-3. [ ] Czas nagrania po PR #23 albo decyzja o pozostawieniu 1 min 42 s.
+3. [x] Czas nagrania 1 min 57 s po scaleniu PR #23 (plik w `main`: 116,8 s).
 4. [ ] Bramka, PR, niezależny przegląd, merge.
