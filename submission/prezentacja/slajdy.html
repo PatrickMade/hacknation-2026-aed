@@ -25,7 +25,7 @@
 <!-- 2. Stawka -->
 <section class="s noc">
   <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-maly-negatyw.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>zgodność z tematem wyzwania</b>, waga 15%</span></div>
-  <h1>Gdy serce staje, liczy się minuta. A&nbsp;dziś <em>nikt nie wie, gdzie są wszystkie AED</em>.</h1>
+  <h1>Gdy serce staje, liczy się minuta. A&nbsp;w&nbsp;otwartych danych <em>nie ma jednego rejestru AED</em>.</h1>
   <p class="lid">Świadek zatrzymania krążenia potrzebuje defibrylatora w&nbsp;kilka minut. Wytyczne ERC 2025 zalecają, żeby wszystkie publicznie dostępne AED były w&nbsp;rejestrze<sup>1</sup>. W&nbsp;otwartych danych państwa takiego rejestru dziś nie ma.</p>
   <div class="tresc" style="grid-template-columns: 1fr 1fr 1fr; align-items: start; margin-top: 34px">
     <div class="kreska" style="padding-top:16px"><div class="liczba">3-6<small>%</small></div><p class="opis-liczby">mniej szans na przeżycie z&nbsp;każdą minutą bez defibrylacji<sup>1</sup></p></div>
@@ -151,6 +151,7 @@
         <tr><td>Poznań</td><td class="r"><b>346</b></td></tr>
         <tr><td>Gdańsk</td><td class="r"><b>272</b></td></tr>
       </table>
+      <p class="podpis" style="font-size:14.5px">Kraków, Poznań i&nbsp;Gdańsk mają w&nbsp;prototypie tylko fikcyjne rekordy demonstracyjne, więc nadal są lukami.</p>
       <figure class="kadr" style="margin-top:12px"><div class="adres">ta sama strona: legenda mapy</div><div class="okno"><img src="img/zrzuty/akcja-legenda.jpg" alt="Legenda mapy: oficjalne dane 4 gminy, luka w 2124 gminach, fioletowa ramka dla 4 gmin tylko z danymi demonstracyjnymi, brak danych w 351 gminach; mapa porównuje tylko dwa źródła"></div></figure>
     </div>
   </div>
@@ -330,13 +331,13 @@
 <!-- 14. Prośba, rezultaty, AI -->
 <section class="s" style="background:var(--jasna)">
   <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-maly-kolor.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>prezentacja kompletnego rozwiązania</b>, waga 5%</span></div>
-  <h1>Obejrzyj nagranie (1 min 57 s) albo uruchom portal u&nbsp;siebie: kod, dane, znak i&nbsp;nagranie są w&nbsp;jednym repozytorium.</h1>
+  <h1>Obejrzyj nagranie (1 min 59 s) albo uruchom portal u&nbsp;siebie: kod, dane, znak i&nbsp;nagranie są w&nbsp;jednym repozytorium.</h1>
   <div class="tresc" style="grid-template-columns: 6fr 5fr; gap: 44px; margin-top:18px; align-items:start">
     <div>
       <p class="etykieta">Rezultaty zadania i&nbsp;gdzie je znaleźć</p>
       <table>
         <tr><td>Opis projektu</td><td><code>submission/opis-projektu.md</code></td></tr>
-        <tr><td>Prezentacja i&nbsp;nagranie demo</td><td><code>submission/</code> (PDF, MP4 1 min 57 s)</td></tr>
+        <tr><td>Prezentacja i&nbsp;nagranie demo</td><td><code>submission/</code> (PDF, MP4 1 min 59 s)</td></tr>
         <tr><td>Prototyp i&nbsp;kod źródłowy</td><td><code>README.md</code>, <code>backend/mcod/aed_*</code></td></tr>
         <tr><td>Wzorcowy zakres danych XLSX</td><td><code>aed-standard/field-dictionary.xlsx</code></td></tr>
         <tr><td>Nazwa, hasło, logo, księga znaku</td><td><code>brand/</code></td></tr>
@@ -347,7 +348,7 @@
     <div>
       <div style="display:grid; grid-template-columns: 200px 200px; gap: 28px">
         <div><img src="img/qr-repozytorium.svg" alt="Kod QR do repozytorium projektu" style="width:200px; height:200px; display:block; background:#fff; border-radius:8px"><p class="podpis"><b>Repozytorium</b><br>github.com/PatrickMade/<wbr>hacknation-2026-aed</p></div>
-        <div><img src="img/qr-nagranie.svg" alt="Kod QR do nagrania demo" style="width:200px; height:200px; display:block; background:#fff; border-radius:8px"><p class="podpis"><b>Nagranie demo</b><br>1 min 57 s, plik MP4 w&nbsp;repozytorium</p></div>
+        <div><img src="img/qr-nagranie.svg" alt="Kod QR do nagrania demo" style="width:200px; height:200px; display:block; background:#fff; border-radius:8px"><p class="podpis"><b>Nagranie demo</b><br>1 min 59 s, plik MP4 w&nbsp;repozytorium</p></div>
       </div>
       <p style="font-size:19px; line-height:1.4; font-weight:700; margin-top:16px">Uruchomienie: README, 10 poleceń i&nbsp;4 kolejne dla kart urządzeń i&nbsp;wpisu „Najbliższy AED”. Konta demonstracyjne tworzy polecenie <code>seed_jury</code>.</p>
     </div>
@@ -374,7 +375,7 @@
       <tr><td><span class="stan decyzja"></span><b>Dane zgłaszającego problem</b></td><td>Bez wymaganych danych osobowych; podpis i&nbsp;kontakt usuwane 30 dni po rozwiązaniu. Klauzula i&nbsp;okres: do prawnika</td><td>Slajd 8</td></tr>
     </table>
   </div>
-  <p class="zrodla"><span class="legenda"><span class="stan pelny"></span>spełnione &nbsp; <span class="stan pol"></span>częściowo &nbsp; <span class="stan decyzja"></span>wymaga decyzji operatora.</span> Dostępność: axe-core (WCAG 2.0-2.2 A i&nbsp;AA) bez naruszeń w&nbsp;treści czterech ekranów AED; stronę akcji i&nbsp;kartę urządzenia sprawdzono też przy 360 px (slajd 9). Dwa zastrzeżenia dotyczą niezmienionej powłoki portalu (<code>submission/ograniczenia.md</code>).</p>
+  <p class="zrodla"><span class="legenda"><span class="stan pelny"></span>spełnione &nbsp; <span class="stan pol"></span>częściowo &nbsp; <span class="stan decyzja"></span>wymaga decyzji operatora.</span> Dostępność: axe-core (WCAG 2.0-2.2 A i&nbsp;AA) bez naruszeń w&nbsp;treści czterech ekranów AED; stronę akcji i&nbsp;kartę urządzenia sprawdzono też przy 360 px (slajd 9). Trzy zastrzeżenia dotyczą niezmienionej powłoki portalu: odnośnik menu, pasek postępu i&nbsp;fokus w&nbsp;oknie RODO (<code>submission/ograniczenia.md</code>).</p>
   <span class="nr">15 / 16</span>
 </section>
 
