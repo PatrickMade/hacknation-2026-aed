@@ -18,6 +18,7 @@ zostało użyte, a co jest decyzją i pracą człowieka.
   wzorcowego zakresu danych, pierwsza wersja lokalnego uruchomienia portalu).
 - Wyszukiwarka internetowa dla agentów AI (Exa) do wyszukiwania źródeł
   w researchu.
+- **Suno** (model v6): muzyka do nagrania demo.
 
 Agenci AI pracują w osobnych zadaniach, każde na własnej gałęzi. Po
 utworzeniu szkieletu repozytorium zmiany trafiają do niego przez pull
@@ -38,7 +39,7 @@ konfiguracji) i przeglądem w osobnej sesji AI.
 | Zgłoszenia AED | Moduł `backend/mcod/aed_reports` (rejestr urządzeń po `aed_id`, API zgłoszeń ze zgodą RODO, panel dysponenta, e-mail, własny koder QR sprawdzony bit po bicie z biblioteką referencyjną qrcodegen), strona `/pl/aed/<aed_id>`, testy i fikcyjne dane demo | Zakres funkcji; akceptacja działania w demo według `akceptacja.md` [do wykonania] |
 | Strona akcji i "Najbliższy AED" | Strona akcji z licznikami i mapą pokrycia gmin, wpis "Najbliższy AED" w zakładce PoCoTo | Zakres funkcji; akceptacja działania w demo według `akceptacja.md` [do wykonania] |
 | Nazwa, hasło, logo, księga znaku (`brand/`) | Kilka rund propozycji nazw i haseł oraz szkiców znaku; finalne pliki znaku i naklejki z kodem QR zapisane jako SVG; eksport do PNG, JPG i PDF w przeglądarce Google Chrome i w programie ImageMagick; księga znaku. Model: Claude Fable 5.2. Kontur Polski pochodzi z danych Natural Earth (domena publiczna), a krój Figtree jest na licencji SIL Open Font License 1.1 | Wybór nazwy "Mapa Serc"; własne sformułowanie hasła "Wszystkie AED pod ręką."; odrzucenie wcześniejszych propozycji i wybór wariantu znaku; akceptacja finalnych plików |
-| Teksty zgłoszenia i prezentacja | Wersje robocze opisu, listy ograniczeń, slajdów (HTML) i tego oświadczenia; zrzuty ekranu i nagranie demo (`mapa-serc-demo.mp4`) przygotowane skryptem przeglądarki z lokalnej instancji portalu; okładka HackTribe | Redakcja i akceptacja treści; wygłoszenie prezentacji |
+| Teksty zgłoszenia i prezentacja | Wersje robocze opisu, listy ograniczeń, slajdów (HTML) i tego oświadczenia; zrzuty ekranu przygotowane skryptem przeglądarki z lokalnej instancji portalu; nagranie demo (`mapa-serc-demo.mp4`): nagrania ekranu skryptem przeglądarki, plansze i napisy, montaż w DaVinci Resolve sterowany przez AI, muzyka wygenerowana w Suno (opis: `nagranie-demo.md`); okładka HackTribe | Redakcja i akceptacja treści; wygłoszenie prezentacji |
 | Kontrola jakości | Testy automatyczne i przeglądy kodu oraz treści w osobnych sesjach AI; kontrola modułów AED w przeglądarce; automatyczna kontrola dostępności nowych stron (axe-core) | Przegląd końcowy materiałów przed wysłaniem [do wykonania] i odpowiedzialność za całość |
 
 ## Czego AI nie robiło

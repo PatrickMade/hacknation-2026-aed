@@ -15,14 +15,15 @@ musi samo pokazać problem, działający prototyp i wezwanie do działania.
 
 Zmontowane nagranie zastępuje wersję 1 pod tą samą ścieżką:
 
-- najwyżej 2:00, 1920x1080, H.264, z muzyką na jasnej licencji i bez lektora;
+- najwyżej 2:00, 1920x1080, H.264, z muzyką i bez lektora (decyzja autora
+  z 2026-11-22: muzyka wygenerowana w Suno na jego koncie w planie Pro);
 - napisy po polsku wypalone w obrazie oraz ten sam tekst w pliku `.srt`;
 - identyfikacja Mapa Serc z `brand/` (znak, kolory, krój Figtree);
 - kolejność: problem (rozproszone dane o AED) -> dysponent publikuje
   w kreatorze -> Raport zbiorczy z mapą i API -> zgłoszenie z kodu QR do
   dysponenta -> strona akcji -> wezwanie do działania;
-- ujęcia portalu to nagrania ekranu świeżej lokalnej instancji z `main`
-  (6c852693), a montaż powstaje w DaVinci Resolve Studio;
+- ujęcia portalu to nagrania ekranu lokalnej instancji z bieżącego `main`,
+  a montaż powstaje w DaVinci Resolve Studio;
 - teksty w pierwszej osobie liczby pojedynczej albo bezosobowo, bez twierdzeń
   wykraczających poza to, co prototyp robi.
 
@@ -51,8 +52,8 @@ i materiały robocze w repozytorium.
    albo w plikach repozytorium (`backend/data/aed/sources/`, `aed-standard/`).
 5. Brak form pierwszej osoby liczby mnogiej w napisach i w notatce
    (grep z `.ai/specs/2026-11-21-submission-pack.md`, punkt 5).
-6. Muzyka ma wskazaną licencję i wymagane przypisanie w notatce oraz
-   w planszy końcowej.
+6. Pochodzenie muzyki i podstawa jej użycia są opisane w notatce,
+   a plansza końcowa podaje, że muzykę wygenerowano w Suno.
 7. Jedna niezależna recenzja w roli jurora (efekt, jasność, zgodność z
    faktami, wrażenie "zrobione przez AI") i naniesione poprawki.
 8. Bramka `validation.commands` przechodzi; diff dotyka tylko `submission/`
@@ -70,7 +71,7 @@ i materiały robocze w repozytorium.
 
 1. [x] Issue APP-54 i claim.
 2. [x] Specyfikacja (ten plik).
-3. [ ] Nagrania ekranu z lokalnej instancji i grafiki marki.
-4. [ ] Montaż w DaVinci Resolve, napisy, muzyka, eksport.
-5. [ ] Kontrole akceptacji, recenzja jurora i poprawki.
+3. [x] Nagrania ekranu z lokalnej instancji i grafiki marki.
+4. [x] Montaż w DaVinci Resolve, napisy, muzyka, eksport.
+5. [x] Kontrole akceptacji, recenzja jurora i poprawki.
 6. [ ] Bramka walidacji, PR, niezależny przegląd, merge gate.
