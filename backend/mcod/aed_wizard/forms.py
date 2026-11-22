@@ -61,7 +61,11 @@ class MappingForm(forms.Form):
                                                   choices=enum_choices(field), initial=value)
             self.default_names.append(name)
         self.fields["operator_name"] = forms.CharField(
-            label="Dysponent (operator_name), gdy brak kolumny", initial=organization.title, max_length=300
+            label="Dysponent (operator_name) dla rekordów bez dysponenta w pliku", required=False, max_length=300,
+            help_text=("Instytucja odpowiedzialna za urządzenia i odbiór zgłoszeń o nich, np. szkoła, przychodnia "
+                       "lub zarządca obiektu. Nie musi to być instytucja, która wgrywa plik. Wpisz ją, jeśli plik "
+                       "nie ma kolumny dysponenta. Publikacja dysponenta nie może użyć wartości „nieustalony”."),
+            widget=forms.TextInput(attrs={"aria-describedby": "operator-help"}),
         )
         self.fields["license"] = forms.ChoiceField(
             label="Licencja danych", choices=[(key, value[2]) for key, value in LICENSES.items()], initial="cc0",
@@ -79,6 +83,12 @@ class MappingForm(forms.Form):
         self.fields["swap_axes"] = forms.BooleanField(
             label="Zamień szerokość i długość w wierszach z prawdopodobnie zamienionymi osiami", required=False
         )
+
+    def clean(self):
+        data = super().clean()
+        if not data.get("map_operator_name") and not (data.get("operator_name") or "").strip():
+            self.add_error("operator_name", "Podaj dysponenta urządzeń albo przypisz kolumnę dysponenta z pliku.")
+        return data
 
     def clean_data_date(self):
         day = self.cleaned_data["data_date"]

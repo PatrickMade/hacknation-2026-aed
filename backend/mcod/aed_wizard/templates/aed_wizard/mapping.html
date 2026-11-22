@@ -30,6 +30,7 @@
       <div><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}</div>
     {% endfor %}
       <div><label for="{{ form.operator_name.id_for_label }}">{{ form.operator_name.label }}</label>{{ form.operator_name }}
+        <span id="operator-help">{{ form.operator_name.help_text }}</span>
         {% if form.operator_name.errors %}<span class="aed-error">{{ form.operator_name.errors|join:" " }}</span>{% endif %}</div>
     </div>
   </fieldset>

@@ -29,5 +29,10 @@ Testy RED przed zmianą, potem GREEN; pełna bramka.
 
 ## Progress
 1. [x] Task record.
-2. [ ] Testy RED, implementacja, GREEN.
+2. [x] Testy RED, implementacja, GREEN.
 3. [ ] Pełna bramka, PR, niezależny review, merge.
+
+## Evidence
+- RED (unfixed code), 4 of the 6 new tests: `'Krosno' not found in (None, '')` (field pre-filled with the uploading institution); report without "Dysponent: z pliku (kolumna Dysponent) w 2 rekordach" and without "Dysponent: wpisany …"; `'operator_name' unexpectedly found in {... 'operator_name': 'właściciel'}`. The other 2 already passed on unfixed code and stay as guards: the placeholder refusal (existing `validate.py` rule) and `convert` with an empty entry.
+- GREEN: `mcod.aed_wizard` 33 tests OK.
+- Browser (isolated stack, krosno.agent, real Krosno file): empty dysponent field with help text linked by `aria-describedby`; submit without it shows "Podaj dysponenta urządzeń albo przypisz kolumnę dysponenta z pliku." and stays on step 2; with an entry the report shows "Dysponent: wpisany „Miejski Ośrodek Sportu w Krośnie” w 21 rekordach."
