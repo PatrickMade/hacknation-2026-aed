@@ -107,10 +107,10 @@
         <h2 id="aed-campaign-map" class="heading heading--sm">Gdzie brakuje danych o AED</h2>
         <p id="aed-campaign-map-desc">
           Zielone gminy mają oficjalne dane o AED. Pomarańczowe to luki: wolontariusze OpenStreetMap zaznaczyli tam
-          defibrylatory, ale żadna instytucja nie opublikowała o nich oficjalnych danych. Szare gminy nie mają danych z
-          żadnego z tych źródeł. Te same informacje są w tabelach pod mapą.
+          defibrylatory, ale w Raporcie zbiorczym AED nie ma o nich danych. Szare gminy nie mają danych z żadnego z tych
+          źródeł. Te same informacje są w tabelach pod mapą.
         </p>
-        <p class="aed-campaign__source">
+        <p id="aed-campaign-map-scope" class="aed-campaign__source">
           Mapa porównuje tylko dwa źródła: Raport zbiorczy AED i OpenStreetMap. Inne wykazy AED nie są tu liczone, więc
           szara gmina nie oznacza, że nie ma w niej defibrylatorów.
         </p>
@@ -138,7 +138,7 @@
           class="aed-campaign__map"
           role="region"
           aria-label="Mapa gmin: oficjalne dane o AED i luki"
-          aria-describedby="aed-campaign-map-desc"></div>
+          aria-describedby="aed-campaign-map-desc aed-campaign-map-scope"></div>
 
         <div class="row">
           <div class="col-lg-6">

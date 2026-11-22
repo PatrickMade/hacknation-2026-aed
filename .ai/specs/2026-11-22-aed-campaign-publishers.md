@@ -19,7 +19,7 @@ Decyzje: koordynator (opcja B), zmiana Patryka i mentora (bez „nieustalony”)
 - Krótkie wyjaśnienie: wydawca opublikował zbiór, dysponent odpowiada za urządzenie, a potwierdzony jest wtedy, gdy sam publikuje w portalu dane o swoich urządzeniach (wtedy jest też ich wydawcą).
 - Tabela gmin z danymi: kolumna „Wydawcy danych” (do 3 nazw i „i jeszcze N”); dymek mapy: potwierdzeni dysponenci i wydawcy danych (po 5).
 - Pokrycie gmin: `terc` (gdy wskazuje gminę z PRG), inaczej współrzędne.
-- Legenda mapy (decyzja Patryka przez L8): „Luka - AED w OpenStreetMap, brak danych w dane.gov.pl: N gmin” (odmiana „gmina/gminy/gmin”) zamiast „Luka - AED tylko w OpenStreetMap”, bo dawny tekst sugerował, że OSM to jedyne źródło AED. Przy mapie krótka uwaga: mapa porównuje tylko Raport zbiorczy AED i OpenStreetMap, inne wykazy nie są liczone, a szara gmina nie oznacza braku AED.
+- Legenda mapy (decyzja Patryka przez L8): „Luka - AED w OpenStreetMap, brak danych w dane.gov.pl: N gmin” (odmiana „gmina/gminy/gmin”) zamiast „Luka - AED tylko w OpenStreetMap”, bo dawny tekst sugerował, że OSM to jedyne źródło AED. Przy mapie krótka uwaga: mapa porównuje tylko Raport zbiorczy AED i OpenStreetMap, inne wykazy nie są liczone, a szara gmina nie oznacza braku AED. Opis mapy mówi tylko, że w Raporcie zbiorczym AED nie ma danych o lukach (nie, że żadna instytucja ich nie opublikowała); uwaga o dwóch źródłach jest w `aria-describedby` mapy.
 - OSM: najpierw zasób OSM w zbiorze raportu; gdy go tam nie ma, zbiór, którego tytuł (bez znaczników `<mark>`) zawiera „OpenStreetMap” i „AED”, i jego zasób CSV. Błąd wyszukiwania zbioru OSM nie ukrywa liczników z danych oficjalnych: strona pokazuje je i komunikat o błędzie OSM.
 
 ## Zakres
