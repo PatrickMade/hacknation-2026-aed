@@ -87,8 +87,9 @@ i prowadzi do jego zbioru źródłowego.
    AED, wpisu urzędowego brak") i przycisk prowadzący do kreatora.
 6. **Zgłoszenie problemu do konkretnego dysponenta**: kod QR na naklejce przy
    AED prowadzi do wpisu urządzenia i formularza "Zgłoś problem" (zamknięty,
-   brak urządzenia, uszkodzony, złe dane lub lokalizacja). Kontakt do
-   zgłaszającego jest opcjonalny i wymaga wyraźnej zgody (RODO). Zgłoszenie
+   brak urządzenia, uszkodzony, złe dane lub lokalizacja). Taką stronę ma
+   każdy rekord raportu zbiorczego. Formularz nie wymaga danych osobowych;
+   kontakt do zgłaszającego jest opcjonalny i wymaga wyraźnej zgody (RODO). Zgłoszenie
    trafia do panelu właściwego dysponenta ze statusem nowe, w trakcie,
    rozwiązane.
 7. **"Najbliższy AED"**: wpis w zakładce PoCoTo portalu, oparty na

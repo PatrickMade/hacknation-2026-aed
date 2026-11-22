@@ -9,7 +9,8 @@ Stan na 2026-11-21, 22:27 UTC. Wszystkie sprawdzane elementy są w gałęzi `mai
 ## 1. Demo lokalne
 
 Uruchomienie według `README.md`: sekcja "Uruchomienie od zera", a dla
-punktów 1.6 i 1.8 także "Zgłoszenia AED i kody QR" (`load_aed_devices`,
+punktów 1.6 i 1.8 także "Zgłoszenia AED i kody QR"
+(`load_aed_report_devices` po `aed_refresh`, `load_aed_devices`,
 `seed_aed_showcase`). Potem:
 
 - [ ] 1.1 Portal działa pod https://mcod.local/ bez zmian wyglądu poza
@@ -21,8 +22,9 @@ punktów 1.6 i 1.8 także "Zgłoszenia AED i kody QR" (`load_aed_devices`,
       plik Krosna, przypisanie kolumn, raport walidacji, publikacja.
 - [ ] 1.5 Walidator "Sprawdź swój plik" pokazuje błędy pliku
       z błędami bez logowania.
-- [ ] 1.6 Karta urządzenia i "Zgłoś problem": zgłoszenie widzi tylko
-      dysponent urządzenia, e-mail w MailHog.
+- [ ] 1.6 Karta urządzenia i "Zgłoś problem" dla rekordu raportu i dla
+      urządzenia demo: zgłoszenie bez imienia i kontaktu przechodzi, widzi
+      je tylko dysponent urządzenia, e-mail w MailHog.
 - [ ] 1.7 Strona akcji `/pl/aed`: liczniki i mapa pokrycia gmin,
       także na telefonie.
 - [ ] 1.8 "Najbliższy AED" w zakładce PoCoTo.
@@ -86,6 +88,7 @@ Uwagi:
 - [ ] 7.1 Treść klauzuli RODO w formularzu "Zgłoś problem" (strona
       urządzenia `/pl/aed/<aed_id>`).
 - [ ] 7.2 Okres przechowywania danych zgłaszającego: imię lub podpis
-      i kontakt są usuwane 30 dni po oznaczeniu zgłoszenia jako rozwiązane.
+      i kontakt (oba opcjonalne) są usuwane 30 dni po oznaczeniu zgłoszenia
+      jako rozwiązane.
 
 Uwagi:

@@ -61,14 +61,18 @@ Stan na 2026-11-21.
 ## Zgłoszenia problemów
 
 16. Formularz zgłoszenia nie zastępuje numeru alarmowego 112 i nie gwarantuje
-    czasu reakcji dysponenta.
+    czasu reakcji dysponenta. Kartę urządzenia, kod QR i ścieżkę zgłoszenia
+    ma każdy z 74 rekordów raportu zbiorczego (po poleceniu
+    `load_aed_report_devices`); punkty z OpenStreetMap ich nie mają, bo nie
+    mają potwierdzonego dysponenta.
 17. Powiadomienia e-mail w demo trafiają do lokalnej skrzynki testowej
     (MailHog), a nie do prawdziwych adresów.
 18. Publiczny formularz zgłoszeń nie ma limitu liczby zgłoszeń z jednego
     źródła ani ochrony przed automatami. Przed wdrożeniem trzeba je dodać.
-19. Treść klauzuli RODO w formularzu i okres przechowywania danych
-    zgłaszającego (usunięcie 30 dni po rozwiązaniu zgłoszenia) to propozycje
-    prototypu. Wymagają potwierdzenia przez administratora danych przed
+19. Formularz zgłoszenia nie wymaga danych osobowych: imię lub podpis
+    i kontakt są opcjonalne. Treść klauzuli RODO i okres przechowywania
+    danych, które zgłaszający poda (usunięcie 30 dni po rozwiązaniu
+    zgłoszenia), to propozycje prototypu. Wymagają potwierdzenia przez administratora danych przed
     użyciem poza demo. Usuwanie wykonuje zadanie okresowe, którego lokalna
     instancja nie uruchamia sama; kopia zgłoszenia wysłana e-mailem do
     dysponenta pozostaje poza portalem.
