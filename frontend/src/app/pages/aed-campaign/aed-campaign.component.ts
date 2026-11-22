@@ -33,10 +33,19 @@ const STATUS_STYLE: Record<GminaStatus, { fillColor: string; fillOpacity: number
   // #087f45 = --mapa-serc-zielen in brand/tokens.css.
   published: { fillColor: '#087f45', fillOpacity: 0.75 },
   gap: { fillColor: '#d9480f', fillOpacity: 0.75 },
+  // Demo data only and no OSM points: no official data, so the same fill as "none"; the outline marks demo data.
+  demo: { fillColor: '#ced4da', fillOpacity: 0.35 },
   none: { fillColor: '#ced4da', fillOpacity: 0.35 },
 };
 
 const TABLE_PREVIEW = 20;
+
+/** Outline of gminy with fictional demo data only (seed_aed_demo). */
+const DEMO_OUTLINE = '#7048e8';
+
+function isDemoOnly(gmina: GminaCoverage): boolean {
+  return gmina.officialCount === 0 && gmina.demoCount > 0;
+}
 
 /**
  * AED campaign page: counters and gmina coverage map from the "Raport zbiorczy AED" dataset.
@@ -56,6 +65,7 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
   readonly providerPanelUrl = AED_PROVIDER_PANEL_URL;
   readonly statusStyle = STATUS_STYLE;
   readonly tablePreview = TABLE_PREVIEW;
+  readonly isDemoOnly = isDemoOnly;
 
   state: LoadState = 'loading';
   /** Loading of the OpenStreetMap resource, which feeds the gap map and tables. */
@@ -159,6 +169,21 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
     return more > 0 ? `${shown} i jeszcze ${this.fmt(more)}` : shown;
   }
 
+  /**
+   * "w tym N demonstracyjnych" for a counter, empty without demo data. Persons (wydawcy, dysponenci) take
+   * "demonstracyjnych" from 2 up; things (defibrylatory) take "demonstracyjne" for 2-4, 22-24 and so on.
+   */
+  demoPart(count: number, kind: 'person' | 'thing'): string {
+    if (count <= 0) {
+      return '';
+    }
+    const last = count % 10;
+    const lastTwo = count % 100;
+    const fewForm = kind === 'thing' && last >= 2 && last <= 4 && (lastTwo < 12 || lastTwo > 14);
+    const word = count === 1 ? 'demonstracyjny' : fewForm ? 'demonstracyjne' : 'demonstracyjnych';
+    return `w tym ${this.fmt(count)} ${word}`;
+  }
+
   fmt(value: number): string {
     return value.toLocaleString('pl-PL');
   }
@@ -203,11 +228,16 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
       GminaFeature['properties']
     >;
     const layer = L.geoJSON(collection, {
-      style: (feature) => ({
-        ...STATUS_STYLE[coverage.get(feature.properties.terc)?.status || 'none'],
-        color: '#495057',
-        weight: 0.4,
-      }),
+      style: (feature) => {
+        const gmina = coverage.get(feature.properties.terc);
+        return {
+          ...STATUS_STYLE[gmina?.status || 'none'],
+          // Gminy with fictional demo data only keep their official-data fill and get a dashed violet outline.
+          ...(gmina && isDemoOnly(gmina)
+            ? { color: DEMO_OUTLINE, weight: 2.5, dashArray: '4 3' }
+            : { color: '#495057', weight: 0.4 }),
+        };
+      },
       onEachFeature: (feature, featureLayer) => {
         featureLayer.bindTooltip(this.tooltip(coverage.get(feature.properties.terc)), { sticky: true });
       },
@@ -228,6 +258,7 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
     const list = (label: string, names: string[]) =>
       names.length ? `<br>${label}: ${names.slice(0, 5).map(escape).join(', ')}${names.length > 5 ? '…' : ''}` : '';
     const institutions = list('Potwierdzeni dysponenci', gmina.operators) + list('Wydawcy danych', gmina.publishers);
-    return `<strong>${escape(gmina.name)}</strong><br>AED w oficjalnych danych: ${gmina.officialCount}<br>AED w OpenStreetMap: ${gmina.osmCount}${institutions}`;
+    const demo = gmina.demoCount ? `<br>AED w danych demonstracyjnych (fikcyjnych): ${gmina.demoCount}` : '';
+    return `<strong>${escape(gmina.name)}</strong><br>AED w oficjalnych danych: ${gmina.officialCount}${demo}<br>AED w OpenStreetMap: ${gmina.osmCount}${institutions}`;
   }
 }

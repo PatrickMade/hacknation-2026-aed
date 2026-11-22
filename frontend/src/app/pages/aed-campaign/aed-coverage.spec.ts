@@ -195,6 +195,87 @@ describe('computeCoverage', () => {
     expect(result.gminyCovered).toBe(3);
   });
 
+  it('keeps demo records apart: own counts and a demo state for gminy that have only demo data', () => {
+    const demoHospital = 'Szpital Demonstracyjny (dane demonstracyjne)';
+    const records = [
+      {
+        terc: '1408011',
+        operatorName: 'Szkoła Podstawowa nr 2',
+        publishers: ['Urząd Miasta Legionowo'],
+        confirmedOperator: false,
+        lat: 52.4,
+        lon: 20.5,
+      },
+      {
+        terc: '1861011',
+        operatorName: 'Przychodnia Krosno',
+        publishers: ['Przychodnia Krosno'],
+        confirmedOperator: true,
+        lat: 49.7,
+        lon: 22.8,
+      },
+      ...[0.1, 0.2, 0.3].map((offset) => ({
+        terc: null,
+        operatorName: demoHospital,
+        publishers: [demoHospital],
+        confirmedOperator: true,
+        demo: true,
+        lat: 52.2 + offset,
+        lon: 21.2,
+      })),
+    ];
+    const withoutOsm = computeCoverage(records, [], gminy);
+
+    expect(withoutOsm.records).toBe(5);
+    expect(withoutOsm.demoRecords).toBe(3);
+    expect(withoutOsm.publishers).toBe(3);
+    expect(withoutOsm.demoPublishers).toBe(1);
+    expect(withoutOsm.confirmedOperators).toBe(2);
+    expect(withoutOsm.demoConfirmedOperators).toBe(1);
+    expect(withoutOsm.gminyCovered).toBe(2);
+    expect(withoutOsm.gminyDemoOnly).toBe(1);
+    expect(withoutOsm.gaps).toBe(0);
+    const warszawa = withoutOsm.gminy.get('1465011');
+    expect(warszawa.status).toBe('demo');
+    expect(warszawa.officialCount).toBe(0);
+    expect(warszawa.demoCount).toBe(3);
+    expect(withoutOsm.gminy.get('1408011').status).toBe('published');
+  });
+
+  it('keeps a gmina with OSM points and only demo records counted as a gap in official data', () => {
+    const demo = { operatorName: 'Demo', publishers: ['Demo'], confirmedOperator: true, demo: true, lon: 21.2 };
+    const records = [{ ...demo, terc: null, lat: 52.3 }];
+    const result = computeCoverage(records, [{ lat: 52.5, lon: 21.5 }], gminy);
+
+    expect(result.gminy.get('1465011').status).toBe('gap');
+    expect(result.gminy.get('1465011').demoCount).toBe(1);
+    expect(result.gaps).toBe(1);
+    expect(result.gminyDemoOnly).toBe(1);
+    expect(result.gminyCovered).toBe(0);
+  });
+
+  it('counts a gmina with official and demo records as official, with only official records in its count', () => {
+    const records = [
+      { terc: '1408011', operatorName: 'A', publishers: ['Urząd'], confirmedOperator: false, lat: 52.4, lon: 20.5 },
+      {
+        terc: '1408011',
+        operatorName: 'B',
+        publishers: ['B'],
+        confirmedOperator: true,
+        demo: true,
+        lat: 52.5,
+        lon: 20.5,
+      },
+    ];
+    const result = computeCoverage(records, [], gminy);
+
+    expect(result.gminy.get('1408011').status).toBe('published');
+    expect(result.gminy.get('1408011').officialCount).toBe(1);
+    expect(result.gminy.get('1408011').demoCount).toBe(1);
+    expect(result.gminyCovered).toBe(1);
+    expect(result.gminyDemoOnly).toBe(0);
+  });
+
   it('does not count operator names taken from the location text as confirmed dysponenci', () => {
     const records = [
       {

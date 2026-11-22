@@ -9,6 +9,8 @@ export const AED_CAMPAIGN_BRAND = {
   slogan: 'Wszystkie AED pod ręką.',
   dysponentLine: 'Lista AED w szufladzie nikogo nie uratuje.',
   markSrc: '/assets/aed/mapa-serc-symbol-kolor.svg',
+  /** Lockup with the slogan, brand/logo/mapa-serc-logo-haslo-kolor.svg copied byte for byte (campaign page header). */
+  lockupSrc: '/assets/aed/mapa-serc-logo-haslo-kolor.svg',
 };
 
 /** "Dodaj dane AED" wizard in the provider panel (L5, APP-43); the panel asks for login first. */

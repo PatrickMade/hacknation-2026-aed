@@ -147,6 +147,7 @@ describe('AedCampaignService.getReport', () => {
         // Unreadable quality_flags give no evidence, so "Hala sportowa" is not a confirmed dysponent.
         expect(report.records.map((record) => record.confirmedOperator)).toEqual([false, false, false, true]);
         expect(report.records[0].terc).toBe('1434011');
+        expect(report.records.map((record) => record.demo)).toEqual([false, false, false, true]);
         expect(report.osmResourceId).toBe('11');
         expect(report.osmLookupFailed).toBe(false);
         done();
