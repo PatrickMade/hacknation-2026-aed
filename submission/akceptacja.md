@@ -4,7 +4,7 @@ Każdy punkt akceptuje autor po własnym sprawdzeniu. Zaznacz `[x]` i wpisz
 uwagi albo "OK". Punkt z uwagami wraca do poprawy przed wysłaniem
 zgłoszenia.
 
-Stan na 2026-11-21, 22:27 UTC. Wszystkie sprawdzane elementy są w gałęzi `main`.
+Stan na 2026-11-22, 02:00 UTC. Wszystkie sprawdzane elementy są w gałęzi `main`.
 
 ## 1. Demo lokalne
 

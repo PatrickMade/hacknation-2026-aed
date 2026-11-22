@@ -62,7 +62,7 @@ i prowadzi do jego zbioru źródłowego.
 ### Elementy rozwiązania
 
 1. **Wzorcowy zakres danych AED** (`aed-standard/`): słownik 44 pól w XLSX
-   (15 wymaganych, 3 warunkowe, 25 opcjonalnych), szablon CSV, schemat
+   (15 wymaganych, 3 warunkowe, 26 opcjonalnych), szablon CSV, schemat
    maszynowy Table Schema, przykładowy rekord, mapowania pięciu istniejących
    zbiorów i OSM oraz walidator z testami. Lokalizacja w WGS84, adres z kodami
    TERYT, opis miejsca, dostępność i godziny w notacji `opening_hours`,
@@ -152,7 +152,7 @@ w repozytorium.
 
 ## Stan prototypu
 
-Stan na 2026-11-21, 22:27 UTC: wszystkie elementy są w gałęzi `main`.
+Stan na 2026-11-22, 02:00 UTC: wszystkie elementy są w gałęzi `main`.
 
 | Element | Stan |
 |---|---|

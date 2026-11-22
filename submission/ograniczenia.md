@@ -1,6 +1,6 @@
 # Ograniczenia prototypu
 
-Stan na 2026-11-21.
+Stan na 2026-11-22.
 
 ## Środowisko i publikacja
 
