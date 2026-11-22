@@ -39,7 +39,7 @@ html, body {
   font-size: 15px; font-weight: 600; color: var(--tekst2);
 }
 .szyna .znak { display: flex; align-items: center; gap: 8px; color: var(--ciemna); font-weight: 800; }
-.szyna .znak img { height: 36px; display: block; margin-left: -6px; }  /* znak podstawowy z pliku; symbol ma ok. 21 px, minimum z księgi to 20 px */
+.szyna .znak img { height: 36px; display: block; margin-left: -6px; }  /* znak z małym symbolem (logo-maly): symbol ma ok. 21 px, a księga 1.2 każe użyć wersji małej poniżej 32 px */
 .szyna .kryt b { color: var(--ciemna); font-weight: 800; }
 
 h1 { font-size: 39px; line-height: 1.12; font-weight: 800; letter-spacing: -.012em; margin: 16px 0 0; max-width: 1060px; }

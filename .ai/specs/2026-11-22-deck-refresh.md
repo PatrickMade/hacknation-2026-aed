@@ -67,7 +67,7 @@ i pliki marki; zdjęcie znaczników "[do wykonania]" z oświadczenia AI
 ## Progress
 
 1. [x] Issue APP-67 i claim.
-2. [ ] Zrzuty z instancji zbudowanej z `main` 8a83333.
-3. [ ] Slajdy, slajd mobilny, kontrola układu, PDF.
-4. [ ] Teksty w `submission/` i wiersz w `README.md`.
+2. [x] Zrzuty z instancji zbudowanej z `main` 8a83333.
+3. [x] Slajdy, slajd mobilny, kontrola układu, PDF.
+4. [x] Teksty w `submission/` i wiersz w `README.md`.
 5. [ ] Bramka, PR, niezależny przegląd, merge.

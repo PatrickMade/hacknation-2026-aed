@@ -37,6 +37,6 @@ Nagranie `../mapa-serc-demo.mp4` powstało tak samo: skrypt przeglądarki
 przeszedł kroki dysponenta i odbiorcy danych w oknie 1280 x 720 px,
 z napisami na dole ekranu. Zgłoszenia widoczne w nagraniu są testowe.
 
-Znak, symbol i naklejkę QR slajdy biorą wprost z katalogu `brand/`.
+Znak, symbol, naklejkę QR i plakat slajdy biorą wprost z katalogu `brand/`.
 Układ slajdów nie przycina zrzutów: każdy obraz ma szerokość ramki
 i wysokość z własnych proporcji.

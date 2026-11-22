@@ -29,8 +29,8 @@ punktów 1.6 i 1.8 także "Zgłoszenia AED i kody QR"
 - [ ] 1.6 Karta urządzenia i "Zgłoś problem" dla rekordu raportu i dla
       urządzenia demo: zgłoszenie bez imienia i kontaktu przechodzi, widzi
       je tylko dysponent urządzenia, e-mail w MailHog.
-- [ ] 1.7 Strona akcji `/pl/aed`: liczniki i mapa pokrycia gmin,
-      także na telefonie.
+- [ ] 1.7 Strona akcji `/pl/aed`: liczniki z osobno podanymi danymi
+      demonstracyjnymi i mapa pokrycia gmin, także na telefonie.
 - [ ] 1.8 "Najbliższy AED" w zakładce PoCoTo.
 
 Uwagi:

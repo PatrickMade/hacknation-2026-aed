@@ -14,7 +14,7 @@ Wymagania z pełnej treści zadania, pkt 2-5.
 | # | Rezultat | Wymaganie | Właściciel (obszar prac) | Status | Gdzie |
 |---|---|---|---|---|---|
 | 1 | Tytuł i szczegółowy opis | Tytuł i szczegółowy opis projektu | Pakiet zgłoszenia | gotowe | `submission/opis-projektu.md` |
-| 2 | Prezentacja | PDF do 10 MB, co najmniej 5 slajdów z dowodami wymagań technicznych (zrzuty ekranu), funkcjonalności, kroki użytkownika, ograniczenia | Pakiet zgłoszenia | gotowe: 13 slajdów i 2 załączniki | `submission/mapa-serc-prezentacja.pdf`, źródła w `submission/prezentacja/` |
+| 2 | Prezentacja | PDF do 10 MB, co najmniej 5 slajdów z dowodami wymagań technicznych (zrzuty ekranu), funkcjonalności, kroki użytkownika, ograniczenia | Pakiet zgłoszenia | gotowe: 14 slajdów i 2 załączniki | `submission/mapa-serc-prezentacja.pdf`, źródła w `submission/prezentacja/` |
 | 3 | Działający prototyp | Zbieranie danych AED z wielu źródeł do jednego maszynowo czytelnego zbioru w dane.gov.pl | Portal, raport zbiorczy, kreator, walidator, zgłoszenia, "Najbliższy AED" i strona akcji | gotowe, w `main` | repozytorium, `README.md` |
 | 4 | Wzorcowy zakres danych | Tabela w formacie XLSX | Wzorcowy zakres danych | gotowe | `aed-standard/field-dictionary.xlsx` |
 | 5 | Kod źródłowy | Kod źródłowy rozwiązania | Wszystkie obszary | gotowe: repozytorium publiczne | https://github.com/PatrickMade/hacknation-2026-aed |
