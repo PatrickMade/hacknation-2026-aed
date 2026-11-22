@@ -21,15 +21,16 @@ punktów 1.6 i 1.8 także "Zgłoszenia AED i kody QR"
       że źródła pobrano na żywo z api.dane.gov.pl.
 - [ ] 1.3 API zwraca rekordy raportu: `https://api.mcod.local/1.4/resources/<id CSV>/data`.
 - [ ] 1.4 Kreator: konto pełnomocnika Krosna, "Dodaj dane AED",
-      plik Krosna, przypisanie kolumn, data danych podana ręcznie (plik
-      jej nie zawiera), raport walidacji, publikacja.
+      plik Krosna, przypisanie kolumn, dysponent i data danych wpisane
+      ręcznie (plik ich nie zawiera; bez dysponenta kreator nie przechodzi
+      dalej), raport walidacji, publikacja.
 - [ ] 1.5 Walidator "Sprawdź swój plik" pokazuje błędy pliku
       z błędami bez logowania.
 - [ ] 1.6 Karta urządzenia i "Zgłoś problem" dla rekordu raportu i dla
       urządzenia demo: zgłoszenie bez imienia i kontaktu przechodzi, widzi
       je tylko dysponent urządzenia, e-mail w MailHog.
-- [ ] 1.7 Strona akcji `/pl/aed`: liczniki i mapa pokrycia gmin,
-      także na telefonie.
+- [ ] 1.7 Strona akcji `/pl/aed`: liczniki z osobno podanymi danymi
+      demonstracyjnymi i mapa pokrycia gmin, także na telefonie.
 - [ ] 1.8 "Najbliższy AED" w zakładce PoCoTo.
 
 Uwagi:
