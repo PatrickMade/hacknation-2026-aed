@@ -9,18 +9,18 @@ Plik: [mapa-serc-demo.mp4](mapa-serc-demo.mp4), napisy:
 | Obraz | 1920x1080, 30 kl./s, H.264 (High), yuv420p |
 | Dźwięk | AAC 48 kHz stereo, sama muzyka, bez lektora; -16,0 LUFS, szczyt -3,4 dBFS |
 | Napisy | polskie, wypalone w obrazie; ten sam tekst w pliku `.srt` |
-| Rozmiar pliku | 14,6 MB |
+| Rozmiar pliku | 14,5 MB |
 
 ## Układ nagrania
 
 | Czas | Część | Co widać |
 |---|---|---|
-| 0:00-0:18 | Problem | Plansze: ile gmin ma oficjalne dane o AED, pięć zbiorów AED w dane.gov.pl i ich układy, jeden zbiór w 43 polach wzorcowego zakresu danych, znak akcji |
+| 0:00-0:18 | Problem | Plansze: ile gmin ma oficjalne dane o AED, pięć zbiorów AED w dane.gov.pl i ich układy, jeden zbiór w 44 polach wzorcowego zakresu danych, znak akcji |
 | 0:18-0:38 | 1. Dysponent publikuje dane | Kreator "Dodaj dane AED": plik Krosna, przypisanie kolumn, wynik walidacji, publikacja |
-| 0:38-1:05 | 2. Raport zbiorczy: mapa i API | Zbiór "Raport zbiorczy AED", zasoby, licencja, mapa portalu, tabela, odpowiedź API |
-| 1:05-1:35 | 3. Zgłoszenie z kodu QR | Naklejka i karta urządzenia na telefonie, formularz zgłoszenia, panel dysponenta, e-mail |
-| 1:35-1:47 | 4. Strona akcji | Strona Mapa Serc: liczniki, mapa luk, przykład Warszawy |
-| 1:47-1:57 | Wezwanie do działania | Plansza końcowa z adresem repozytorium i kodem QR |
+| 0:38-1:04 | 2. Raport zbiorczy: mapa i API | Zbiór "Raport zbiorczy AED", zasoby, licencja, mapa portalu, tabela, odpowiedź API |
+| 1:04-1:34 | 3. Zgłoszenie z kodu QR | Naklejka i karta urządzenia na telefonie, formularz zgłoszenia, panel dysponenta, e-mail |
+| 1:34-1:46 | 4. Strona akcji | Strona Mapa Serc: liczniki, mapa luk, przykład Warszawy |
+| 1:46-1:56 | Wezwanie do działania | Plansza końcowa z adresem repozytorium i kodem QR |
 
 ## Jak powstało
 
@@ -60,17 +60,25 @@ repozytorium.
 
 ## Dane w nagraniu
 
-- Zbiory źródłowe: datowane kopie pięciu zbiorów AED z dane.gov.pl
-  (`backend/data/aed/sources/`, licencje w `LICENSES.md`) oraz punkty AED
-  z OpenStreetMap (ODbL 1.0).
+- Zbiory źródłowe: pięć zbiorów AED z dane.gov.pl, które `aed_refresh`
+  pobiera z publicznego API dane.gov.pl, a gdy API nie odpowiada, z datowanych
+  kopii w `backend/data/aed/sources/` (licencje w `LICENSES.md`). Przy tym
+  nagraniu wszystkie pięć odpowiedzi przyszło z API (22.11.2026). Punkty AED
+  z OpenStreetMap (ODbL 1.0) są w osobnym zbiorze.
+- Cztery instytucje oznaczone "(dane demonstracyjne)" i ich rekordy są
+  fikcyjne; tworzy je `seed_aed_demo`.
 - Plik wgrywany w kreatorze to kopia zbioru Krosna
   (`backend/data/aed/sources/krosno/Defibrylator_jAmxQcp.csv`, CC0 1.0).
+  Plik nie zawiera daty, więc w kreatorze wpisano datę danych tego zbioru
+  z dane.gov.pl: 2024-02-19.
 - Urządzenie na karcie z kodem QR i zgłoszenie są przykładowe. Konta,
   instytucje i adresy e-mail pochodzą z `seed_jury`.
-- Liczby w napisach są odczytane z ekranu w chwili nagrania: 21
-  rekordów w kreatorze, 74 rekordy w API, 5 z
-  2479 gmin z oficjalnymi danymi, 2123 gmin, w których AED zna
-  tylko OpenStreetMap (stan raportu na 21.11.2026).
+- Liczby w napisach są odczytane z ekranu w chwili nagrania: rekordy w
+  kreatorze (21), rekordy w API (86), na stronie akcji
+  8 z 2479 gmin z oficjalnymi danymi, gminy z lukami: 2120 (stan
+  raportu na 22.11.2026). Plansza otwierająca pomija 4 gminy, w których
+  jedynym wydawcą jest fikcyjna instytucja demonstracyjna: 4 z
+  2479 gmin z oficjalnymi danymi, gminy z lukami: 2124.
 
 ## Muzyka
 

@@ -1,7 +1,7 @@
 1
 00:00:00,300 --> 00:00:05,100
-Oficjalne dane o AED ma 5 z 2479 gmin.
-W 2123 gminach AED zna tylko OpenStreetMap.
+Oficjalne dane o AED ma 4 z 2479 gmin.
+W 2124 gminach AED zna tylko OpenStreetMap.
 
 2
 00:00:05,500 --> 00:00:11,100
@@ -11,130 +11,130 @@ o defibrylatorach AED. Każdy ma inny układ.
 3
 00:00:11,500 --> 00:00:15,500
 Mapa Serc łączy je w jeden zbiór:
-43 pola wzorcowego zakresu danych AED.
+44 pola wzorcowego zakresu danych AED.
 
 4
 00:00:15,900 --> 00:00:19,100
 Mapa Serc. Wszystkie AED pod ręką.
 
 5
-00:00:19,300 --> 00:00:23,933
+00:00:19,300 --> 00:00:23,833
 Dysponent wgrywa swój plik AED w dowolnym układzie:
 CSV, XLSX albo GeoJSON.
 
 6
-00:00:24,067 --> 00:00:27,067
+00:00:23,967 --> 00:00:26,967
 Kreator sam proponuje przypisanie kolumn.
 
 7
-00:00:27,200 --> 00:00:30,967
+00:00:27,100 --> 00:00:30,867
 Walidator: 21 rekordów przechodzi kontrole.
 Każdy dostaje aed_id.
 
 8
-00:00:31,100 --> 00:00:35,267
+00:00:31,000 --> 00:00:35,167
 Publikacja w zbiorze instytucji,
 z oznaczeniem zgodności.
 
 9
-00:00:35,400 --> 00:00:38,367
+00:00:35,300 --> 00:00:38,267
 Opublikowano: zasób jest w portalu i w jego API.
 
 10
-00:00:38,500 --> 00:00:42,367
+00:00:38,400 --> 00:00:42,267
 Raport zbiorczy AED łączy źródła
 i pliki z kreatora.
 
 11
-00:00:42,500 --> 00:00:45,967
-Trzy zasoby: CSV, GeoJSON i punkty
-z OpenStreetMap (ODbL).
+00:00:42,400 --> 00:00:46,167
+Dwa zasoby: CSV i GeoJSON.
+Punkty z OpenStreetMap: osobny zbiór, ODbL.
 
 12
-00:00:46,100 --> 00:00:49,467
+00:00:46,300 --> 00:00:49,667
 Licencja raportu: CC BY 4.0,
 z zachowaniem warunków źródeł.
 
 13
-00:00:49,600 --> 00:00:55,467
+00:00:49,800 --> 00:00:55,667
 Podgląd na mapie portalu.
 Po kliknięciu punktu widać nazwę miejsca.
 
 14
-00:00:55,600 --> 00:01:00,233
+00:00:55,800 --> 00:00:59,467
 Kolumny tabeli to pola wzorcowego zakresu.
 Braki są oznaczone jako unknown.
 
 15
-00:01:00,367 --> 00:01:05,167
-API portalu zwraca te same 74 rekordy,
+00:00:59,600 --> 00:01:04,367
+API portalu zwraca te same 86 rekordów,
 ze źródłem i licencją każdego.
 
 16
-00:01:05,300 --> 00:01:10,067
+00:01:04,500 --> 00:01:09,267
 Kod QR z naklejki otwiera kartę urządzenia.
 Rekord w nagraniu jest przykładowy.
 
 17
-00:01:10,200 --> 00:01:14,567
+00:01:09,400 --> 00:01:13,767
 Przechodzień zgłasza problem,
 na przykład zamkniętą szafkę z AED.
 
 18
-00:01:14,700 --> 00:01:18,567
+00:01:13,900 --> 00:01:17,767
 Wymagane: rodzaj problemu i opis.
 Podpis i kontakt są dobrowolne.
 
 19
-00:01:18,700 --> 00:01:21,900
+00:01:17,900 --> 00:01:21,100
 Formularz nie wzywa pomocy.
 Od tego jest numer 112.
 
 20
-00:01:22,033 --> 00:01:25,567
+00:01:21,233 --> 00:01:24,800
 Zgłoszenie przyjęte
 i przekazane dysponentowi.
 
 21
-00:01:25,700 --> 00:01:30,133
+00:01:24,933 --> 00:01:29,367
 Dysponent widzi zgłoszenie w panelu.
 Inne instytucje go nie widzą.
 
 22
-00:01:30,267 --> 00:01:35,033
+00:01:29,500 --> 00:01:34,267
 Dostaje też e-mail. Podane dane osobowe
 są usuwane 30 dni po rozwiązaniu sprawy.
 
 23
-00:01:35,167 --> 00:01:36,967
+00:01:34,400 --> 00:01:36,200
 Strona akcji w portalu.
 
 24
-00:01:37,100 --> 00:01:40,967
-4 instytucje, 74 defibrylatory,
-5 z 2479 gmin z oficjalnymi danymi.
+00:01:36,333 --> 00:01:40,200
+Liczniki strony akcji.
+Cztery instytucje w nagraniu są fikcyjne.
 
 25
-00:01:41,100 --> 00:01:44,367
-Mapa luk: w 2123 gminach AED
-zna tylko OpenStreetMap.
+00:01:40,333 --> 00:01:43,533
+Luki: 2120 gmin z AED w OpenStreetMap,
+bez danych w dane.gov.pl.
 
 26
-00:01:44,500 --> 00:01:47,967
+00:01:43,667 --> 00:01:47,133
 Warszawa: 1078 AED w OpenStreetMap,
 0 w oficjalnych danych.
 
 27
-00:01:48,300 --> 00:01:50,700
+00:01:47,467 --> 00:01:49,867
 Lista AED w szufladzie nikogo nie uratuje.
 
 28
-00:01:50,800 --> 00:01:53,800
+00:01:49,967 --> 00:01:52,967
 Masz AED w swojej instytucji?
 Udostępnij dane o nim w dane.gov.pl.
 
 29
-00:01:53,900 --> 00:01:56,900
+00:01:53,067 --> 00:01:56,067
 Kod otwarty na licencji GPL v3:
 github.com/PatrickMade/hacknation-2026-aed
 

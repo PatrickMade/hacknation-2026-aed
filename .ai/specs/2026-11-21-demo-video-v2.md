@@ -74,4 +74,7 @@ i materiały robocze w repozytorium.
 3. [x] Nagrania ekranu z lokalnej instancji i grafiki marki.
 4. [x] Montaż w DaVinci Resolve, napisy, muzyka, eksport.
 5. [x] Kontrole akceptacji, recenzja jurora i poprawki.
-6. [ ] Bramka walidacji, PR, niezależny przegląd, merge gate.
+6. [x] Ponowne nagranie na świeżej instancji z `main` 8dcdf64 (po APP-57 i
+   zmianie liczników strony akcji): 44 pola, raport bez zasobu OSM, cztery
+   instytucje demonstracyjne pominięte na planszy otwierającej.
+7. [ ] Bramka walidacji, PR, niezależny przegląd, merge gate.
