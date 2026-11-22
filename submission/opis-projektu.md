@@ -83,8 +83,9 @@ i prowadzi do jego zbioru źródłowego.
    pobrania oraz punkty AED z OSM jako osobny zasób na licencji ODbL.
    Odświeżanie: zadanie okresowe w tle, w demo uruchamiane ręcznie.
 5. **Strona akcji w portalu**: kampania, liczniki (dysponenci, rekordy AED,
-   gminy z danymi na tle 2479 gmin), mapa pokrycia gmin z lukami ("OSM zna
-   AED, wpisu urzędowego brak") i przycisk prowadzący do kreatora.
+   gminy z danymi na tle 2479 gmin), mapa pokrycia gmin z lukami (gminy,
+   w których OpenStreetMap ma punkty AED, a dane.gov.pl nie ma o nich danych;
+   mapa porównuje tylko te dwa źródła) i przycisk prowadzący do kreatora.
 6. **Zgłoszenie problemu do konkretnego dysponenta**: kod QR na naklejce przy
    AED prowadzi do wpisu urządzenia i formularza "Zgłoś problem" (zamknięty,
    brak urządzenia, uszkodzony, złe dane lub lokalizacja). Taką stronę ma
