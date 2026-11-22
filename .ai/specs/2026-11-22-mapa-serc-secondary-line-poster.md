@@ -72,3 +72,4 @@ prezentacji, strony akcji i tekstów zgłoszenia.
 - [x] 2. Wzór plakatu w `brand/plakat/` (SVG, PDF, PNG) - 74479d9
 - [x] 3. `brand/README.md` - 74479d9
 - [x] 4. Bramka walidacji i PR (cztery polecenia lokalnie; test portalu i cała bramka w kontroli CI na PR)
+- [x] 5. Poprawki po niezależnym przeglądzie: pole na znak dysponenta na plakacie w ciemnej zieleni `#0B2E20` (para z listy kontrastów w księdze; plakat i księga wygenerowane ponownie), a `brand/README.md` podaje, że hasła dla dysponentów używa się też w części strony akcji skierowanej do nich

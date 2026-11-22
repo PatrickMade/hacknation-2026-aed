@@ -65,7 +65,8 @@ Akcja ma dwa hasła o różnych rolach:
   częścią znaku z hasłem.
 - **Lista AED w szufladzie nikogo nie uratuje.** - hasło dla dysponentów,
   czyli instytucji i firm, które mają AED. Używa się go w pismach, na
-  plakatach i w prezentacjach dla dysponentów.
+  plakatach i w prezentacjach dla dysponentów oraz w części strony akcji
+  skierowanej do nich.
 
 Hasła dla dysponentów nie dopisuje się do znaku, nie używa w materiałach dla
 mieszkańców ani na naklejce przy urządzeniu. W materiale dla dysponentów jest
