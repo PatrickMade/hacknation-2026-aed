@@ -51,9 +51,7 @@ describe('AedCampaignService.getReport', () => {
   const datasetService = {
     getAll: () =>
       of({
-        results: [
-          { id: '6', attributes: { title: '<mark>Raport</mark> <mark>zbiorczy</mark> <mark>AED</mark></mark>' } },
-        ],
+        results: [{ id: '6', attributes: { title: '<mark>Raport</mark> <mark>zbiorczy</mark> <mark>AED</mark>' } }],
       }),
     getResourcesList: () =>
       of({
@@ -70,8 +68,16 @@ describe('AedCampaignService.getReport', () => {
     const sourceRecords = (publisher: string) =>
       JSON.stringify([{ source_id: 'dane.gov.pl', publisher_name: publisher, source_url: 'https://example.org' }]);
     const flags = (...names: string[]) => JSON.stringify(names);
+    // L4 demo.py / wizard shape: a dysponent's own publication has no publisher_name.
     const demo = JSON.stringify([
-      { source_id: 'dysponent:demo-1', publisher_name: 'Przychodnia Zdrowie (dane demonstracyjne)' },
+      {
+        source_id: 'dysponent:demo-1',
+        source_record_id: 'DEMO-1',
+        source_url: 'https://mcod.local/pl/dataset',
+        retrieved_at: '2026-11-22T00:00:00Z',
+        license_url: 'https://creativecommons.org/publicdomain/zero/1.0/',
+        attribution: 'Przychodnia Zdrowie (dane demonstracyjne) - dane demonstracyjne',
+      },
     ]);
     const compliance = [
       {
@@ -112,7 +118,7 @@ describe('AedCampaignService.getReport', () => {
       getAll: (params: Record<string, string>) =>
         of({
           results: /openstreetmap/i.test(params['q'])
-            ? [{ id: '9', attributes: { title: 'Punkty AED z <mark>OpenStreetMap</mark> - Polska (ODbL 1.0)</mark>' } }]
+            ? [{ id: '9', attributes: { title: 'Punkty AED z <mark>OpenStreetMap</mark> - Polska (ODbL 1.0)' } }]
             : [{ id: '6', attributes: { title: '<mark>Raport</mark> <mark>zbiorczy</mark> <mark>AED</mark>' } }],
         }),
       getResourcesList: (datasetId: string) =>
@@ -138,9 +144,32 @@ describe('AedCampaignService.getReport', () => {
           [],
           ['Przychodnia Zdrowie (dane demonstracyjne)'],
         ]);
-        expect(report.records.map((record) => record.confirmedOperator)).toEqual([false, false, true, true]);
+        // Unreadable quality_flags give no evidence, so "Hala sportowa" is not a confirmed dysponent.
+        expect(report.records.map((record) => record.confirmedOperator)).toEqual([false, false, false, true]);
         expect(report.records[0].terc).toBe('1434011');
         expect(report.osmResourceId).toBe('11');
+        expect(report.osmLookupFailed).toBe(false);
+        done();
+      },
+      error: (error) => done(error),
+    });
+  });
+
+  it('keeps the official records when the OpenStreetMap dataset lookup fails', (done) => {
+    const failingOsmLookup = {
+      ...datasetService,
+      getAll: (params: Record<string, string>) =>
+        /openstreetmap/i.test(params['q']) ? throwError(() => ({ status: 503 })) : datasetService.getAll(),
+      getResourcesList: () =>
+        of({ results: [{ id: '6', attributes: { title: 'Raport zbiorczy AED (CSV)', format: 'csv' } }] }),
+    };
+    const service = new AedCampaignService(failingOsmLookup as never, {} as never);
+
+    service.getReport().subscribe({
+      next: (report) => {
+        expect(report.records.length).toBe(2);
+        expect(report.osmResourceId).toBeNull();
+        expect(report.osmLookupFailed).toBe(true);
         done();
       },
       error: (error) => done(error),

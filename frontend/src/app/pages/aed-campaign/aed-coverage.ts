@@ -1,6 +1,7 @@
 /**
  * Coverage of Polish gminy by published AED data (pure functions, no Angular).
  */
+import { hasOperatorName } from '@app/pages/aed-campaign/aed-report-lookup';
 
 export interface GminaFeature {
   type: 'Feature';
@@ -11,7 +12,7 @@ export interface GminaFeature {
 export interface AedOfficialRecord {
   terc: string | null;
   operatorName: string | null;
-  /** Institutions that published the record (source_records[].publisher_name). */
+  /** Institutions that published the record (source_records[].publisher_name; the dysponent for its own publication). */
   publishers: string[];
   /**
    * False when operator_name is not a confirmed dysponent: L4 fills municipal records from the source's location
@@ -34,7 +35,7 @@ export interface GminaCoverage {
   name: string;
   status: GminaStatus;
   officialCount: number;
-  /** Dysponenci (operator_name) of the official records in the gmina. */
+  /** Confirmed dysponenci (operator_name of records with confirmedOperator) in the gmina. */
   operators: string[];
   /** Data publishers of the official records in the gmina. */
   publishers: string[];
@@ -45,7 +46,10 @@ export interface CoverageSummary {
   records: number;
   /** Unique data publishers (source_records[].publisher_name). */
   publishers: number;
-  /** Unique dysponenci: operator_name values that are not empty and not a "nieustalony" placeholder. */
+  /**
+   * Unique confirmed dysponenci: operator_name of records with confirmedOperator (L4 rule), skipping empty
+   * values and "nieustalony" placeholders.
+   */
   confirmedOperators: number;
   gminyCovered: number;
   /** Number of gminy in the boundary file (PRG). */
@@ -128,15 +132,6 @@ function locate(index: IndexedGmina[], lat: number, lon: number): string | null 
   return hit ? hit.terc : null;
 }
 
-/**
- * A dysponent counts only with a real name: empty values and "nieustalony" placeholders
- * (e.g. "nieustalony (OpenStreetMap)") are skipped.
- */
-export function isConfirmedOperator(name: string | null | undefined): boolean {
-  const text = (name || '').trim();
-  return text !== '' && !/^nieustalony/i.test(text);
-}
-
 function isCoordinate(value: number | null): boolean {
   return typeof value === 'number' && Number.isFinite(value);
 }
@@ -172,7 +167,7 @@ export function computeCoverage(
   const confirmedOperators = new Set<string>();
   records.forEach((record) => {
     const operator =
-      record.confirmedOperator && isConfirmedOperator(record.operatorName) ? record.operatorName.trim() : null;
+      record.confirmedOperator && hasOperatorName(record.operatorName) ? record.operatorName.trim() : null;
     if (operator) {
       confirmedOperators.add(operator);
     }

@@ -95,9 +95,9 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
           this.report = report;
           this.updateCoverage([]);
           this.state = report ? 'ready' : 'unpublished';
-          this.osmState = report?.osmResourceId ? 'loading' : 'ready';
+          this.osmState = report?.osmLookupFailed ? 'error' : report?.osmResourceId ? 'loading' : 'ready';
           this.changeDetector.detectChanges();
-          if (report && !report.osmResourceId) {
+          if (report && !report.osmResourceId && !report.osmLookupFailed) {
             this.drawMap();
           }
         }),
