@@ -5,22 +5,22 @@ Plik: [mapa-serc-demo.mp4](mapa-serc-demo.mp4), napisy:
 
 | Parametr | Wartość |
 |---|---|
-| Czas trwania | 1 min 57 s |
+| Czas trwania | 1 min 59 s |
 | Obraz | 1920x1080, 30 kl./s, H.264 (High), yuv420p |
 | Dźwięk | AAC 48 kHz stereo, sama muzyka, bez lektora; -16,0 LUFS, szczyt -3,4 dBFS |
 | Napisy | polskie, wypalone w obrazie; ten sam tekst w pliku `.srt` |
-| Rozmiar pliku | 14,8 MB |
+| Rozmiar pliku | 15,1 MB |
 
 ## Układ nagrania
 
 | Czas | Część | Co widać |
 |---|---|---|
-| 0:00-0:18 | Problem | Plansze: ile gmin ma dane o AED w dane.gov.pl, pięć zbiorów AED w dane.gov.pl i ich układy, jeden zbiór w 44 polach wzorcowego zakresu danych, znak akcji |
-| 0:18-0:38 | 1. Dysponent publikuje dane | Kreator "Dodaj dane AED": plik Krosna, przypisanie kolumn, wynik walidacji, publikacja |
-| 0:38-1:04 | 2. Raport zbiorczy: mapa i API | Zbiór "Raport zbiorczy AED", zasoby, licencja, mapa portalu, tabela, odpowiedź API |
-| 1:04-1:34 | 3. Zgłoszenie z kodu QR | Naklejka i karta urządzenia na telefonie, formularz zgłoszenia, panel dysponenta, e-mail |
-| 1:34-1:47 | 4. Strona akcji | Strona Mapa Serc: liczniki, mapa luk, przykład Warszawy |
-| 1:47-1:56 | Wezwanie do działania | Plansza końcowa z adresem repozytorium i kodem QR |
+| 0:00-0:19 | Problem | Plansze: ile gmin ma dane o AED w dane.gov.pl, pięć zbiorów AED w dane.gov.pl i ich układy, jeden zbiór w 44 polach wzorcowego zakresu danych, znak akcji |
+| 0:19-0:39 | 1. Dysponent publikuje dane | Kreator "Dodaj dane AED": plik Krosna, przypisanie kolumn, wynik walidacji, publikacja |
+| 0:39-1:06 | 2. Raport zbiorczy: mapa i API | Zbiór "Raport zbiorczy AED", zasoby, licencja, mapa portalu, tabela, odpowiedź API |
+| 1:06-1:36 | 3. Zgłoszenie z kodu QR | Naklejka i karta urządzenia na telefonie, formularz zgłoszenia, panel dysponenta, e-mail |
+| 1:36-1:49 | 4. Strona akcji | Strona Mapa Serc: liczniki, mapa luk, przykład Warszawy |
+| 1:49-1:58 | Wezwanie do działania | Plansza końcowa z adresem repozytorium i kodem QR |
 
 ## Jak powstało
 
