@@ -77,14 +77,11 @@ Stan na 2026-11-21.
     Automatyczna kontrola axe-core (reguły WCAG 2.0-2.2 A i AA) treści
     nowych stron nie wykazała naruszeń na stronie akcji, karcie urządzenia
     z otwartym formularzem, w publicznym walidatorze i w pierwszym kroku
-    kreatora. Kontrola całego dokumentu (1200 px i 360 px) wykazała:
-    - dwie uwagi w niezmienionej powłoce portalu, obecne także na stronach
-      zbiorów: pasek postępu `ng-progress` bez nazwy
-      (`aria-progressbar-name`) i atrybut odnośnika menu w nagłówku
-      (`aria-allowed-attr`);
-    - jedną uwagę na karcie urządzenia: przy zamkniętym formularzu przycisk
-      "Zgłoś problem" wskazuje atrybutem `aria-controls` formularz, którego
-      jeszcze nie ma w dokumencie (`aria-valid-attr-value`).
+    kreatora. Kontrola całego dokumentu (1200 px i 360 px) wykazała dwie
+    uwagi w niezmienionej powłoce portalu, obecne także na stronach
+    zbiorów: pasek postępu `ng-progress` bez nazwy
+    (`aria-progressbar-name`) i atrybut odnośnika menu w nagłówku
+    (`aria-allowed-attr`).
     Kontrola automatyczna obejmuje tylko część kryteriów; nie wykonano
     testu z czytnikiem ekranu.
 21. Kod portalu pochodzi z oficjalnego wydania (backend 2.62.3, frontend
