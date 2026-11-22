@@ -11,6 +11,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -34,19 +35,26 @@ def find_chrome(explicit):
     sys.exit('Chrome or Chromium not found; pass --chrome <path>')
 
 
+def render(command, target, started):
+    """Run Chrome and judge the result by the file it wrote: headless Chrome can exit non-zero during shutdown
+    (for example with the display asleep) after writing a complete file."""
+    result = subprocess.run(command, capture_output=True, timeout=180)
+    if not target.is_file() or target.stat().st_mtime < started or target.stat().st_size == 0:
+        sys.exit('Chrome did not write {} (exit {}): {}'.format(
+            target.name, result.returncode, result.stderr.decode(errors='replace')[-400:]))
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--chrome')
     args = parser.parse_args()
     chrome = find_chrome(args.chrome)
+    started = time.time() - 1
     with tempfile.TemporaryDirectory() as profile:
-        subprocess.run([chrome, '--headless=new', '--disable-gpu', '--no-first-run', '--user-data-dir=' + profile,
-                        '--no-pdf-header-footer', '--print-to-pdf=' + str(OUTPUT), SOURCE.as_uri()],
-                       check=True, capture_output=True, timeout=180)
-        subprocess.run([chrome, '--headless=new', '--disable-gpu', '--no-first-run', '--user-data-dir=' + profile,
-                        '--hide-scrollbars', '--force-device-scale-factor=1', '--window-size=800,600',
-                        '--screenshot=' + str(COVER), COVER_SOURCE.as_uri()],
-                       check=True, capture_output=True, timeout=180)
+        base = [chrome, '--headless=new', '--disable-gpu', '--no-first-run', '--user-data-dir=' + profile]
+        render(base + ['--no-pdf-header-footer', '--print-to-pdf=' + str(OUTPUT), SOURCE.as_uri()], OUTPUT, started)
+        render(base + ['--hide-scrollbars', '--force-device-scale-factor=1', '--window-size=800,600',
+                       '--screenshot=' + str(COVER), COVER_SOURCE.as_uri()], COVER, started)
     print('{} {:.0f} kB'.format(COVER.name, COVER.stat().st_size / 1024))
     data = OUTPUT.read_bytes()
     pages = len(re.findall(rb'/Type\s*/Page[^s]', data))

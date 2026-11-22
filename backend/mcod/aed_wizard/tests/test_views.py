@@ -73,6 +73,7 @@ class WizardTests(TestCase):
         data = form_data(page.context["form"])
         data["license"] = "cc-by"
         data["data_date"] = "2024-02-19"  # the Krosno layout carries no date: the dysponent enters it
+        data["operator_name"] = "Miejski Ośrodek Sportu w Krośnie"  # no dysponent column: entered by hand
         response = self.client.post(reverse("aed_wizard:mapping"), data)
         self.assertRedirects(response, reverse("aed_wizard:report"), fetch_redirect_response=False)
         report = self.client.get(reverse("aed_wizard:report"))
@@ -140,6 +141,7 @@ class WizardTests(TestCase):
         data = form_data(self.client.get(reverse("aed_wizard:mapping")).context["form"])
         data.pop("map_latitude")
         data["data_date"] = "2024-02-19"
+        data["operator_name"] = "Miejski Ośrodek Sportu w Krośnie"
         self.client.post(reverse("aed_wizard:mapping"), data)
         report = self.client.get(reverse("aed_wizard:report"))
         self.assertTrue(report.context["errors"])
@@ -174,11 +176,56 @@ class WizardTests(TestCase):
         self.upload(self.org, dated.encode("utf-8"))
         page = self.client.get(reverse("aed_wizard:mapping"))
         self.assertEqual(str(page.context["form"]["data_date"].value()), "2024-02-19")
-        self.client.post(reverse("aed_wizard:mapping"), form_data(page.context["form"]))
+        self.client.post(reverse("aed_wizard:mapping"),
+                         dict(form_data(page.context["form"]), operator_name="Miejski Ośrodek Sportu w Krośnie"))
         report = self.client.get(reverse("aed_wizard:report"))
         self.assertContains(report, "Data danych: 2024-02-19 (z pliku: updated_at)")
         self.client.post(reverse("aed_wizard:report"), {"title": "AED Krosno", "update_frequency": "monthly"})
         self.assertEqual(Resource.objects.get().data_date, datetime.date(2024, 2, 19))
+
+    def mapping_post(self, csv_bytes=CITY_CSV, **overrides):
+        self.client.force_login(self.agent)
+        self.upload(self.org, csv_bytes)
+        page = self.client.get(reverse("aed_wizard:mapping"))
+        data = dict(form_data(page.context["form"]), data_date="2024-02-19", **overrides)
+        return page, self.client.post(reverse("aed_wizard:mapping"), data)
+
+    def test_dysponent_is_not_the_uploading_institution_by_default(self):
+        page, response = self.mapping_post()
+        self.assertIn(page.context["form"]["operator_name"].value(), (None, ""))
+        self.assertNotContains(page, 'value="Krosno"')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context["form"].errors["operator_name"])
+
+    def test_dysponent_column_in_the_file_is_used_and_reported(self):
+        text = CITY_CSV.decode("cp1250").replace("; Godziny\r\n", "; Godziny; Dysponent\r\n", 1)
+        text = text.replace("całodobowo\r\n", "całodobowo;Szkoła Podstawowa nr 1\r\n")
+        text = text.replace("Mo-Fr 08:00-16:00\r\n", "Mo-Fr 08:00-16:00;Przychodnia Zdrowie\r\n")
+        _, response = self.mapping_post(text.encode("utf-8"))
+        self.assertRedirects(response, reverse("aed_wizard:report"), fetch_redirect_response=False)
+        report = self.client.get(reverse("aed_wizard:report"))
+        self.assertEqual(report.context["errors"], [])
+        self.assertContains(report, "Dysponent: z pliku (kolumna Dysponent) w 2 rekordach")
+        csv_text = self.client.get(reverse("aed_wizard:converted_csv")).content.decode("utf-8")
+        self.assertIn("Szkoła Podstawowa nr 1", csv_text)
+        self.assertNotIn(",Krosno,Krosno", csv_text)
+
+    def test_entered_dysponent_is_reported_and_published(self):
+        _, response = self.mapping_post(operator_name="Miejski Ośrodek Sportu w Krośnie")
+        self.assertRedirects(response, reverse("aed_wizard:report"), fetch_redirect_response=False)
+        report = self.client.get(reverse("aed_wizard:report"))
+        self.assertContains(report, "Dysponent: wpisany „Miejski Ośrodek Sportu w Krośnie” w 2 rekordach")
+        self.client.post(reverse("aed_wizard:report"), {"title": "AED Krosno", "update_frequency": "monthly"})
+        main = Resource.objects.get().files.get(is_main=True)
+        with main.file.open("rb") as handle:
+            self.assertIn("Miejski Ośrodek Sportu w Krośnie".encode("utf-8"), handle.read())
+
+    def test_placeholder_dysponent_is_refused_by_the_standard(self):
+        _, response = self.mapping_post(operator_name="nieustalony")
+        report = self.client.get(reverse("aed_wizard:report"))
+        self.assertTrue(any("publikacja dysponenta musi wskazać potwierdzonego dysponenta" in error["message"]
+                            for error in report.context["errors"]))
+        self.assertNotContains(report, "Opublikuj zasób")
 
     def test_public_check_reports_without_storing_anything(self):
         before = (Dataset.objects.count(), Resource.objects.count(), AedPublication.objects.count())

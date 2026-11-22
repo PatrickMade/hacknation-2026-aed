@@ -1,5 +1,6 @@
 import {
   hasConfirmedOperator,
+  isDemoRecord,
   isOsmResource,
   isReportDatasetTitle,
   publishersFromSourceRecords,
@@ -72,5 +73,45 @@ describe('hasConfirmedOperator', () => {
     expect(hasConfirmedOperator(municipal, '[]')).toBe(true);
     expect(hasConfirmedOperator(municipal, '["operator_from_location"]')).toBe(false);
     expect(hasConfirmedOperator(municipal, '["operator_unconfirmed"]')).toBe(false);
+  });
+});
+
+describe('isDemoRecord', () => {
+  const demoSource = (attribution: string) =>
+    JSON.stringify([
+      {
+        source_id: 'dysponent:demo-szpital-sw-lukasza',
+        source_record_id: 'DEMO-1',
+        attribution,
+      },
+    ]);
+
+  it('recognises the source marker written by seed_aed_demo', () => {
+    expect(
+      isDemoRecord(demoSource('Szpital Demonstracyjny św. Łukasza (dane demonstracyjne) - dane demonstracyjne')),
+    ).toBe(true);
+  });
+
+  it('does not decide by name: a demo-looking name without the source marker is not demo data', () => {
+    const wizard = JSON.stringify([
+      { source_id: 'dysponent:szpital', source_record_id: '1', attribution: 'Szpital (dane demonstracyjne)' },
+    ]);
+    const municipal = JSON.stringify([
+      { source_id: 'dane.gov.pl:1', publisher_name: 'Urząd', attribution: 'Urząd - dane demonstracyjne' },
+    ]);
+
+    expect(isDemoRecord(wizard)).toBe(false);
+    expect(isDemoRecord(municipal)).toBe(false);
+    expect(isDemoRecord('not json')).toBe(false);
+    expect(isDemoRecord(null)).toBe(false);
+  });
+
+  it('counts a record merged with an official source as official, not demo', () => {
+    const merged = JSON.stringify([
+      { source_id: 'dysponent:demo-szpital', attribution: 'Szpital (dane demonstracyjne) - dane demonstracyjne' },
+      { source_id: 'dane.gov.pl:1', publisher_name: 'Urząd Miasta Lublin' },
+    ]);
+
+    expect(isDemoRecord(merged)).toBe(false);
   });
 });

@@ -1,6 +1,6 @@
 # Ograniczenia prototypu
 
-Stan na 2026-11-21.
+Stan na 2026-11-22.
 
 ## Środowisko i publikacja
 
@@ -18,25 +18,39 @@ Stan na 2026-11-21.
    więc pierwsze uruchomienie trwa dłużej.
 5. Publiczne API portalu (`/1.4`) służy do odczytu. Publikacja odbywa się
    przez panel dostawcy albo mechanizm importu (harvester), a nie przez
-   ogólne API zapisu.
+   ogólne API zapisu. Kreator wymaga konta dostawcy w portalu. Dysponent
+   bez takiego konta (na przykład firma lub wspólnota) występuje o konto
+   dostawcy w dane.gov.pl albo przekazuje dane gminie, która publikuje je
+   w swoim zbiorze; prototyp nie dodaje dla niego osobnej funkcji.
 
 ## Dane
 
-6. Dane w demo to migawki pięciu istniejących zbiorów AED z dane.gov.pl
-   (Krosno, Marki, Przemyśl, Warszawa, Legionowo) z adresem źródła i datą
-   pobrania. Nie są aktualizowane na żywo z produkcji.
+6. Raport czyta pięć istniejących zbiorów AED z dane.gov.pl (Krosno, Marki,
+   Przemyśl, Warszawa, Legionowo) na żywo z publicznego API portalu, tylko
+   do odczytu. Gdy API nie odpowiada, używa datowanych kopii z repozytorium
+   i zapisuje, które źródło i kiedy zostało użyte. Punkty z OpenStreetMap
+   pozostają datowaną kopią. Oprócz rekordów z tych zbiorów demo zawiera
+   12 fikcyjnych rekordów czterech fikcyjnych dysponentów, oznaczonych
+   "(dane demonstracyjne)"; służą do pokazania drogi publikacji przez
+   kreator.
 7. Dla Warszawy nie potwierdzono metody i struktury odpowiedzi API z danymi
    AED; mapowanie tego zbioru jest oznaczone jako niepotwierdzone.
 8. Wpisy ze stron gov.pl i BIP (739 wpisów z 20 źródeł, w tym 137 ze
-   współrzędnymi) służą tylko jako **oznaczone dane demonstracyjne**. Warunki
-   ponownego wykorzystania części stron gminnych nie są rozstrzygnięte.
+   współrzędnymi) posłużyły tylko do rozpoznania problemu. Nie weszły do
+   raportu ani do repozytorium, bo warunki ponownego wykorzystania części
+   stron gminnych nie są rozstrzygnięte.
 9. Żaden rekord nie potwierdza fizycznego istnienia, sprawności ani
    aktualnej dostępności AED. Nie przeprowadzono oględzin ani weryfikacji
-   u dysponentów.
-10. Punkty AED z OpenStreetMap są osobnym zasobem na licencji ODbL 1.0.
-    Selektor licencji w obecnym kodzie portalu nie zawiera ODbL; sposób
-    publikacji takiego zasobu na produkcji trzeba uzgodnić z operatorem
-    portalu. Dane OSM nie wskazują odpowiedzialnego dysponenta.
+   u dysponentów. W rekordach z plików miejskich dysponentem jest
+   instytucja nazwana w opisie lokalizacji w źródle (oznaczenie
+   `operator_from_location`), a wydawcą urząd miasta; żaden z tych
+   dysponentów nie potwierdził danych.
+10. Punkty AED z OpenStreetMap są osobnym zbiorem z tekstem licencji
+    ODbL 1.0 i wymaganym oznaczeniem autorów. Słownik licencji w obecnym
+    kodzie portalu nie zawiera ODbL, więc etykieta licencji odczytywana
+    maszynowo nadal wskazuje CC BY 4.0; sposób publikacji takich danych na
+    produkcji trzeba uzgodnić z operatorem portalu. Dane OSM nie wskazują
+    potwierdzonego dysponenta (oznaczenie `operator_unconfirmed`).
 
 ## Jakość danych i walidacja
 
@@ -52,20 +66,25 @@ Stan na 2026-11-21.
     współrzędne nie dowodzą, że dwa rekordy opisują to samo urządzenie.
 14. Wbudowana mapa portalu czyta dane tabelaryczne. Zasób GeoJSON jest
     do pobrania, bez podglądu na mapie.
-15. Odświeżanie raportu zbiorczego jest zaprojektowane jako codzienne
-    zadanie w tle; w demo uruchamia się je ręcznie.
+15. Raport zbiorczy odświeża codziennie (03:30 UTC) usługa `aed-beat`,
+    dopóki lokalna instancja działa; pierwsze odświeżenie po instalacji
+    uruchamia się ręcznie (`aed_refresh`).
 
 ## Zgłoszenia problemów
 
 16. Formularz zgłoszenia nie zastępuje numeru alarmowego 112 i nie gwarantuje
-    czasu reakcji dysponenta.
+    czasu reakcji dysponenta. Kartę urządzenia, kod QR i ścieżkę zgłoszenia
+    ma każdy z 86 rekordów raportu zbiorczego (po poleceniu
+    `load_aed_report_devices`); punkty z OpenStreetMap ich nie mają, bo nie
+    mają potwierdzonego dysponenta.
 17. Powiadomienia e-mail w demo trafiają do lokalnej skrzynki testowej
     (MailHog), a nie do prawdziwych adresów.
 18. Publiczny formularz zgłoszeń nie ma limitu liczby zgłoszeń z jednego
     źródła ani ochrony przed automatami. Przed wdrożeniem trzeba je dodać.
-19. Treść klauzuli RODO w formularzu i okres przechowywania danych
-    zgłaszającego (usunięcie 30 dni po rozwiązaniu zgłoszenia) to propozycje
-    prototypu. Wymagają potwierdzenia przez administratora danych przed
+19. Formularz zgłoszenia nie wymaga danych osobowych: imię lub podpis
+    i kontakt są opcjonalne. Treść klauzuli RODO i okres przechowywania
+    danych, które zgłaszający poda (usunięcie 30 dni po rozwiązaniu
+    zgłoszenia), to propozycje prototypu. Wymagają potwierdzenia przez administratora danych przed
     użyciem poza demo. Usuwanie wykonuje zadanie okresowe, którego lokalna
     instancja nie uruchamia sama; kopia zgłoszenia wysłana e-mailem do
     dysponenta pozostaje poza portalem.
@@ -74,12 +93,16 @@ Stan na 2026-11-21.
 
 20. Wymagania WCAG 2.2 AA i responsywności (od 360 px) dotyczą nowych stron
     AED. Pozostała część portalu jest bez zmian i poza zakresem audytu.
-    Automatyczna kontrola axe-core (reguły WCAG 2.0-2.2 A i AA) nie wykazała
-    naruszeń na stronie akcji, karcie urządzenia z formularzem
-    i w publicznym walidatorze. W pierwszym kroku kreatora wykazała jedno:
-    trzy linki do pobrania szablonu są mniejsze niż 24 px (kryterium 2.5.8).
-    Kontrola automatyczna obejmuje tylko część kryteriów; nie wykonano testu
-    z czytnikiem ekranu.
+    Automatyczna kontrola axe-core (reguły WCAG 2.0-2.2 A i AA) treści
+    nowych stron nie wykazała naruszeń na stronie akcji, karcie urządzenia
+    z otwartym formularzem, w publicznym walidatorze i w pierwszym kroku
+    kreatora. Kontrola całego dokumentu (1200 px i 360 px) wykazała dwie
+    uwagi w niezmienionej powłoce portalu, obecne także na stronach
+    zbiorów: pasek postępu `ng-progress` bez nazwy
+    (`aria-progressbar-name`) i atrybut odnośnika menu w nagłówku
+    (`aria-allowed-attr`).
+    Kontrola automatyczna obejmuje tylko część kryteriów; nie wykonano
+    testu z czytnikiem ekranu.
 21. Kod portalu pochodzi z oficjalnego wydania (backend 2.62.3, frontend
     3.5.2) na licencji GPLv3. Zmiany i moduły AED podlegają tej samej
     licencji (`LICENSE`, `UPSTREAM.md`). Datowane kopie danych źródłowych

@@ -106,12 +106,25 @@ def conversion_context(organization, state, cleaned):
     source_url = state["source_url"] or "{}/pl/institution/{}".format(settings.BASE_URL, organization.pk)
     return {
         "org_slug": organization.slug,
-        "operator_name": cleaned["operator_name"],
+        "operator_name": cleaned["operator_name"].strip(),
         "source_url": source_url,
         "license_url": LICENSES[cleaned["license"]][1],
         "data_date": cleaned["data_date"].isoformat(),
         "now": timezone.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
+
+
+def records_word(count):
+    return "rekordzie" if count == 1 else "rekordach"
+
+
+def operator_origin(counts, column, entered):
+    parts = []
+    if counts["file"]:
+        parts.append("z pliku (kolumna {}) w {} {}".format(column, counts["file"], records_word(counts["file"])))
+    if counts["entered"]:
+        parts.append("wpisany „{}” w {} {}".format(entered, counts["entered"], records_word(counts["entered"])))
+    return "; ".join(parts) or "brak w pliku i nie wpisano"
 
 
 def data_date_origin(day, detected, origin):
@@ -147,6 +160,8 @@ def mapping_step(request):
             "columns": conversion.columns,
             "license": form.cleaned_data["license"],
             "data_date": form.cleaned_data["data_date"].isoformat(),
+            "operator_origin": operator_origin(conversion.operator_origin, form.mapping().get("operator_name"),
+                                               form.cleaned_data["operator_name"].strip()),
             "data_date_origin": data_date_origin(form.cleaned_data["data_date"].isoformat(), *detected_date),
         })
         save_state(request, state)
@@ -180,7 +195,7 @@ def report(request):
         request, 3, organization=organization, form=form, errors=state["errors"], warnings=state["warnings"],
         records=state["records"], generated_ids=state["generated_ids"], columns=state["columns"],
         license_name=LICENSES[state["license"]][2], data_date=state["data_date"], mark=mark(),
-        data_date_origin=state.get("data_date_origin", ""),
+        data_date_origin=state.get("data_date_origin", ""), operator_origin=state.get("operator_origin", ""),
         preview=preview,
     ))
 
