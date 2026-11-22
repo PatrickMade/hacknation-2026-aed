@@ -25,4 +25,5 @@ Strona `/pl/aed` liczy 4 fikcyjnych dysponentów z `seed_aed_demo` jak dane ofic
 1. [x] Issue APP-65, claim, spec.
 2. [x] RED, potem GREEN: znacznik, liczniki, stan mapy (5 asercji RED); po review: luka przed stanem demonstracyjnym i rekord scalony (2 asercje RED), potem GREEN.
 3. [x] Komponent, teksty, znak w nagłówku.
-4. [ ] Przeglądarka, pełna bramka, PR, review, CI, merge gate.
+4. [x] Przeglądarka (lokalny stos: main 8dcdf64 + ta gałąź, `seed_jury`, `seed_aed_demo`, `aed_refresh` ze źródłami na żywo): liczniki 8 (w tym 4 demonstracyjnych) / 4 (w tym 4) / 86 (w tym 12) / 4 z 2479 i 4 gminy tylko z danymi demonstracyjnymi; legenda: 4 gminy oficjalne, 2124 luki, 4 z ramką demonstracyjną; Kraków, Poznań, Gdańsk i Lublin w tabeli luk z dopiskiem; znak z hasłem w `h1` (alt „Mapa Serc. Wszystkie AED pod ręką.”). axe-core 4.10.2 (WCAG 2.x A/AA) w sekcji strony AED: 0 naruszeń na desktopie i przy 360 px; na całej stronie zostają niezmienione elementy portalu (`#dropdownMenuLink`, `ng-progress`). 360 px bez przewijania w poziomie.
+5. [ ] Pełna bramka, review, CI, merge gate.

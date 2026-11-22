@@ -94,11 +94,6 @@ $mapa-serc-jasna-zielen: #ddf3e6;
     color: $color-text;
   }
 
-  &__swatch--demo {
-    border: 2px dashed #7048e8;
-    background: #e9ecef;
-  }
-
   &__demo-tag {
     font-weight: 400;
     color: $color-text;
@@ -124,6 +119,12 @@ $mapa-serc-jasna-zielen: #ddf3e6;
     border: 1px solid #495057;
 
     &--none {
+      background: #e9ecef;
+    }
+
+    // Same outline as demo-only gminy on the map.
+    &--demo {
+      border: 2px dashed #7048e8;
       background: #e9ecef;
     }
   }
