@@ -161,6 +161,8 @@ services:
       cms: {condition: service_started}
       smtp: {condition: service_started}
     restart: on-failure
+    # 03-admin.conf.template proxies /media to host.docker.internal; plain Linux Docker needs this mapping.
+    extra_hosts: ['host.docker.internal:host-gateway']
     env_file: .env
     environment:
       MCOD_NGINX_FRONTEND: http://frontend:4000
