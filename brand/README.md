@@ -15,6 +15,8 @@ o defibrylatorach AED w portalu dane.gov.pl.
 | `logo/mapa-serc-logo-*` | Znak podstawowy: symbol i nazwa w układzie poziomym |
 | `logo/mapa-serc-logo-haslo-*` | Znak z hasłem |
 | `logo/mapa-serc-symbol-*` | Sam symbol |
+| `logo/mapa-serc-symbol-maly-*` | Symbol w wersji małej, gdy ma mniej niż 32 px wysokości |
+| `logo/mapa-serc-logo-maly-*` | Znak podstawowy z małym symbolem |
 | `naklejka-qr/` | Wzór naklejki z kodem QR do umieszczenia przy urządzeniu |
 | `plakat/` | Wzór plakatu dla dysponentów (SVG, PDF w formacie A4, podgląd PNG) |
 | `tokens.css` | Kolory akcji jako zmienne CSS |
@@ -34,7 +36,12 @@ Pliki mają wliczone pole ochronne, czyli wolny margines wokół znaku.
 - Korzystaj z gotowych plików. Nie składaj znaku z liter, nie rozciągaj go,
   nie obracaj i nie zmieniaj kolorów.
 - Na jasnym tle używaj wersji `kolor`, na ciemnym wersji `negatyw`.
-- Najmniejsza wysokość symbolu: 16 px na ekranie, 5 mm w druku.
+- Gdy symbol ma mniej niż 32 px wysokości na ekranie albo 10 mm w druku,
+  używaj wersji małej (`symbol-maly`, `logo-maly`): ma prostszy kontur oraz
+  większe serce i błyskawicę. Od tego progu w górę używaj wersji pełnej.
+- Najmniejsza wysokość symbolu w wersji małej: 16 px na ekranie, 5 mm w druku.
+- Serce z błyskawicą celowo nawiązuje do międzynarodowego znaku AED
+  zalecanego przez ILCOR, bo ten motyw jest rozpoznawany na całym świecie.
 - Znak nie zastępuje znaku AED i nie oznacza miejsca, w którym jest urządzenie.
 - Obok znaku dane.gov.pl znak akcji stoi jako równorzędny, w odstępie.
   Nie używa orła, biało-czerwonej belki ani barw portalu.
@@ -52,10 +59,13 @@ Kontrast par kolorów według WCAG jest podany w księdze znaku i w `tokens.css`
 
 ## Naklejka z kodem QR
 
-Wzór w `naklejka-qr/` zawiera adres przykładowy. Kod dla konkretnego
+Wzór w `naklejka-qr/` zawiera adresy przykładowe. Kod dla konkretnego
 urządzenia powinien prowadzić do jego karty i do zgłoszenia usterki, które
-trafia do dysponenta. Na dolnym pasku naklejki jest miejsce na identyfikator
-urządzenia i nazwę dysponenta.
+trafia do dysponenta. Pod kodem jest pole na krótki adres karty, dla osób,
+które nie mogą zeskanować kodu, a niżej miejsce na identyfikator urządzenia
+i nazwę dysponenta. Na dolnym pasku jest wiersz "W nagłym zatrzymaniu
+krążenia dzwoń 112"; nie usuwa się go ani nie zmienia. W rogu naklejki jest
+znak z małym symbolem. Zalecany rozmiar: 70 x 93 mm.
 
 ## Hasła
 
@@ -77,7 +87,9 @@ w pełnym brzmieniu, z kropką na końcu.
 
 Wzór w `plakat/` jest przeznaczony do wywieszenia w urzędzie, szkole,
 przychodni albo firmie. Ma format A4 i te same proporcje co A3. Pole
-w prawym górnym rogu to miejsce na znak dysponenta. Treść trzech kroków
+w prawym górnym rogu to miejsce na znak dysponenta. Pod przyciskiem jest
+pole na adres strony, pod którym dysponent udostępnia dane: plakat jest
+drukowany, więc adres musi być widoczny. Treść trzech kroków
 można dopasować do własnej instrukcji; kolorów, kroju i brzmienia haseł
 się nie zmienia.
 
