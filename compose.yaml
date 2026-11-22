@@ -152,6 +152,15 @@ services:
     build:
       context: backend
       dockerfile: docker/nginx/Dockerfile
+    # nginx resolves every upstream once at startup and exits if a name is missing,
+    # so start it after the proxied services and restart it if it still loses that race.
+    depends_on:
+      frontend: {condition: service_started}
+      api: {condition: service_started}
+      admin: {condition: service_started}
+      cms: {condition: service_started}
+      smtp: {condition: service_started}
+    restart: on-failure
     env_file: .env
     environment:
       MCOD_NGINX_FRONTEND: http://frontend:4000
