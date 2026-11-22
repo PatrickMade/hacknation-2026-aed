@@ -29,6 +29,20 @@ HackTribe; próba wystąpienia.
 Założenie: format finału (czas, przebieg) nie jest potwierdzony; scenariusz
 zakłada 5 minut i przewiduje pokaz przypadku wybranego przez jury.
 
+## Poprawka po próbie na działającym portalu (APP-76, 2026-11-22)
+
+Próba scenariusza na lokalnej instancji z `main` 9c5696b pokazała trzy luki
+w `scenariusz.md`; poprawka dopisuje je do tekstu:
+
+- suwak promienia filtra odległości zaczyna od 0,1 km i wtedy filtr nic nie
+  znajduje; w scenariuszu 2 trzeba go przesunąć na 0,5 km albo 1 km;
+- po starcie usług tabela punktów OpenStreetMap indeksuje się jeszcze około
+  2 minut, choć kolejki są puste;
+- dwa konta panelu wymagają dwóch profili przeglądarki albo okna prywatnego.
+
+Sprawdzenie: zachowanie lokalnej instancji; kod suwaka
+(`frontend/src/app/shared/slider/slider.component.ts`).
+
 ## Acceptance
 
 1. Suma czasów w scenariuszu wynosi najwyżej 5 minut.
