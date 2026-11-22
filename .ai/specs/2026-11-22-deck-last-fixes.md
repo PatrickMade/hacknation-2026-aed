@@ -7,7 +7,7 @@ Extends: .ai/specs/2026-11-22-deck-final-touch.md
 
 ## Problem
 
-Autor zaakceptował cztery ostatnie poprawki prezentacji przed terminem
+Autor zaakceptował ostatnie poprawki prezentacji przed terminem
 zgłoszenia (2026-11-22 10:00 UTC).
 
 ## Outcome
@@ -34,7 +34,7 @@ Non-goals: runda jurorów, inne slajdy, kod portalu, nagranie.
 2. Kontrola układu slajdów przechodzi.
 3. Oba kody QR ze slajdu 14 odczytane z renderu PDF dają oczekiwane adresy.
 4. Czas nagrania w tekstach równa się długości pliku MP4 w `main` po
-   scaleniu zmiany nagrania (`ffprobe`), zaokrąglonej w dół do sekundy.
+   scaleniu zmiany nagrania (`ffprobe`), zaokrąglonej do sekundy.
 5. Bramka `validation.commands` przechodzi.
 
 ## Progress
