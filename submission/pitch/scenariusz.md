@@ -60,7 +60,8 @@ https://admin.mcod.local/aed/sprawdz-plik/ i plik
    oznaczonych jako dane demonstracyjne."
 2. Zasób CSV, zakładka Mapa: punkty na wbudowanej mapie portalu.
 3. "Opcje mapy", "określ swoją lokalizację", adres "Legionowo, Rynek",
-   promień 1 km, "Zastosuj filtr". Mówię: "To jest Najbliższy AED: ta sama
+   suwak promienia przesunąć na 0,5 km albo 1 km (zaczyna od 0,1 km, przy
+   którym filtr nic nie znajdzie), "Zastosuj filtr". Mówię: "To jest Najbliższy AED: ta sama
    mapa portalu z filtrem odległości." Wymaga internetu (publiczny geokoder
    Nominatim, z którego korzysta portal).
 4. Karta z API: `https://api.mcod.local/1.4/resources/<id zasobu CSV>/data?per_page=1`.
@@ -104,7 +105,9 @@ Najpóźniej 30 minut wcześniej:
 1. Uruchomić portal według `README.md`, sekcja "Uruchomienie od zera"
    (albo `docker compose up -d` na przygotowanej bazie). Jeśli
    https://mcod.local/ nie odpowiada po starcie usług, uruchomić ponownie
-   `docker compose up -d nginx`.
+   `docker compose up -d nginx`. Po starcie usług odczekać około 2 minut:
+   tabela punktów z OpenStreetMap indeksuje się jeszcze, gdy kolejki są
+   już puste, a bez niej mapa luk jest pusta.
 2. Załadować urządzenia i wpis "Najbliższy AED": `load_aed_devices` (dwa
    pliki), `load_aed_report_devices`, `seed_aed_showcase` (README, sekcja
    "Zgłoszenia AED i kody QR").
@@ -115,7 +118,9 @@ Najpóźniej 30 minut wcześniej:
    z lukami.
    Gdy mapa pokazuje 0 luk, wyczyścić cache API (README, "Cache API po
    `aed_refresh`").
-5. Zalogować dwa konta w dwóch oknach: `krosno.agent@mcod.local` (kreator)
+5. Zalogować dwa konta w dwóch osobnych profilach przeglądarki (albo
+   w oknie zwykłym i prywatnym; oba konta korzystają z tego samego adresu
+   panelu): `krosno.agent@mcod.local` (kreator)
    i `demo.agent@mcod.local` (zgłoszenia). Hasła są w lokalnym `.env`;
    nie pokazywać tego pliku na ekranie.
 6. Przygotować karty w kolejności: strona akcji, kreator, zbiór, mapa
