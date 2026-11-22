@@ -1,4 +1,6 @@
 """Integration contract for the local jury seed, 2026-11-21."""
+import io
+import logging
 import os
 from unittest.mock import patch
 
@@ -76,3 +78,22 @@ class JurySeedTests(TestCase):
         with self.assertRaises(CommandError):
             call_command('seed_jury')
         self.assertEqual(before, (User.objects.count(), Organization.objects.count()))
+
+    def test_fresh_seed_prints_no_signal_tracebacks(self):
+        """A fresh seed must not print signal debug records carrying get_or_create's handled DoesNotExist."""
+        records = []
+        handler = logging.Handler(level=logging.DEBUG)
+        handler.emit = records.append
+        signals = logging.getLogger('signals')
+        # Force DEBUG so the test cannot pass vacuously under settings that log signals at INFO.
+        self.addCleanup(signals.setLevel, signals.level)
+        signals.setLevel(logging.DEBUG)
+        level = signals.level
+        signals.addHandler(handler)
+        self.addCleanup(signals.removeHandler, handler)
+        out = io.StringIO()
+        call_command('seed_jury', stdout=out)
+        self.assertIn('Jury seed complete', out.getvalue())
+        self.assertEqual(Organization.objects.count(), 6)
+        self.assertEqual([r.getMessage() for r in records if r.exc_info and r.exc_info[0]], [])
+        self.assertEqual(signals.level, level)

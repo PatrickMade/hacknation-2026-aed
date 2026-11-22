@@ -186,3 +186,27 @@ class FetchTests(SimpleTestCase):
         get.return_value = response
         with self.assertRaisesMessage(readers.SourceError, "bez adresu docelowego"):
             readers.fetch("https://files.example/aed.csv")
+
+
+class DataDateTests(SimpleTestCase):
+    """APP-61: the resource data date comes from the data, never silently from today."""
+
+    def detect(self, text):
+        return mapping.detect_data_date(readers.read("aed.csv", text.encode("utf-8")))
+
+    def test_source_data_date_wins_over_record_timestamps(self):
+        sources = json.dumps([{"source_id": "x", "source_data_date": "2024-02-19"}]).replace('"', '""')
+        older = json.dumps([{"source_id": "x", "source_data_date": "2023-05-01"}]).replace('"', '""')
+        text = ('name,source_records,updated_at\r\nA,"{}",2026-11-20T10:00:00Z\r\n'
+                'B,"{}",2026-11-21T10:00:00Z\r\n').format(sources, older)
+        self.assertEqual(self.detect(text), ("2024-02-19", "source_records.source_data_date"))
+
+    def test_updated_at_then_retrieved_at_give_the_latest_valid_day(self):
+        text = ("name,updated_at,retrieved_at\r\nA,2024-02-18T23:00:00Z,2026-11-01T00:00:00Z\r\n"
+                "B,2024-02-19T08:00:00Z,\r\nC,nie wiem,\r\n")
+        self.assertEqual(self.detect(text), ("2024-02-19", "updated_at"))
+        text = "name,retrieved_at\r\nA,2026-11-01T00:00:00Z\r\n"
+        self.assertEqual(self.detect(text), ("2026-11-01", "retrieved_at"))
+
+    def test_a_file_without_dates_has_no_data_date(self):
+        self.assertEqual(mapping.detect_data_date(readers.read("krosno.csv", CITY_CSV)), (None, None))

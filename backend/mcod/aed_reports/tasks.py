@@ -14,4 +14,5 @@ def purge_reporter_data_task():
 
 def register_beat_schedule():
     from mcod.celeryapp import app
-    app.conf.beat_schedule.setdefault('aed-reporter-data-retention', {'task': TASK_NAME, 'schedule': crontab(minute=15, hour=4)})
+    app.conf.beat_schedule.setdefault('aed-reporter-data-retention', {'task': TASK_NAME, 'schedule': crontab(minute=15, hour=4),
+                                                                      'options': {'queue': 'periodic'}})
