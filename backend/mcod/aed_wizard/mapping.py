@@ -42,7 +42,8 @@ ALIASES = {
     "opening_hours": ["opening_hours", "godziny_dostepnosci", "godziny_otwarcia", "godziny", "dostepnosc"],
     "opening_hours_raw": ["opening_hours_raw"],
     "access_notes": ["access_notes", "uwagi", "informacje_dodatkowe"],
-    "operator_name": ["operator_name", "dysponent", "wlasciciel", "operator"],
+    # Not "wlasciciel": a building owner is not the dysponent (aed-standard, operator_name).
+    "operator_name": ["operator_name", "dysponent", "operator"],
     "public_phone": ["public_phone", "phone", "telefon", "tel", "nr_telefonu"],
     "public_email": ["public_email", "email", "e_mail", "adres_email"],
     "manufacturer": ["manufacturer", "producent"],
@@ -229,11 +230,12 @@ def split_address(value):
 
 
 class Conversion:
-    def __init__(self, columns, records, warnings, generated_ids):
+    def __init__(self, columns, records, warnings, generated_ids, operator_origin=None):
         self.columns = columns
         self.records = records
         self.warnings = warnings
         self.generated_ids = generated_ids
+        self.operator_origin = operator_origin or {"file": 0, "entered": 0}
 
     def csv_bytes(self):
         output = io.StringIO()
@@ -249,8 +251,11 @@ def convert(table, mapping, defaults, context, swap_axes=False):
 
     mapping: target -> source column; defaults: field -> constant for empty values;
     context: org_slug, operator_name, source_url, license_url, data_date, now (UTC text).
+    context["operator_name"] is the uploader's entry for rows without a dysponent in the file; it is never
+    the uploading institution by default (APP-63). operator_origin counts records per origin.
     """
     warnings, generated_ids, records = [], 0, []
+    operator_origin = {"file": 0, "entered": 0}
     flags_by_row = {}
     seen_points, seen_addresses = {}, {}
     source_id = "dysponent:" + context["org_slug"]
@@ -271,8 +276,11 @@ def convert(table, mapping, defaults, context, swap_axes=False):
         for field, value in defaults.items():
             if value and not record.get(field):
                 record[field] = value
-        if not record.get("operator_name"):
+        if record.get("operator_name"):
+            operator_origin["file"] += 1
+        elif context.get("operator_name"):
             record["operator_name"] = context["operator_name"]
+            operator_origin["entered"] += 1
         record["country_code"] = "PL"
 
         hours = record.get("opening_hours", "")
@@ -345,7 +353,7 @@ def convert(table, mapping, defaults, context, swap_axes=False):
     names = standard.field_names()
     required = set(standard.required_names())
     columns = [name for name in names if name in required or any(record.get(name) for record in records)]
-    return Conversion(columns, records, warnings, generated_ids)
+    return Conversion(columns, records, warnings, generated_ids, operator_origin)
 
 
 def warning(row, field, message):
