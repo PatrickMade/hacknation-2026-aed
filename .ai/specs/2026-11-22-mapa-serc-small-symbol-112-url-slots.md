@@ -78,8 +78,8 @@ prezentacji i tekstach zgłoszenia.
 
 ## Progress
 
-- [x] 1. Mały symbol i znak z małym symbolem w `brand/logo/`
-- [x] 2. Naklejka: wiersz 112, pole na krótki adres, znak z małym symbolem
-- [x] 3. Plakat: pole na adres strony
-- [x] 4. Księga znaku 1.2 i `brand/README.md`
-- [ ] 5. Bramka walidacji i PR
+- [x] 1. Mały symbol i znak z małym symbolem w `brand/logo/` - 9cd2b38
+- [x] 2. Naklejka: wiersz 112, pole na krótki adres, znak z małym symbolem - 9cd2b38
+- [x] 3. Plakat: pole na adres strony - 9cd2b38
+- [x] 4. Księga znaku 1.2 i `brand/README.md` - 9cd2b38
+- [x] 5. Bramka walidacji i PR (cztery polecenia lokalnie; test portalu i cała bramka w kontroli CI na PR)
