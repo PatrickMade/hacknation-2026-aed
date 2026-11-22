@@ -7,278 +7,382 @@
 </head>
 <body>
 
-<!-- 1. Tytuł -->
-<section class="slajd tytul">
-  <img class="logo" src="img/brand/mapa-serc-logo-haslo-kolor.svg" alt="Mapa Serc - Wszystkie AED pod ręką.">
-  <p class="pod">Jeden standard danych o defibrylatorach AED w portalu dane.gov.pl</p>
-  <p class="maly">HackNation 2026 · zadanie „Misja AED - Dane na ratunek” (Ministerstwo Cyfryzacji, Departament Zarządzania Danymi) · zespół jednoosobowy</p>
-  <div class="stopka"><span>github.com/PatrickMade/hacknation-2026-aed</span><span>1</span></div>
+<!-- 1. Okładka -->
+<section class="s okladka">
+  <img class="logo" src="../../brand/logo/mapa-serc-logo-haslo-kolor.svg" alt="Mapa Serc - Wszystkie AED pod ręką.">
+  <h1 style="font-size:40px; max-width:548px">Mechanizm, który zbiera dane o&nbsp;AED od dysponentów w&nbsp;jeden otwarty zbiór na dane.gov.pl.</h1>
+  <p class="lid">Na start: dane 74 urządzeń z&nbsp;czterech miast, zebrane z&nbsp;plików w&nbsp;czterech różnych układach. Mechanizm działa w&nbsp;oficjalnym kodzie portalu, więc operator niczego nie buduje od zera.</p>
+  <p class="stopa"><b>HackNation 2026</b>, zadanie „Misja AED - Dane na ratunek” Ministerstwa Cyfryzacji<br>Zespół jednoosobowy. Kod: github.com/PatrickMade/hacknation-2026-aed</p>
+  <div class="mapa">
+    <figure class="kadr">
+      <div class="adres">mcod.local/pl/aed, strona akcji w&nbsp;lokalnej kopii portalu</div>
+      <div class="okno"><img src="img/zrzuty/akcja-poczatek.jpg" alt="Strona akcji Mapa Serc w portalu: nagłówek Otwarte Dane, znak, hasło i liczniki"></div>
+      <figcaption><b>Zrzut z&nbsp;działającego prototypu.</b> Strona akcji wewnątrz portalu; liczniki czyta z&nbsp;Raportu zbiorczego AED. W&nbsp;demo 12 z&nbsp;86 rekordów, 4 z&nbsp;8 wydawców i&nbsp;wszyscy 4 potwierdzeni dysponenci to fikcyjne dane demonstracyjne. Adres mcod.local to lokalna kopia portalu dane.gov.pl.</figcaption>
+    </figure>
+  </div>
 </section>
 
-<!-- 2. Problem -->
-<section class="slajd">
-  <h1>Problem: dane o AED są rozproszone i niespójne</h1>
-  <div class="siatka trzy">
-    <div class="karta"><div class="liczba">5</div><p>zbiorów AED w dane.gov.pl (Krosno, Marki, Przemyśl, Warszawa, Legionowo). Każdy ma inny układ kolumn.</p></div>
-    <div class="karta"><div class="liczba">739</div><p>wpisów o AED z 20 źródeł na stronach urzędów (HTML, PDF, mapy). Tylko 137 ma współrzędne.</p></div>
-    <div class="karta"><div class="liczba">18 tys.</div><p>punktów AED w OpenStreetMap: dane społecznościowe (ODbL), bez wskazania odpowiedzialnego dysponenta.</p></div>
+<!-- 2. Stawka -->
+<section class="s noc">
+  <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-negatyw.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>zgodność z tematem wyzwania</b>, waga 15%</span></div>
+  <h1>Gdy serce staje, liczy się minuta. A&nbsp;dziś <em>nikt nie wie, gdzie są wszystkie AED</em>.</h1>
+  <p class="lid">Świadek zatrzymania krążenia potrzebuje defibrylatora w&nbsp;kilka minut. Wytyczne ERC 2025 zalecają, żeby wszystkie publicznie dostępne AED były w&nbsp;rejestrze<sup>1</sup>. W&nbsp;otwartych danych państwa takiego rejestru dziś nie ma.</p>
+  <div class="tresc" style="grid-template-columns: 1fr 1fr 1fr; align-items: start; margin-top: 34px">
+    <div class="kreska" style="padding-top:16px"><div class="liczba">3-6<small>%</small></div><p class="opis-liczby">mniej szans na przeżycie z&nbsp;każdą minutą bez defibrylacji<sup>1</sup></p></div>
+    <div class="kreska" style="padding-top:16px"><div class="liczba">18&nbsp;298</div><p class="opis-liczby">punktów AED w&nbsp;Polsce znają wolontariusze OpenStreetMap<sup>2</sup></p></div>
+    <div class="kreska" style="padding-top:16px"><div class="liczba">74</div><p class="opis-liczby">Tyle AED ma dane do pobrania w&nbsp;dane.gov.pl: cztery miasta, cztery układy pliku<sup>3</sup></p></div>
   </div>
-  <h2 style="margin-top:24px">Przykład: dwa źródła, dwa układy</h2>
-  <div class="siatka dwie" style="flex:0 0 auto">
-    <pre>Krosno (CSV):
-Długość geograficzna,Szerokość geograficzna, Nazwa, Lokalizacja, Adres, Numer Id
-21.72034402175176,49.718809346153336,"Defibrylator","Zespół Krytych Pływalni",...</pre>
-    <pre>Marki (CSV): cały rekord w jednej kolumnie,
-współrzędne w większości zamienione miejscami.
-Udana konwersja do JSON nie oznacza poprawnych danych.</pre>
-  </div>
-  <p class="maly" style="margin-top:14px">Dyspozytor 112, ratownik ani twórca aplikacji nie ma jednego aktualnego źródła, które mówi, gdzie jest AED, kiedy jest dostępny i kto za niego odpowiada.</p>
-  <div class="stopka"><img src="img/brand/mapa-serc-symbol-kolor.svg" alt=""><span>2</span></div>
+  <p class="zrodla"><sup>1</sup> Wytyczne Europejskiej Rady Resuscytacji 2025, „Podstawowe zabiegi resuscytacyjne u dorosłych”, wyd. polskie (prc.krakow.pl), s. 21 pliku PDF: spadek szans na przeżycie do wypisu ze szpitala u pacjentów z rytmem do defibrylacji. <sup>2</sup> Eksport OpenAEDMap dla Polski z 21.11.2026, ODbL. <sup>3</sup> Zbiory 3624, 4955, 4581 i 40593 w dane.gov.pl, pobrane z api.dane.gov.pl 22.11.2026.</p>
+  <span class="nr">2 / 15</span>
 </section>
 
-<!-- 3. Rozwiązanie -->
-<section class="slajd">
-  <h1>Rozwiązanie: mechanizm zbierania danych AED w dane.gov.pl</h1>
-  <div class="przeplyw">
-    <div class="krok"><b>Dysponent</b>gmina, szpital, szkoła, firma</div><div class="strz">→</div>
-    <div class="krok"><b>Kreator</b>plik lub URL, dopasowanie kolumn</div><div class="strz">→</div>
-    <div class="krok"><b>Walidacja</b>wzorcowy zakres danych AED</div><div class="strz">→</div>
-    <div class="krok"><b>Zbiór dysponenta</b>zasób z metadanymi w portalu</div><div class="strz">→</div>
-    <div class="krok"><b>Raport zbiorczy AED</b>CSV z mapą, GeoJSON, API</div><div class="strz">→</div>
-    <div class="krok"><b>Odbiorcy</b>służby, aplikacje, obywatele</div>
-  </div>
-  <div class="siatka dwie">
-    <ul>
-      <li>Oficjalny, otwarty kod portalu dane.gov.pl (backend 2.62.3, frontend 3.5.2, GPLv3), uruchomiony lokalnie. Wygląd portalu poza obszarami AED bez zmian.</li>
-      <li>Za dane odpowiada dysponent: publikuje własny zbiór w swojej instytucji.</li>
-      <li>Zbiór ogólnopolski powstaje automatycznie jako <b>raport zbiorczy</b>, na wzór zbioru 4354 (raport zbiorczy DGA). Wydawca: Ministerstwo Cyfryzacji jako operator portalu.</li>
-    </ul>
-    <ul>
-      <li>Każdy rekord wskazuje dysponenta i prowadzi do zbioru źródłowego (pochodzenie, licencja, data).</li>
-      <li>Kod QR przy urządzeniu prowadzi do jego karty i zgłoszenia problemu wprost do dysponenta.</li>
-      <li>Akcja „Mapa Serc” zachęca do publikacji. Dla dysponentów: „Lista AED w szufladzie nikogo nie uratuje.”</li>
-    </ul>
-  </div>
-  <div class="stopka"><img src="img/brand/mapa-serc-symbol-kolor.svg" alt=""><span>3</span></div>
-</section>
-
-<!-- 4. Wzorcowy zakres danych -->
-<section class="slajd">
-  <h1>Wzorcowy zakres danych AED (aed-standard/)</h1>
-  <div class="siatka tekst-obraz">
+<!-- 3. Przed i po -->
+<section class="s">
+  <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>zgodność z tematem wyzwania</b>, waga 15%</span></div>
+  <h1>Pięć miast ma zbiór o&nbsp;AED w&nbsp;dane.gov.pl. Każdy plik czyta się inaczej, a&nbsp;jeden nie ma danych do pobrania. W&nbsp;Mapie Serc układ jest <em>jeden</em>.</h1>
+  <div class="tresc" style="grid-template-columns: 6fr 5fr; gap: 40px; margin-top:16px">
     <div>
-      <div class="siatka trzy" style="gap:12px;flex:0 0 auto;margin-bottom:18px">
-        <div class="karta"><div class="liczba">43</div><p>pola</p></div>
-        <div class="karta"><div class="liczba">15</div><p>wymaganych</p></div>
-        <div class="karta"><div class="liczba">3</div><p>warunkowe</p></div>
+      <p class="etykieta">Dziś: prawdziwe początki plików z&nbsp;dane.gov.pl</p>
+      <div style="display:grid; gap:8px">
+        <div class="plik"><p class="kto">Krosno <span>(CSV, zbiór 3624)</span></p><pre>Długość geograficzna,Szerokość geograficzna, Nazwa, Lokalizacja, Adres, Numer Id</pre></div>
+        <div class="plik"><p class="kto">Marki <span>(CSV, zbiór 4955)</span></p><pre>"52.326697, 21.107557,""Defibrylator"",""Urząd Miasta Marki "",..."</pre><p class="uwaga">Cały wiersz w&nbsp;jednej komórce; pod nagłówkiem „Długość” stoi szerokość.</p></div>
+        <div class="plik"><p class="kto">Legionowo <span>(CSV, zbiór 40593)</span></p><pre>nazwa,cecha_ulicy,nazwa_ulicy,nr_budynku,nr_lokalu,kod_pocztowy,miejscowosc,kod_terc,kod_simc,szerokosc_geograficzna,dlugosc_geograficzna</pre></div>
+        <div class="plik"><p class="kto">Przemyśl <span>(GeoJSON, zbiór 4581)</span></p><pre>{"properties": {"id": 744, "name": "Defibrylator (AED 9485) w ADM Centrum", ...}}</pre></div>
+        <div class="plik"><p class="kto">Warszawa <span>(zbiór 39512)</span></p><p class="uwaga">Odnośnik do miejskiego API z&nbsp;kluczem: 0 rekordów do pobrania bez klucza.</p></div>
       </div>
-      <ul>
-        <li>Słownik pól w XLSX, szablon CSV, schemat Table Schema, przykład, mapowania 5 zbiorów i OSM, walidator z testami.</li>
-        <li>WGS84, adres z TERYT, dostępność w notacji <code>opening_hours</code>, dysponent, stan, przegląd.</li>
-        <li>Pochodzenie i licencja każdego rekordu (<code>source_records</code>), flagi jakości.</li>
-        <li>Bez danych osobowych: tylko kontakt instytucjonalny.</li>
-      </ul>
     </div>
-    <pre>{
-  "aed_id": "08e3fb61-c3f9-57bf-9b58-aae59c9e7031",
-  "name": "Defibrylator (AED 9485) w ADM Centrum",
-  "latitude": 49.7812096,
-  "longitude": 22.7750936,
-  "locality": "Przemyśl",
-  "operator_name": "Urząd Miejski w Przemyślu",
-  "updated_at": "2026-11-21T17:32:40Z",
-  "source_records": [{
+    <div>
+      <p class="etykieta">W Mapie Serc: jeden rekord wzorcowego zakresu danych</p>
+      <pre class="ciemny-kod" style="font-size:12.5px; line-height:1.45; padding:14px 16px">{
+  <span class="k">"aed_id"</span>: "08e3fb61-c3f9-57bf-9b58-aae59c9e7031",
+  <span class="k">"name"</span>: "Defibrylator (AED 9485) w ADM Centrum",
+  <span class="k">"latitude"</span>: 49.7812096, <span class="k">"longitude"</span>: 22.7750936,
+  <span class="k">"terc"</span>: "1862011",
+  <span class="k">"operator_name"</span>: "Urząd Miejski w Przemyślu",
+  <span class="k">"source_records"</span>: [{
     "source_id": "dane:dataset:4581",
-    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-    "source_data_date": "2024-11-06",
-    "field_provenance": {"operator_name":
-      "wydawca zbioru źródłowego w dane.gov.pl;
-       dysponent do potwierdzenia"}
-  }],
-  "quality_flags": []
+    "publisher_name": "Urząd Miejski w Przemyślu",
+    "license_url": ".../publicdomain/zero/1.0/",
+    "retrieved_at": "2026-11-22T01:33:06Z" }],
+  <span class="k">"quality_flags"</span>: ["operator_from_location"]
 }</pre>
-  </div>
-  <p class="maly">Rekord z raportu zbiorczego w lokalnym portalu (API, fragment). Propozycja na potrzeby zadania, nie obowiązujący standard państwowy.</p>
-  <div class="stopka"><img src="img/brand/mapa-serc-symbol-kolor.svg" alt=""><span>4</span></div>
-</section>
-
-<!-- 5. Kroki dysponenta: kreator -->
-<section class="slajd">
-  <h1>Kroki dysponenta: „Dodaj dane AED” w panelu dostawcy</h1>
-  <div class="siatka obraz-tekst">
-    <figure><img src="img/zrzuty/kreator-kolumny.jpg" alt="Kreator: przypisanie kolumn pliku z Krosna do pól standardu"><figcaption>Krok 2: kreator proponuje przypisanie kolumn pliku z Krosna do pól standardu.</figcaption></figure>
-    <div>
-      <ol>
-        <li>Logowanie do panelu dostawcy jako pełnomocnik lub edytor instytucji.</li>
-        <li>Pobranie szablonu albo wgranie własnego pliku CSV, XLSX, GeoJSON lub podanie URL.</li>
-        <li>Dopasowanie kolumn; wartości domyślne dla pól wymaganych; licencja i data danych.</li>
-        <li>Raport walidacji z błędami do wiersza i pola.</li>
-        <li>Publikacja zasobu z metadanymi (kategoria Zdrowie, słowa kluczowe AED) i znakiem „Zgodny ze standardem AED”.</li>
-      </ol>
+      <p class="podpis" style="margin-top:10px"><b>Rekord z&nbsp;raportu w&nbsp;lokalnym portalu</b> (fragment). Każdy rekord mówi, kto wydał dane, kiedy je pobrano, na jakiej licencji i&nbsp;czy dysponent jest potwierdzony.</p>
     </div>
   </div>
-  <div class="stopka"><img src="img/brand/mapa-serc-symbol-kolor.svg" alt=""><span>5</span></div>
+  <div class="pasmo"><span>dysponent</span><i>&rarr;</i><span>kreator</span><i>&rarr;</i><span>walidator</span><i>&rarr;</i><span>zbiór dysponenta</span><i>&rarr;</i><span>Raport zbiorczy AED</span><i>&rarr;</i><span>mapa i&nbsp;API portalu</span><i>&rarr;</i><span>kod QR przy AED</span><i>&rarr;</i><span>zgłoszenie do dysponenta</span></div>
+  <span class="nr">3 / 15</span>
 </section>
 
-<!-- 6. Raport walidacji i walidator publiczny -->
-<section class="slajd">
-  <h1>Walidacja: raport w kreatorze i publiczny walidator</h1>
-  <div class="siatka dwie">
-    <figure><img src="img/zrzuty/kreator-raport.jpg" alt="Raport walidacji w kreatorze: plik przechodzi kontrolę, znak zgodności"><figcaption>Kreator: 21 rekordów z Krosna przechodzi walidator; zasób dostanie znak zgodności.</figcaption></figure>
-    <figure><img src="img/zrzuty/walidator.jpg" alt="Publiczny walidator: plik z błędami, wiersze i pola błędów"><figcaption>„Sprawdź swój plik”: bez logowania, plik nie jest zapisywany. Zamienione osie i powtórzony identyfikator.</figcaption></figure>
-  </div>
-  <div class="stopka"><img src="img/brand/mapa-serc-symbol-kolor.svg" alt=""><span>6</span></div>
-</section>
-
-<!-- 7. Raport zbiorczy AED -->
-<section class="slajd">
-  <h1>Raport zbiorczy AED: jeden zbiór z pięciu źródeł</h1>
-  <div class="siatka obraz-tekst">
-    <figure><img src="img/zrzuty/raport-mapa.jpg" alt="Wbudowana mapa portalu z punktami raportu zbiorczego AED"><figcaption>Wbudowana mapa portalu: kolumny longitude, latitude, name w rolach l, b, label.</figcaption></figure>
+<!-- 4. Krok 1: kreator -->
+<section class="s">
+  <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>zgodność z zasadami dane.gov.pl</b>, waga 30%</span></div>
+  <h1>Krok 1. Dysponent wgrywa swój plik w&nbsp;panelu dostawcy. Kreator dopasowuje kolumny i&nbsp;sprawdza dane.</h1>
+  <div class="tresc" style="grid-template-columns: 1fr 1fr; gap: 30px; margin-top:16px; align-items:start">
+    <figure class="kadr" style="max-width:520px"><div class="adres">admin.mcod.local/aed/kreator/kolumny/</div><div class="okno"><img src="img/zrzuty/kreator-kolumny.jpg" alt="Kreator: podgląd pliku z Krosna i przypisanie kolumn do pól standardu"></div><figcaption><b>Plik w&nbsp;układzie miasta.</b> Kreator sam proponuje, która kolumna to szerokość, długość i&nbsp;nazwa. Dla pola wymaganego bez kolumny dysponent wybiera wartość dla całego pliku albo „unknown”.</figcaption></figure>
     <div>
-      <ul>
-        <li>Agregator mapuje 5 zbiorów do standardu, waliduje, deduplikuje i zachowuje pochodzenie rekordu.</li>
-        <li>W lokalnym portalu: <b>74 rekordy</b>. Flagi jakości, np. zamienione współrzędne w Markach.</li>
-        <li>Zasoby: CSV z mapą, GeoJSON i osobno <b>18 298 punktów OSM</b> na licencji ODbL 1.0.</li>
-        <li>Częstotliwość: codziennie. Odświeżanie: komenda <code>aed_refresh</code> lub zadanie Celery.</li>
+      <figure class="kadr"><div class="adres">admin.mcod.local/aed/kreator/raport/</div><div class="okno"><img src="img/zrzuty/kreator-raport.jpg" alt="Raport walidacji: plik przechodzi kontrolę walidatora standardu AED"></div></figure>
+      <figure class="kadr" style="margin-top:12px"><div class="adres">ten sam ekran, niżej: publikacja</div><div class="okno"><img src="img/zrzuty/kreator-publikacja.jpg" alt="Publikacja zasobu: oznaczenie zgodności ze standardem AED i tytuł zasobu z datą danych"></div><figcaption><b>21 rekordów zgodnych.</b> Zasób trafia do zbioru instytucji z&nbsp;kategorią Zdrowie i&nbsp;oznaczeniem „Zgodny ze standardem AED”. Datę danych kreator bierze z&nbsp;pliku; gdy plik jej nie ma, dysponent musi ją podać (tu 19.02.2024).</figcaption></figure>
+    </div>
+  </div>
+  <p class="zrodla">Demo: publiczny plik Krosna (zbiór 3624) wgrany kontem testowym pełnomocnika.</p>
+  <span class="nr">4 / 15</span>
+</section>
+
+<!-- 5. Krok 2: zbiór w portalu -->
+<section class="s">
+  <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>zgodność z zasadami dane.gov.pl</b>, waga 30%</span></div>
+  <h1>Krok 2. Portal składa z&nbsp;tych plików Raport zbiorczy AED i&nbsp;codziennie odświeża go z&nbsp;API dane.gov.pl.</h1>
+  <div class="tresc" style="grid-template-columns: 1fr 1fr; gap: 30px; margin-top:16px; align-items:start">
+    <div>
+      <figure class="kadr"><div class="adres">mcod.local/pl/dataset/11,raport-zbiorczy-aed</div><div class="okno"><img src="img/zrzuty/zbior-metadane.jpg" alt="Strona zbioru Raport zbiorczy AED: dostawca, kategoria Zdrowie, częstotliwość Codziennie, daty"></div><figcaption><b>Strona zbioru.</b> Kategoria Zdrowie i&nbsp;częstotliwość „Codziennie”: usługa <code>aed-beat</code> uruchamia odświeżenie o&nbsp;03:30 UTC. Każde pobiera pięć zbiorów na żywo z&nbsp;api.dane.gov.pl, a&nbsp;gdy API nie odpowiada, sięga po datowaną kopię i&nbsp;zapisuje to w&nbsp;opisie zbioru.</figcaption></figure>
+      <figure class="kadr" style="margin-top:12px"><div class="adres">mcod.local/pl/dataset/11/resource/10</div><div class="okno"><img src="img/zrzuty/zasob-naglowek.jpg" alt="Zasób CSV: poziom otwartości danych cztery gwiazdki"></div><figcaption><b>Zasób CSV: 4 z&nbsp;5 gwiazdek otwartości.</b> Obok GeoJSON i&nbsp;JSON-LD do pobrania.</figcaption></figure>
+    </div>
+    <div>
+      <figure class="kadr"><div class="adres">mcod.local/pl/dataset/10</div><div class="okno"><img src="img/zrzuty/zbior-osm.jpg" alt="Osobny zbiór Punkty AED z OpenStreetMap - Polska (ODbL 1.0) z opisem licencji"></div><figcaption><b>Punkty z&nbsp;OpenStreetMap to osobny zbiór</b> z&nbsp;tekstem ODbL 1.0 i&nbsp;uznaniem autorów. Słownik licencji portalu nie ma ODbL, więc etykieta odczytywana maszynowo nadal mówi CC BY 4.0. To sprawa do decyzji operatora.</figcaption></figure>
+      <figure class="kadr" style="margin-top:12px"><div class="adres">zasób CSV raportu, warunki wykorzystywania</div><div class="okno"><img src="img/zrzuty/zasob-licencja.jpg" alt="Licencja raportu: CC BY 4.0 z zachowaniem warunków źródeł; zbiór nie zawiera danych z OpenStreetMap"></div><figcaption><b>Licencja raportu:</b> CC BY 4.0 z&nbsp;zachowaniem warunków źródeł.</figcaption></figure>
+    </div>
+  </div>
+  <span class="nr">5 / 15</span>
+</section>
+
+<!-- 6. Krok 3: mapa i API -->
+<section class="s">
+  <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>zgodność z zasadami dane.gov.pl</b>, waga 30%</span></div>
+  <h1>Krok 3. Te same rekordy widać na wbudowanej mapie portalu i&nbsp;w&nbsp;jego API, bez osobnej aplikacji.</h1>
+  <div class="tresc" style="grid-template-columns: 520px 1fr; gap: 34px; margin-top:16px; align-items:start">
+    <figure class="kadr"><div class="adres">mcod.local/pl/dataset/11/resource/10/map</div><div class="okno"><img src="img/zrzuty/zasob-mapa.jpg" alt="Zakładka Mapa zasobu CSV z punktami raportu na mapie Polski"></div><figcaption><b>85 z&nbsp;86 rekordów na mapie.</b> Jeden punkt z&nbsp;Marek leży poza gminą, więc raport nie publikuje jego pozycji. Mapa to zwykła zakładka zasobu w&nbsp;portalu.</figcaption></figure>
+    <div>
+      <pre class="ciemny-kod maly">GET api.mcod.local/1.4/resources/10/data?per_page=1
+
+<span class="k">"count"</span>: 86
+<span class="k">"name"</span>: "Szkoła Podstawowa nr 2", <span class="k">"locality"</span>: "Marki"
+<span class="k">"latitude"</span>: 52.340344, <span class="k">"longitude"</span>: 21.113589
+<span class="k">"terc"</span>: "1434021"
+<span class="k">"operator_name"</span>: "Szkoła Podstawowa nr 2"</pre>
+      <pre class="ciemny-kod maly" style="margin-top:8px">GET api.mcod.local/catalog/dataset/11.rdf
+
+<span class="k">dct:title</span> "Raport zbiorczy AED"
+<span class="k">dct:publisher</span> .../institution/11,aed-operator-portalu
+<span class="k">dct:accrualPeriodicity</span> .../frequency/DAILY
+<span class="k">dcat:theme</span> .../data-theme/HEAL
+<span class="k">dcat:keyword</span> "AED", "defibrylator", "raport zbiorczy"</pre>
+      <p class="podpis" style="margin-top:10px; font-size:15px"><b>86 rekordów:</b> 74 z&nbsp;plików czterech miast i&nbsp;12 fikcyjnych, oznaczonych „(dane demonstracyjne)”, które pokazują publikację przez kreator. API zwraca pola wzorcowego zakresu, a&nbsp;metadane zbioru są w&nbsp;RDF ze słownikami DCAT (odpowiedzi w&nbsp;skrócie).</p>
+      <p class="podpis" style="margin-top:8px; font-size:15px">Polecenie <code>seed_aed_showcase</code> dodaje do zakładki PoCoTo wpis „Najbliższy AED”: tę samą mapę z&nbsp;filtrem odległości od podanego adresu.</p>
+    </div>
+  </div>
+  <span class="nr">6 / 15</span>
+</section>
+
+<!-- 7. Mapa luk -->
+<section class="s">
+  <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>kreatywność i innowacyjność</b>, waga 15%</span></div>
+  <h1>W&nbsp;<em style="color:var(--luka)">2124 gminach</em> wolontariusze OpenStreetMap zaznaczyli AED, a&nbsp;dane.gov.pl nie ma o&nbsp;nich danych. Od tych gmin warto zacząć zaproszenia.</h1>
+  <div class="tresc" style="grid-template-columns: 7fr 5fr; gap: 34px; margin-top:16px; align-items:start">
+    <div>
+      <figure class="kadr" style="max-width:600px"><div class="adres">mcod.local/pl/aed, sekcja „Gdzie brakuje danych o AED”</div><div class="okno"><img src="img/zrzuty/akcja-mapa-zblizenie.jpg" alt="Mapa gmin wokół Warszawy: zielone z oficjalnymi danymi, pomarańczowe z lukami"></div></figure>
+      <p class="podpis">Okolice Warszawy. Zielone: Legionowo i&nbsp;Marki. Warszawa jest pomarańczowa: ma zbiór w&nbsp;portalu, ale dane tylko przez miejskie API z&nbsp;kluczem. Gdy dysponent opublikuje dane, jego gmina zmienia kolor na zielony.</p>
+    </div>
+    <div>
+      <p class="etykieta">Lista do zaproszenia: najwięcej AED w&nbsp;OSM, brak danych w&nbsp;dane.gov.pl</p>
+      <table class="ciasna">
+        <tr><td>Warszawa</td><td class="r"><b>1078</b></td></tr>
+        <tr><td>Wrocław</td><td class="r"><b>403</b></td></tr>
+        <tr><td>Kraków</td><td class="r"><b>353</b></td></tr>
+        <tr><td>Poznań</td><td class="r"><b>346</b></td></tr>
+        <tr><td>Gdańsk</td><td class="r"><b>272</b></td></tr>
+      </table>
+      <figure class="kadr" style="margin-top:12px"><div class="adres">ta sama strona: legenda mapy</div><div class="okno"><img src="img/zrzuty/akcja-legenda.jpg" alt="Legenda mapy: oficjalne dane 8 gmin, luka w 2120 gminach, brak danych w 351 gminach; mapa porównuje tylko dwa źródła"></div></figure>
+    </div>
+  </div>
+  <p class="zrodla">Prawdziwe dane mają 4 gminy, luki 2124, a&nbsp;351 nie ma danych z&nbsp;żadnego źródła (razem 2479). Strona demo pokazuje 8 zielonych gmin i&nbsp;2120 luk, bo Gdańsk, Kraków, Poznań i&nbsp;Lublin mają fikcyjne rekordy demonstracyjne; tytuł i&nbsp;lista ich nie liczą. Mapa porównuje tylko Raport zbiorczy AED i&nbsp;OpenStreetMap. Granice gmin: PRG, GUGiK.</p>
+  <span class="nr">7 / 15</span>
+</section>
+
+<!-- 8. Kod QR -->
+<section class="s">
+  <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>kreatywność i innowacyjność</b>, waga 15%</span></div>
+  <h1>Każdy rekord raportu ma kartę z&nbsp;kodem QR. Zgłoszenie trafia do instytucji, która odpowiada za jego dane.</h1>
+  <div class="tresc" style="grid-template-columns: 200px 232px 1fr; gap: 26px; margin-top:16px; align-items:start">
+    <div class="krok"><p class="tyt"><span class="n">1</span>Karta rekordu z&nbsp;raportu</p><figure class="kadr"><div class="adres">/pl/aed/4b6e…, 360 px</div><div class="okno"><img src="img/zrzuty/telefon-karta.jpg" alt="Karta urządzenia AED z Urzędu Miasta Krosna na telefonie: znak Mapa Serc z hasłem, adres, dysponent i przycisk Zgłoś problem"></div></figure></div>
+    <div class="krok"><p class="tyt"><span class="n">2</span>Zgłoszenie bez danych osobowych</p><figure class="kadr"><div class="adres">formularz, 360 px</div><div class="okno"><img src="img/zrzuty/telefon-formularz.jpg" alt="Formularz zgłoszenia problemu z AED na telefonie: imię lub podpis jest opcjonalne"></div></figure></div>
+    <div class="krok"><p class="tyt"><span class="n">3</span>Zgłoszenie widzi tylko ta instytucja; dostaje też e-mail</p>
+      <figure class="kadr" style="max-width:630px"><div class="adres">admin.mcod.local/aed_reports/aedincidentreport/</div><div class="okno"><img src="img/zrzuty/zgloszenia-panel.jpg" alt="Lista zgłoszeń w panelu dysponenta"></div></figure>
+      <figure class="kadr" style="max-width:630px; margin-top:10px"><div class="adres">e-mail do dysponenta, lokalna skrzynka testowa</div><div class="okno"><img src="img/zrzuty/zgloszenie-email.jpg" alt="E-mail ze zgłoszeniem do dysponenta: zgłaszający i kontakt nie podano"></div></figure>
+    </div>
+  </div>
+  <p class="zrodla">Kartę ma 86 z&nbsp;86 rekordów; ta to rekord z&nbsp;pliku Krosna, za który w&nbsp;demo odpowiada wydawca pliku (urząd miasta). Zgłoszenia na zrzutach dotyczą urządzenia fikcyjnego. Formularz nie zastępuje numeru 112. Podpis i&nbsp;kontakt są usuwane 30 dni po rozwiązaniu zgłoszenia; informacja o&nbsp;danych to wzór do weryfikacji prawnej.</p>
+  <span class="nr">8 / 15</span>
+</section>
+
+<!-- 9. Wzorcowy zakres danych -->
+<section class="s">
+  <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>wzorcowy zakres danych</b>, waga 10%</span></div>
+  <h1>Wzorcowy zakres danych ma 44 pola, w&nbsp;tym 15 wymaganych. Kontrola jakości znajduje błędy w&nbsp;prawdziwych plikach.</h1>
+  <div class="tresc" style="grid-template-columns: 7fr 5fr; gap: 36px; margin-top:14px; align-items:start">
+    <div>
+      <table class="ciasna">
+        <tr><th>Grupa pól</th><th class="r">Pola</th><th class="r">Wymagane</th><th>Pola wymagane</th></tr>
+        <tr><td><b>Identyfikacja</b></td><td class="r">3</td><td class="r"><b>3</b></td><td><code>aed_id</code> <code>name</code> <code>location_kind</code></td></tr>
+        <tr><td><b>Miejsce</b></td><td class="r">18</td><td class="r"><b>3</b></td><td><code>coordinate_method</code> <code>country_code</code> <code>indoor</code></td></tr>
+        <tr><td><b>Dostępność</b></td><td class="r">6</td><td class="r"><b>2</b></td><td><code>access</code> <code>locked</code></td></tr>
+        <tr><td><b>Urządzenie i&nbsp;dysponent</b></td><td class="r">11</td><td class="r"><b>2</b></td><td><code>operational_status</code> <code>operator_name</code></td></tr>
+        <tr><td><b>Wiarygodność i&nbsp;pochodzenie</b></td><td class="r">6</td><td class="r"><b>5</b></td><td><code>verification_method</code> <code>source_records</code> <code>retrieved_at</code> <code>updated_at</code> <code>quality_flags</code></td></tr>
+        <tr><td><b>Razem</b></td><td class="r"><b>44</b></td><td class="r"><b>15</b></td><td>oraz 3 warunkowe (współrzędne dla stałego miejsca, strefa czasu) i&nbsp;26 opcjonalnych, np. <code>opening_hours</code>, <code>operator_regon</code></td></tr>
+      </table>
+      <p class="podpis" style="margin-top:8px">Słownik <code>aed-standard/field-dictionary.xlsx</code> opisuje każde pole: polska etykieta, typ, czy wymagane, format, przykład i&nbsp;opis. Obok: Table Schema, szablon CSV i&nbsp;walidator z&nbsp;testami. Podział na grupy porządkuje tylko ten slajd. Kod gminy (<code>terc</code>) raport nadaje z&nbsp;granic PRG: ma go 73 z&nbsp;74 rekordów miast.</p>
+    </div>
+    <div>
+      <p class="etykieta">Co wykryła kontrola jakości w&nbsp;74 rekordach z&nbsp;plików miast</p>
+      <div class="pasek"><span>dysponent niepotwierdzony</span><div><div class="b" style="width:100%"></div></div><span class="ile">74</span></div>
+      <div class="pasek"><span>wiersz w&nbsp;jednej komórce</span><div><div class="b" style="width:10.8%"></div></div><span class="ile">8</span></div>
+      <div class="pasek"><span>zamienione osie</span><div><div class="b" style="width:9.5%"></div></div><span class="ile">7</span></div>
+      <div class="pasek"><span>możliwy duplikat</span><div><div class="b" style="width:5.4%"></div></div><span class="ile">4</span></div>
+      <div class="pasek"><span>punkt poza gminą</span><div><div class="b" style="width:1.4%"></div></div><span class="ile">1</span></div>
+      <p class="podpis" style="font-size:14.5px; margin-top:4px">Wynik zapisuje pole <code>quality_flags</code>. Dysponent to instytucja nazwana w&nbsp;pliku miasta; nikt go jeszcze nie potwierdził.</p>
+      <figure class="kadr" style="margin-top:10px"><div class="adres">admin.mcod.local/aed/sprawdz-plik/</div><div class="okno"><img src="img/zrzuty/walidator-bledy.jpg" alt="Publiczny walidator: plik z błędami, wiersz, pole i opis błędu"></div><figcaption><b>Publiczny walidator</b> wskazuje błąd do wiersza i&nbsp;pola, bez logowania.</figcaption></figure>
+    </div>
+  </div>
+  <p class="zrodla"><b>Czego dane jeszcze nie mówią:</b> w&nbsp;74 z&nbsp;74 rekordów z&nbsp;plików miast sześć z&nbsp;15 pól wymaganych (m.in. dostęp, stan urządzenia, rodzaj lokalizacji) ma jawną wartość „unknown”, bo źródła ich nie podają; brakujących wartości nie zgaduję. Pola oparto na tagach AED w&nbsp;OpenStreetMap, identyfikatorach TERYT i&nbsp;standardzie technicznym portalu; to propozycja, nie obowiązujący standard.</p>
+  <span class="nr">9 / 15</span>
+</section>
+
+<!-- 10. Znak i hasło -->
+<section class="s">
+  <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>logotyp i hasło</b>, waga 25%</span></div>
+  <h1>Znak to mapa Polski z&nbsp;sercem AED. Hasło mówi, po co ta mapa: <em>„Wszystkie AED pod ręką.”</em></h1>
+  <div class="tresc" style="grid-template-columns: 9fr 10fr 6fr; gap: 32px; margin-top:14px; align-items:start">
+    <div>
+      <img src="../../brand/logo/mapa-serc-logo-haslo-kolor.svg" alt="Znak Mapa Serc z hasłem" style="width:100%; display:block; margin-left:-10px">
+      <p style="font-size:18.5px; line-height:1.4; margin-top:2px">Każde urządzenie udostępnione w&nbsp;dane.gov.pl staje się sercem na wspólnej mapie. Zieleń pochodzi z&nbsp;oznakowania AED.</p>
+      <p class="podpis" style="margin-top:10px"><b>To nie jest oznaczenie AED.</b> Białe serce z&nbsp;błyskawicą na zielonym kwadracie wskazuje miejsce urządzenia. Mapa Serc wpisuje serce w&nbsp;kontur kraju i&nbsp;oznacza akcję oraz jej mapę.</p>
+      <div style="display:flex; gap:8px; margin-top:12px; font-size:13px; font-weight:700">
+        <span style="background:#087F45;color:#fff;padding:8px 9px;border-radius:5px">#087F45</span>
+        <span style="background:#0B2E20;color:#fff;padding:8px 9px;border-radius:5px">#0B2E20</span>
+        <span style="background:#DDF3E6;color:#0B2E20;padding:8px 9px;border-radius:5px">#DDF3E6</span>
+        <span style="border:1px solid #BFD0C6;padding:7px 9px;border-radius:5px">#FFFFFF</span>
+      </div>
+    </div>
+    <div>
+      <p class="etykieta">Na stronie akcji w&nbsp;portalu dane.gov.pl</p>
+      <figure class="kadr"><div class="adres">mcod.local/pl/aed</div><div class="okno"><img src="img/zrzuty/akcja-naglowek.jpg" alt="Strona akcji Mapa Serc w portalu, z nagłówkiem dane.gov.pl"></div></figure>
+      <div style="display:flex; align-items:center; gap:12px; margin-top:8px">
+        <div style="background:#0B2E20; border-radius:6px; padding:6px 10px; flex:1"><img src="../../brand/logo/mapa-serc-logo-negatyw.svg" alt="Wersja negatywowa" style="width:100%; display:block"></div>
+        <div style="border:1px solid #BFD0C6; border-radius:6px; padding:6px 10px; flex:1"><img src="../../brand/logo/mapa-serc-logo-mono.svg" alt="Wersja jednobarwna" style="width:100%; display:block"></div>
+      </div>
+      <div style="display:flex; align-items:flex-end; gap:14px; margin-top:6px">
+        <img src="../../brand/logo/mapa-serc-symbol-kolor.svg" alt="" style="height:80px"><img src="../../brand/logo/mapa-serc-symbol-kolor.svg" alt="" style="height:40px"><img src="../../brand/logo/mapa-serc-symbol-kolor.svg" alt="" style="height:27px">
+      </div>
+      <p class="podpis">Symbol w&nbsp;wysokości 48, 24 i&nbsp;16 px. Minimum z&nbsp;księgi znaku to 16 px.</p>
+    </div>
+    <div>
+      <p class="etykieta">Księga znaku (PDF, 12 stron)</p>
+      <div class="miniatury" style="grid-template-columns: 1fr; max-width: 236px">
+        <img src="img/zrzuty/ksiega-hasla.jpg" alt="Strona księgi znaku: hasło główne i hasło dla dysponentów z zasadami użycia">
+        <img src="img/zrzuty/ksiega-pole-ochronne.jpg" alt="Strona księgi znaku: pole ochronne i minimalna wielkość">
+      </div>
+      <p class="podpis">Strony o&nbsp;dwóch hasłach i&nbsp;o&nbsp;polu ochronnym. Księga opisuje też niedozwolone użycia, naklejkę i&nbsp;plakat. W&nbsp;<code>brand/</code>: 3 układy w&nbsp;3 wersjach, każdy w&nbsp;SVG, PNG, JPG i&nbsp;PDF.</p>
+    </div>
+  </div>
+  <span class="nr">10 / 15</span>
+</section>
+
+<!-- 11. Akcja dla dysponentów -->
+<section class="s">
+  <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>logotyp i hasło</b>, waga 25%</span></div>
+  <h1>Do dysponentów akcja mówi wprost: <em>„Lista AED w&nbsp;szufladzie nikogo nie uratuje.”</em></h1>
+  <div class="tresc" style="grid-template-columns: 312px 1fr 226px; gap: 28px; margin-top:14px; align-items:start">
+    <div>
+      <p class="etykieta">Wzór plakatu z&nbsp;księgi znaku</p>
+      <img src="../../brand/plakat/mapa-serc-plakat-dysponent.svg" alt="Plakat dla dysponentów: Lista AED w szufladzie nikogo nie uratuje. Trzy kroki publikacji i wzór naklejki z kodem QR" style="width:100%; display:block; border-radius:6px">
+    </div>
+    <div>
+      <figure class="kadr"><div class="adres">mcod.local/pl/aed, sekcja dla dysponentów</div><div class="okno"><img src="img/zrzuty/akcja-zaproszenie.jpg" alt="Sekcja strony akcji: Masz AED w swojej instytucji? Lista AED w szufladzie nikogo nie uratuje."></div><figcaption><b>To samo hasło działa już w&nbsp;prototypie:</b> sekcja strony akcji prowadzi dysponenta do kreatora.</figcaption></figure>
+      <figure class="kadr" style="margin-top:14px"><div class="adres">panel dostawcy, po walidacji pliku</div><div class="okno"><img src="img/zrzuty/odznaka-zgodnosci.jpg" alt="Oznaczenie zasobu: Zgodny ze standardem AED"></div><figcaption><b>Co dostaje dysponent:</b> oznaczenie „Zgodny ze standardem AED” przy zasobie i&nbsp;zieloną gminę na mapie.</figcaption></figure>
+    </div>
+    <div>
+      <img src="../../brand/naklejka-qr/mapa-serc-naklejka-qr.svg" alt="Naklejka Mapa Serc z kodem QR: Ten AED jest na Mapie Serc" style="width:100%; display:block">
+      <p class="podpis"><b>Naklejka przy urządzeniu:</b> „Ten AED jest na Mapie Serc”. Wzór z&nbsp;księgi znaku.</p>
+    </div>
+  </div>
+  <p class="zrodla">Oba hasła i&nbsp;wzór plakatu są w&nbsp;księdze znaku (<code>brand/plakat/</code>, format A4). „Wszystkie AED pod ręką.” to obietnica dla każdego, kto szuka defibrylatora; „Lista AED w&nbsp;szufladzie nikogo nie uratuje.” to wezwanie do dysponentów. Kanały: pełnomocnicy ds. otwartości danych, panel dostawcy, naklejka przy urządzeniu.</p>
+  <span class="nr">11 / 15</span>
+</section>
+
+<!-- 12. Wdrożenie -->
+<section class="s">
+  <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>zgodność z tematem wyzwania</b>, waga 15%</span></div>
+  <h1>Do wdrożenia potrzeba decyzji operatora portalu, a&nbsp;nie nowego systemu.</h1>
+  <p class="lid" style="font-size:21px; max-width:1000px">Mechanizm korzysta z&nbsp;tego, co dane.gov.pl już ma: instytucji, kont pełnomocnika i&nbsp;edytora, zbiorów, zasobów, mapy i&nbsp;API. W&nbsp;kodzie portalu doszły 3 moduły z&nbsp;testami automatycznymi i&nbsp;5 ekranów: strona akcji, karta urządzenia, walidator, kreator i&nbsp;lista zgłoszeń.</p>
+  <div class="tresc" style="grid-template-columns: 1fr 1fr 1fr; gap: 34px; margin-top:16px; align-items:start">
+    <div>
+      <p class="etykieta">Kto publikuje już dziś</p>
+      <ul class="lista mala">
+        <li>Instytucja z&nbsp;kontem dostawcy w&nbsp;dane.gov.pl: pełnomocnik lub edytor wgrywa plik w&nbsp;kreatorze. Krosno, Marki, Przemyśl i&nbsp;Legionowo mają już swoje pliki w&nbsp;portalu.</li>
+      </ul>
+    </div>
+    <div>
+      <p class="etykieta">Dysponent bez konta w&nbsp;portalu</p>
+      <ul class="lista mala">
+        <li>Firma, wspólnota czy klub ma dwie drogi, obie bez nowej funkcji: wniosek o&nbsp;konto dostawcy w&nbsp;dane.gov.pl albo przekazanie danych gminie, która publikuje je w&nbsp;swoim zbiorze.</li>
+      </ul>
+    </div>
+    <div>
+      <p class="etykieta">Kto korzysta z&nbsp;danych</p>
+      <ul class="lista mala">
+        <li>Mieszkaniec i&nbsp;służby ratunkowe: wpis „Najbliższy AED” w&nbsp;zakładce PoCoTo otwiera mapę raportu z&nbsp;filtrem odległości od adresu. Twórcy aplikacji: API portalu.</li>
       </ul>
     </div>
   </div>
-  <div class="stopka"><img src="img/brand/mapa-serc-symbol-kolor.svg" alt=""><span>7</span></div>
-</section>
-
-<!-- 8. Odbiorca danych -->
-<section class="slajd">
-  <h1>Kroki odbiorcy danych: tabela, API, „Najbliższy AED”</h1>
-  <div class="siatka dwie">
-    <figure><img src="img/zrzuty/raport-tabela.jpg" alt="Podgląd tabeli raportu zbiorczego w portalu"><figcaption>1. Zbiór „Raport zbiorczy AED”: tabela, mapa, pobranie CSV lub GeoJSON.</figcaption></figure>
-    <div style="display:flex;flex-direction:column;gap:14px;min-height:0">
-      <pre>GET /1.4/resources/{id}/data?per_page=2
-→ meta.count: 74, rekordy w polach standardu</pre>
-      <figure style="min-height:0;flex:1"><img src="img/zrzuty/najblizszy-aed.jpg" alt="Wpis Najbliższy AED w zakładce PoCoTo portalu"><figcaption>2. API portalu (JSON). 3. „Najbliższy AED” w zakładce PoCoTo: mapa z filtrem odległości.</figcaption></figure>
-    </div>
-  </div>
-  <div class="stopka"><img src="img/brand/mapa-serc-symbol-kolor.svg" alt=""><span>8</span></div>
-</section>
-
-<!-- 9. Zgłoszenie problemu -->
-<section class="slajd">
-  <h1>Zgłoszenie problemu trafia do właściwego dysponenta</h1>
-  <div class="siatka" style="grid-template-columns: 3fr 4fr 3fr">
-    <figure><img src="img/zrzuty/urzadzenie-mobile.jpg" alt="Karta urządzenia AED na telefonie"><figcaption>Kod QR prowadzi do karty urządzenia (telefon, 360 px).</figcaption></figure>
-    <div>
-      <ol>
-        <li>Skan kodu QR z naklejki przy AED.</li>
-        <li>„Zgłoś problem”: zamknięty, brak urządzenia, uszkodzony, złe dane lub lokalizacja.</li>
-        <li>Kontakt opcjonalny, za zgodą (RODO).</li>
-        <li>Zgłoszenie w panelu tylko tej instytucji, która odpowiada za urządzenie; statusy nowe, w trakcie, rozwiązane; e-mail do dysponenta.</li>
-      </ol>
-      <figure style="margin-top:14px"><img src="img/zrzuty/zgloszenia-panel.jpg" alt="Lista zgłoszeń AED w panelu dysponenta"><figcaption>Panel dysponenta: lista zgłoszeń.</figcaption></figure>
-    </div>
-    <figure><img src="img/brand/mapa-serc-naklejka-qr.svg" alt="Naklejka Mapa Serc z kodem QR" style="border:none;box-shadow:none"><figcaption>Naklejka z kodem QR (wzór z księgi znaku).</figcaption></figure>
-  </div>
-  <p class="maly">Formularz nie zastępuje numeru 112. Urządzenie na zrzutach to fikcyjny rekord demonstracyjny.</p>
-  <div class="stopka"><img src="img/brand/mapa-serc-symbol-kolor.svg" alt=""><span>9</span></div>
-</section>
-
-<!-- 10. Dowody wymagań technicznych -->
-<section class="slajd duzy">
-  <h1>Dowody wymagań technicznych</h1>
-  <table>
-    <tr><th style="width:30%">Wymaganie</th><th>Dowód w prototypie</th></tr>
-    <tr><td>Zasady działania dane.gov.pl</td><td>Instytucja, zbiór, zasób, metadane (opis, kategoria, słowa kluczowe, częstotliwość, licencja, data danych) w panelu i API oficjalnego kodu portalu (slajdy 5-8)</td></tr>
-    <tr><td>Formaty maszynowo czytelne</td><td>CSV (UTF-8, RFC 4180), GeoJSON, JSON z API <code>/1.4</code>, słownik XLSX; bez PDF i DOC jako formatu danych</td></tr>
-    <tr><td>Dane z wielu źródeł w jednym zbiorze</td><td>Raport zbiorczy AED z 5 zbiorów, z pochodzeniem i licencją każdego rekordu; OSM jako osobny zasób ODbL</td></tr>
-    <tr><td>Aktualność</td><td>Częstotliwość „codziennie”, data danych w metadanych, odświeżanie komendą lub zadaniem Celery</td></tr>
-    <tr><td>WCAG i responsywność</td><td>Nowe strony AED w komponentach portalu, układ od 360 px (slajdy 9 i 11). Automatyczna kontrola axe-core (WCAG 2.0-2.2 A i AA): 0 naruszeń na stronie akcji, karcie urządzenia z formularzem i w walidatorze; 1 w kreatorze (linki do szablonu mniejsze niż 24 px)</td></tr>
-    <tr><td>Uruchomienie przez jury</td><td>Jedna konfiguracja Docker Compose, konta demo z seeda, instrukcja w <code>README.md</code></td></tr>
-  </table>
-  <div class="stopka"><img src="img/brand/mapa-serc-symbol-kolor.svg" alt=""><span>10</span></div>
-</section>
-
-<!-- 11. Akcja Mapa Serc -->
-<section class="slajd">
-  <h1>Akcja „Mapa Serc”: strona w portalu i mapa luk w danych</h1>
-  <div class="siatka" style="grid-template-columns: 13fr 5fr 5fr">
-    <figure><img src="img/zrzuty/akcja-liczniki-mapa.jpg" alt="Strona akcji Mapa Serc: liczniki i mapa gmin z lukami w danych"><figcaption>Strona akcji w układzie portalu: 4 instytucje, 74 defibrylatory, 5 z 2479 gmin z oficjalnymi danymi. Pomarańczowe: 2123 gminy, w których AED zna tylko OpenStreetMap.</figcaption></figure>
-    <figure><img src="img/zrzuty/akcja-mobile-liczniki.jpg" alt="Liczniki strony akcji na telefonie"><figcaption>Telefon (360 px): liczniki.</figcaption></figure>
-    <figure><img src="img/zrzuty/akcja-mobile-mapa.jpg" alt="Mapa luk w danych na telefonie"><figcaption>Telefon: mapa luk w danych.</figcaption></figure>
-  </div>
-  <p class="maly">Liczniki i mapa czytają dane raportu zbiorczego i zasobu OSM. Przycisk „Udostępnij swoje AED” prowadzi do kreatora.</p>
-  <div class="stopka"><img src="img/brand/mapa-serc-symbol-kolor.svg" alt=""><span>11</span></div>
-</section>
-
-<!-- 12. Ograniczenia -->
-<section class="slajd duzy">
-  <h1>Ograniczenia</h1>
-  <div class="siatka dwie">
-    <ul>
-      <li>Lokalna instancja portalu; na produkcyjnym dane.gov.pl niczego nie opublikowano.</li>
-      <li>Migawki 5 zbiorów z datą pobrania; wpisy ze stron urzędów tylko jako oznaczone dane demonstracyjne.</li>
-      <li>Brak fizycznej weryfikacji urządzeń: rekord nie potwierdza sprawności ani dostępności AED.</li>
-      <li>OSM na ODbL: selektor licencji portalu nie ma ODbL; publikację trzeba uzgodnić z operatorem.</li>
+  <div style="margin-top:14px">
+    <p class="etykieta">Trzy następne kroki</p>
+    <ul class="lista mala">
+      <li><b>1.</b> Ministerstwo Cyfryzacji jako operator włącza moduły AED na testowym środowisku portalu.</li>
+      <li><b>2.</b> Krosno, Marki, Przemyśl i&nbsp;Legionowo publikują przez kreator i&nbsp;proszą instytucje z&nbsp;ich plików o&nbsp;potwierdzenie danych.</li>
+      <li><b>3.</b> Prawnicy portalu rozstrzygają publikację punktów OSM na ODbL i&nbsp;treść informacji o&nbsp;danych w&nbsp;zgłoszeniach.</li>
     </ul>
-    <ul>
-      <li>Walidator nie sprawdza rejestru TERYT, pełnej gramatyki <code>opening_hours</code> ani danych osobowych w dowolnym tekście.</li>
-      <li>Deduplikacja wskazuje kandydatów; ten sam adres nie dowodzi tego samego urządzenia.</li>
-      <li>Mapa portalu czyta CSV; GeoJSON tylko do pobrania.</li>
-      <li>E-maile w demo trafiają do lokalnej skrzynki testowej (MailHog); formularz zgłoszeń nie ma limitu liczby zgłoszeń.</li>
-    </ul>
+    <p class="podpis" style="margin-top:10px"><b>Poza prototypem:</b> potwierdzenie dysponentów 74 rekordów z&nbsp;plików miast, podłączenie raportu do systemu 112, potwierdzanie, że urządzenie działa, i&nbsp;ODbL w&nbsp;słowniku licencji portalu.</p>
   </div>
-  <p class="maly">Pełna lista: submission/ograniczenia.md</p>
-  <div class="stopka"><img src="img/brand/mapa-serc-symbol-kolor.svg" alt=""><span>12</span></div>
+  <p class="zrodla">Pełna lista ograniczeń: <code>submission/ograniczenia.md</code>.</p>
+  <span class="nr">12 / 15</span>
 </section>
 
-<!-- 13. Użycie AI -->
-<section class="slajd duzy">
-  <h1>Zakres użycia AI (regulamin zadania, § 2 ust. 8)</h1>
-  <div class="siatka dwie">
+<!-- 13. Prośba, rezultaty, AI -->
+<section class="s" style="background:var(--jasna)">
+  <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt">Kryterium oceny: <b>prezentacja kompletnego rozwiązania</b>, waga 5%</span></div>
+  <h1>Obejrzyj nagranie (1 min 42 s) albo uruchom portal u&nbsp;siebie: kod, dane, znak i&nbsp;nagranie są w&nbsp;jednym repozytorium.</h1>
+  <div class="tresc" style="grid-template-columns: 6fr 5fr; gap: 44px; margin-top:18px; align-items:start">
     <div>
-      <h2>AI przygotowało</h2>
-      <ul>
-        <li>Research zasad i API dane.gov.pl oraz istniejących źródeł AED.</li>
-        <li>Wzorcowy zakres danych, walidator, testy, dokumentację.</li>
-        <li>Konfigurację lokalnego portalu i kod modułów AED (agregator, kreator, zgłoszenia, strona akcji).</li>
-        <li>Projekty znaku i księgi znaku, teksty i slajdy.</li>
-      </ul>
-      <p class="maly">Narzędzia: Claude Code (Claude Opus 5.5, Claude Fable 5.2), Codex (GPT-6.1 Sol).</p>
+      <p class="etykieta">Rezultaty zadania i&nbsp;gdzie je znaleźć</p>
+      <table>
+        <tr><td>Opis projektu</td><td><code>submission/opis-projektu.md</code></td></tr>
+        <tr><td>Prezentacja i&nbsp;nagranie demo</td><td><code>submission/</code> (PDF, MP4 1 min 42 s)</td></tr>
+        <tr><td>Prototyp i&nbsp;kod źródłowy</td><td><code>README.md</code>, <code>backend/mcod/aed_*</code></td></tr>
+        <tr><td>Wzorcowy zakres danych XLSX</td><td><code>aed-standard/field-dictionary.xlsx</code></td></tr>
+        <tr><td>Nazwa, hasło, logo, księga znaku</td><td><code>brand/</code></td></tr>
+        <tr><td>Oświadczenie o użyciu AI</td><td><code>submission/oswiadczenie-ai.md</code></td></tr>
+      </table>
+      <p class="podpis" style="margin-top:12px"><b>Użycie AI (regulamin zadania, § 2 ust. 8).</b> Kod modułów, wzorcowy zakres danych, pliki znaku i&nbsp;tę prezentację napisały narzędzia AI (Claude Code, Codex). Decyzje należały do mnie: moduł wewnątrz portalu, raport zbiorczy na wzór zbioru 4354, punkty OSM jako osobny zbiór, nazwa, hasła i&nbsp;wariant znaku. Dane o&nbsp;prawdziwych urządzeniach pochodzą tylko z&nbsp;plików urzędów i&nbsp;z&nbsp;OpenStreetMap; AI ich nie wytwarzała.</p>
     </div>
     <div>
-      <h2>Człowiek zdecydował</h2>
-      <ul>
-        <li>Architektura: moduł w portalu, raport zbiorczy, OSM osobno.</li>
-        <li>Nazwa, hasło i wariant znaku.</li>
-        <li>Zakres funkcji; akceptacja działania i materiałów przed wysłaniem.</li>
-      </ul>
-      <p class="maly">AI nie wytworzyło danych o rzeczywistych urządzeniach i nic nie publikowało na produkcji. Pełne oświadczenie: submission/oswiadczenie-ai.md</p>
+      <div style="display:grid; grid-template-columns: 200px 200px; gap: 28px">
+        <div><img src="img/qr-repozytorium.svg" alt="Kod QR do repozytorium projektu" style="width:200px; height:200px; display:block; background:#fff; border-radius:8px"><p class="podpis"><b>Repozytorium</b><br>github.com/PatrickMade/<wbr>hacknation-2026-aed</p></div>
+        <div><img src="img/qr-nagranie.svg" alt="Kod QR do nagrania demo" style="width:200px; height:200px; display:block; background:#fff; border-radius:8px"><p class="podpis"><b>Nagranie demo</b><br>1 min 42 s, plik MP4 w&nbsp;repozytorium</p></div>
+      </div>
+      <p style="font-size:19px; line-height:1.4; font-weight:700; margin-top:16px">Uruchomienie: README, 10 poleceń i&nbsp;4 kolejne dla kart urządzeń i&nbsp;wpisu „Najbliższy AED”. Konta demonstracyjne tworzy polecenie <code>seed_jury</code>.</p>
     </div>
   </div>
-  <div class="stopka"><img src="img/brand/mapa-serc-symbol-kolor.svg" alt=""><span>13</span></div>
+  <p class="zrodla">Kod na licencji GPLv3, jak portal. Kopie danych źródłowych zachowują swoje licencje: CC0 1.0, CC BY 4.0 i&nbsp;ODbL 1.0.</p>
+  <span class="nr">13 / 15</span>
 </section>
 
-<!-- 14. Uruchomienie i dalsze kroki -->
-<section class="slajd duzy ciemny">
-  <h1>Uruchomienie i dalsze kroki</h1>
-  <div class="siatka dwie">
+<!-- 14. Załącznik A: zasady portalu -->
+<section class="s">
+  <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt"><span class="zalacznik">Załącznik A.</span> Kryterium oceny: <b>zgodność z zasadami dane.gov.pl</b>, waga 30%</span></div>
+  <h1>Zasada po zasadzie: co jest spełnione, co częściowo, a&nbsp;co wymaga decyzji operatora.</h1>
+  <div class="tresc" style="margin-top:12px; display:block">
+    <table class="ciasna">
+      <tr><th style="width:26%">Zasada portalu</th><th style="width:43%">Stan w&nbsp;prototypie</th><th>Dowód</th></tr>
+      <tr><td><span class="stan pelny"></span><b>Format do odczytu maszynowego</b></td><td>CSV (UTF-8, RFC 4180), GeoJSON, JSON-LD, JSON z&nbsp;API</td><td>4 z&nbsp;5 gwiazdek otwartości (slajd 5)</td></tr>
+      <tr><td><span class="stan pelny"></span><b>Metadane zbioru</b></td><td>Tytuł, opis, słowa kluczowe, dostawca, kategoria Zdrowie, daty; RDF ze słownikami DCAT</td><td>Slajdy 5 i&nbsp;6</td></tr>
+      <tr><td><span class="stan pelny"></span><b>Licencja danych urzędowych</b></td><td>Raport: CC BY 4.0. Źródła: CC0 1.0 i&nbsp;CC BY 4.0, w&nbsp;każdym rekordzie</td><td>Pole <code>license_url</code></td></tr>
+      <tr><td><span class="stan decyzja"></span><b>Licencja punktów OSM</b></td><td>Osobny zbiór z&nbsp;tekstem ODbL 1.0. Słownik licencji portalu nie ma ODbL: etykieta maszynowa mówi CC BY 4.0</td><td>Slajd 5</td></tr>
+      <tr><td><span class="stan pol"></span><b>Publikuje ten, kto odpowiada</b></td><td>Kreator publikuje w&nbsp;zbiorze instytucji (demo: 4 fikcyjne). W&nbsp;74 rekordach miast dysponent z&nbsp;pliku, niepotwierdzony</td><td>Slajdy 4 i&nbsp;9</td></tr>
+      <tr><td><span class="stan pelny"></span><b>Aktualność</b></td><td>Codziennie o&nbsp;03:30 UTC raport pobiera 5 zbiorów z&nbsp;api.dane.gov.pl; przy braku dostępu datowana kopia</td><td>Slajd 5; opis zbioru</td></tr>
+      <tr><td><span class="stan pelny"></span><b>Dostęp przez API portalu</b></td><td><code>/1.4/resources/{id}/data</code>, 86 rekordów</td><td>Slajd 6</td></tr>
+      <tr><td><span class="stan pelny"></span><b>Zbiór bez danych osobowych</b></td><td>Tylko kontakt instytucjonalny; bez nazwisk i&nbsp;prywatnych telefonów</td><td>Słownik pól</td></tr>
+      <tr><td><span class="stan decyzja"></span><b>Dane zgłaszającego problem</b></td><td>Bez wymaganych danych osobowych; podpis i&nbsp;kontakt usuwane 30 dni po rozwiązaniu. Klauzula i&nbsp;okres: do prawnika</td><td>Slajd 8</td></tr>
+    </table>
+  </div>
+  <p class="zrodla"><span class="legenda"><span class="stan pelny"></span>spełnione &nbsp; <span class="stan pol"></span>częściowo &nbsp; <span class="stan decyzja"></span>wymaga decyzji operatora.</span> Dostępność: axe-core (WCAG 2.0-2.2 A i&nbsp;AA) bez naruszeń w&nbsp;treści czterech ekranów AED; stronę akcji i&nbsp;kartę urządzenia sprawdzono też przy 360 px. Dwa zastrzeżenia dotyczą niezmienionej powłoki portalu (<code>submission/ograniczenia.md</code>).</p>
+  <span class="nr">14 / 15</span>
+</section>
+
+<!-- 15. Załącznik B: źródła -->
+<section class="s">
+  <div class="szyna"><span class="znak"><img src="../../brand/logo/mapa-serc-logo-kolor.svg" alt="Mapa Serc"></span><span class="kryt"><span class="zalacznik">Załącznik B.</span> Kryterium oceny: <b>zgodność z tematem wyzwania</b>, waga 15%</span></div>
+  <h1>Źródła raportu: 74 rekordy z&nbsp;czterech miast i&nbsp;12 demonstracyjnych, każdy z&nbsp;datą i&nbsp;licencją.</h1>
+  <div class="tresc" style="grid-template-columns: 9fr 4fr; gap: 36px; margin-top:14px; align-items:start">
+    <table class="ciasna">
+      <tr><th>Wydawca i&nbsp;zbiór</th><th class="r">Rekordy</th><th>Data danych</th><th>Licencja</th><th>Co wykryła kontrola jakości</th></tr>
+      <tr><td>Urząd Miasta Legionowo<br><code>dane.gov.pl/pl/dataset/40593</code></td><td class="r"><b>24</b></td><td>14.09.2026</td><td>CC0 1.0</td><td>możliwe duplikaty (2)</td></tr>
+      <tr><td>Urząd Miasta Krosna<br><code>dane.gov.pl/pl/dataset/3624</code></td><td class="r"><b>21</b></td><td>19.02.2024</td><td>CC0 1.0</td><td>bez uwag</td></tr>
+      <tr><td>Urząd Miejski w&nbsp;Przemyślu<br><code>dane.gov.pl/pl/dataset/4581</code></td><td class="r"><b>21</b></td><td>06.11.2024</td><td>CC0 1.0</td><td>bez uwag</td></tr>
+      <tr><td>Urząd Miasta Marki<br><code>dane.gov.pl/pl/dataset/4955</code></td><td class="r"><b>8</b></td><td>10.07.2025</td><td>CC BY 4.0</td><td>wiersz w&nbsp;jednej komórce (8), zamienione osie (7), możliwe duplikaty (2), punkt poza gminą (1)</td></tr>
+      <tr><td>Urząd m.st. Warszawy<br><code>dane.gov.pl/pl/dataset/39512</code></td><td class="r"><b>0</b></td><td>-</td><td>CC BY 4.0</td><td>tylko metadane; dane za kluczem API</td></tr>
+      <tr><td>4 fikcyjni dysponenci<br>„(dane demonstracyjne)”, przez kreator</td><td class="r"><b>12</b></td><td>-</td><td>CC0 1.0</td><td>dane fikcyjne; pokazują publikację przez dysponenta</td></tr>
+      <tr><td>OpenStreetMap, osobny zbiór<br><code>openaedmap.org</code></td><td class="r"><b>18&nbsp;298</b></td><td>21.11.2026</td><td>ODbL 1.0</td><td>bez telefonów i&nbsp;autorów edycji</td></tr>
+    </table>
     <div>
-      <h2>Prototyp</h2>
-      <ul>
-        <li>Kod: github.com/PatrickMade/hacknation-2026-aed (GPLv3)</li>
-        <li><code>docker compose</code> według <code>README.md</code>, konta demo z <code>seed_jury</code></li>
-        <li>Raport zbiorczy: <code>aed_refresh</code></li>
-      </ul>
-    </div>
-    <div>
-      <h2>Wdrożenie</h2>
-      <ul>
-        <li>Te same mechanizmy w produkcyjnym dane.gov.pl.</li>
-        <li>Pierwsi dysponenci: gminy z istniejącymi zbiorami.</li>
-        <li>Codzienny raport zbiorczy i naklejki z kodem QR przy urządzeniach.</li>
+      <p class="etykieta">Czego ten zbiór nie mówi</p>
+      <ul class="lista">
+        <li style="font-size:18px">Żaden rekord nie potwierdza, że urządzenie <b>istnieje i&nbsp;działa</b>.</li>
+        <li style="font-size:18px">Dysponent 74 rekordów miast pochodzi z&nbsp;opisu w&nbsp;pliku i&nbsp;<b>nie jest potwierdzony</b>.</li>
+        <li style="font-size:18px"><b>739 wpisów</b> o&nbsp;AED znalezionych na stronach urzędów nie weszło do raportu: nie mają licencji, a&nbsp;tylko 137 ma współrzędne.</li>
       </ul>
     </div>
   </div>
-  <img src="img/brand/mapa-serc-logo-haslo-negatyw.svg" alt="Mapa Serc - Wszystkie AED pod ręką." style="width:360px;margin-top:auto">
-  <div class="stopka"><span>HackNation 2026</span><span>14</span></div>
+  <p class="zrodla"><b>Wynik agregacji z&nbsp;22.11.2026, 01:33 UTC (na zrzutach czas polski, 02:33):</b> pięć zbiorów pobranych na żywo z&nbsp;api.dane.gov.pl, 86 rekordów przyjętych, 0 odrzuconych, 7 par współrzędnych naprawionych, 4 możliwe duplikaty oznaczone. Najstarsze dane są z&nbsp;lutego 2024. Licencje kopii zapasowych: <code>backend/data/aed/sources/LICENSES.md</code>.</p>
+  <span class="nr">15 / 15</span>
 </section>
 
 </body>
