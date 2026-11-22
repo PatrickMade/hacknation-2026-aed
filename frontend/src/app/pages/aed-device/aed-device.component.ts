@@ -2,7 +2,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+
+import { AED_CAMPAIGN_BRAND } from '@app/pages/aed-campaign/aed-campaign.brand';
 
 import { SeoService } from '@app/services/seo.service';
 
@@ -32,7 +34,7 @@ const ACCESS_LABELS: Record<string, string> = {
 @Component({
   selector: 'app-aed-device',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './aed-device.component.html',
   styleUrls: ['../../shared/forms/forms.scss', './aed-device.component.scss'],
 })
@@ -41,6 +43,13 @@ export class AedDeviceComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly seoService = inject(SeoService);
   private readonly fb = inject(FormBuilder);
+
+  /** Mapa Serc identity (APP-58): ready logo files copied byte for byte from brand/logo; names from the campaign page. */
+  readonly brand = {
+    ...AED_CAMPAIGN_BRAND,
+    logoSrc: '/assets/aed/mapa-serc-logo-kolor.svg',
+    campaignLink: '/pl/aed',
+  };
 
   readonly state = signal<'loading' | 'ready' | 'not-found' | 'error'>('loading');
   readonly device = signal<AedDevice | null>(null);
@@ -56,7 +65,7 @@ export class AedDeviceComponent implements OnInit {
   readonly form = this.fb.nonNullable.group({
     type: ['', Validators.required],
     description: ['', [Validators.required, Validators.maxLength(2000)]],
-    reporter_name: ['', [Validators.required, Validators.maxLength(200)]],
+    reporter_name: ['', Validators.maxLength(200)], // optional: no personal data required (APP-60)
     contact: ['', Validators.maxLength(200)],
     consent: [false],
   });
