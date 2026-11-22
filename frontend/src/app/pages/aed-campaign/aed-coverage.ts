@@ -1,6 +1,7 @@
 /**
  * Coverage of Polish gminy by published AED data (pure functions, no Angular).
  */
+import { hasOperatorName } from '@app/pages/aed-campaign/aed-report-lookup';
 
 export interface GminaFeature {
   type: 'Feature';
@@ -11,6 +12,13 @@ export interface GminaFeature {
 export interface AedOfficialRecord {
   terc: string | null;
   operatorName: string | null;
+  /** Institutions that published the record (source_records[].publisher_name; the dysponent for its own publication). */
+  publishers: string[];
+  /**
+   * False when operator_name is not a confirmed dysponent: L4 fills municipal records from the source's location
+   * text (flag operator_from_location) and marks OSM candidates with operator_unconfirmed.
+   */
+  confirmedOperator: boolean;
   lat: number | null;
   lon: number | null;
 }
@@ -27,13 +35,22 @@ export interface GminaCoverage {
   name: string;
   status: GminaStatus;
   officialCount: number;
+  /** Confirmed dysponenci (operator_name of records with confirmedOperator) in the gmina. */
   operators: string[];
+  /** Data publishers of the official records in the gmina. */
+  publishers: string[];
   osmCount: number;
 }
 
 export interface CoverageSummary {
   records: number;
-  operators: number;
+  /** Unique data publishers (source_records[].publisher_name). */
+  publishers: number;
+  /**
+   * Unique confirmed dysponenci: operator_name of records with confirmedOperator (L4 rule), skipping empty
+   * values and "nieustalony" placeholders.
+   */
+  confirmedOperators: number;
   gminyCovered: number;
   /** Number of gminy in the boundary file (PRG). */
   gminyTotal: number;
@@ -130,6 +147,7 @@ export function computeCoverage(
 ): CoverageSummary {
   const index = indexGminy(gminy);
   const coverage = new Map<string, GminaCoverage>();
+  const publishersByGmina = new Map<string, Set<string>>();
   const operatorsByGmina = new Map<string, Set<string>>();
   gminy.forEach((feature) => {
     coverage.set(feature.properties.terc, {
@@ -138,23 +156,30 @@ export function computeCoverage(
       status: 'none',
       officialCount: 0,
       operators: [],
+      publishers: [],
       osmCount: 0,
     });
+    publishersByGmina.set(feature.properties.terc, new Set());
     operatorsByGmina.set(feature.properties.terc, new Set());
   });
 
-  const operators = new Set<string>();
+  const publishers = new Set<string>();
+  const confirmedOperators = new Set<string>();
   records.forEach((record) => {
-    const operator = (record.operatorName || '').trim();
+    const operator =
+      record.confirmedOperator && hasOperatorName(record.operatorName) ? record.operatorName.trim() : null;
     if (operator) {
-      operators.add(operator);
+      confirmedOperators.add(operator);
     }
+    const recordPublishers = (record.publishers || []).map((name) => name.trim()).filter(Boolean);
+    recordPublishers.forEach((name) => publishers.add(name));
     let terc = normalizeTerc(record.terc);
     if (!terc || !coverage.has(terc)) {
       terc = isCoordinate(record.lat) && isCoordinate(record.lon) ? locate(index, record.lat, record.lon) : null;
     }
     if (terc) {
       coverage.get(terc).officialCount++;
+      recordPublishers.forEach((name) => publishersByGmina.get(terc).add(name));
       if (operator) {
         operatorsByGmina.get(terc).add(operator);
       }
@@ -171,6 +196,7 @@ export function computeCoverage(
   let gminyCovered = 0;
   let gaps = 0;
   coverage.forEach((gmina) => {
+    gmina.publishers = Array.from(publishersByGmina.get(gmina.terc)).sort((a, b) => a.localeCompare(b, 'pl'));
     gmina.operators = Array.from(operatorsByGmina.get(gmina.terc)).sort((a, b) => a.localeCompare(b, 'pl'));
     if (gmina.officialCount > 0) {
       gmina.status = 'published';
@@ -183,7 +209,8 @@ export function computeCoverage(
 
   return {
     records: records.length,
-    operators: operators.size,
+    publishers: publishers.size,
+    confirmedOperators: confirmedOperators.size,
     gminyCovered,
     gminyTotal: gminy.length,
     gaps,

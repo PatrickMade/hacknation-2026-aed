@@ -1,11 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { from, Observable, of } from 'rxjs';
-import { concatMap, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
+import { forkJoin, from, Observable, of } from 'rxjs';
+import { catchError, concatMap, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 
 import { AED_REPORT_DATASET_TITLE } from '@app/pages/aed-campaign/aed-campaign.brand';
 import { AedOfficialRecord, AedPoint, GminaFeature } from '@app/pages/aed-campaign/aed-coverage';
-import { isOsmResource, isReportDatasetTitle } from '@app/pages/aed-campaign/aed-report-lookup';
+import {
+  hasConfirmedOperator,
+  isOsmDatasetTitle,
+  isOsmResource,
+  isReportDatasetTitle,
+  publishersFromSourceRecords,
+} from '@app/pages/aed-campaign/aed-report-lookup';
 import { ApiModel } from '@app/services/api/api-model';
 import { DatasetService } from '@app/services/dataset.service';
 
@@ -28,6 +34,8 @@ export interface AedReportData {
   records: AedOfficialRecord[];
   /** OpenStreetMap resource of the report, read separately with getOsmPoints(). */
   osmResourceId: string | null;
+  /** True when the separate OpenStreetMap dataset could not be looked up; the official data is still shown. */
+  osmLookupFailed: boolean;
 }
 
 export interface AedOsmData {
@@ -102,23 +110,53 @@ export class AedCampaignService {
           return of(null);
         }
         const osm = resources.find((item) => isOsmResource(item.attributes?.title));
-        return this.getRows(official.id).pipe(
-          map(({ rows, truncated }) => ({
+        return forkJoin({
+          official: this.getRows(official.id),
+          osmLookup: osm ? of({ id: String(osm.id), failed: false }) : this.findOsmResource(),
+        }).pipe(
+          map(({ official: { rows, truncated }, osmLookup }) => ({
             datasetId: String(dataset.id),
             datasetSlug: dataset.attributes?.slug,
             dataDate: official.attributes?.data_date || dataset.attributes?.modified || null,
             truncated,
             records: rows.map((row) => ({
-              // Optional: the raport zbiorczy has no terc column, so the gmina usually comes from coordinates.
+              // 7-digit gmina code from PRG; when missing or unknown, the gmina comes from coordinates.
               terc: row['terc'] ?? null,
               operatorName: row['operator_name'],
+              publishers: publishersFromSourceRecords(row['source_records'], row['operator_name']),
+              confirmedOperator: hasConfirmedOperator(row['source_records'], row['quality_flags']),
               lat: toNumber(row['latitude']),
               lon: toNumber(row['longitude']),
             })),
-            osmResourceId: osm ? String(osm.id) : null,
+            osmResourceId: osmLookup.id,
+            osmLookupFailed: osmLookup.failed,
           })),
         );
       }),
+    );
+  }
+
+  /**
+   * The CSV resource of the separate OpenStreetMap AED dataset (id null when there is none). A failed lookup is
+   * reported as failed instead of failing the report, so the official counters stay visible.
+   */
+  private findOsmResource(): Observable<{ id: string | null; failed: boolean }> {
+    return this.datasetService.getAll({ q: 'AED OpenStreetMap', 'model[terms]': ApiModel.DATASET, per_page: 10 }).pipe(
+      map((response) => response.results.find((item) => isOsmDatasetTitle(item.attributes?.title))),
+      switchMap((dataset) =>
+        dataset
+          ? this.datasetService.getResourcesList(dataset.id, { per_page: 100 }).pipe(
+              map((response) => {
+                const resource = (response.results || []).find(
+                  (item) => (item.attributes?.format || '').toLowerCase() === 'csv',
+                );
+                return resource ? String(resource.id) : null;
+              }),
+            )
+          : of(null),
+      ),
+      map((id) => ({ id, failed: false })),
+      catchError(() => of({ id: null, failed: true })),
     );
   }
 

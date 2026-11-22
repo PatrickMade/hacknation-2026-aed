@@ -95,9 +95,9 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
           this.report = report;
           this.updateCoverage([]);
           this.state = report ? 'ready' : 'unpublished';
-          this.osmState = report?.osmResourceId ? 'loading' : 'ready';
+          this.osmState = report?.osmLookupFailed ? 'error' : report?.osmResourceId ? 'loading' : 'ready';
           this.changeDetector.detectChanges();
-          if (report && !report.osmResourceId) {
+          if (report && !report.osmResourceId && !report.osmLookupFailed) {
             this.drawMap();
           }
         }),
@@ -150,6 +150,13 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
       heading.scrollIntoView({ block: 'start' });
       heading.focus({ preventScroll: true });
     }
+  }
+
+  /** Up to three names, then how many more, so a long list does not stretch the table. */
+  shortList(names: string[]): string {
+    const shown = names.slice(0, 3).join(', ');
+    const more = names.length - 3;
+    return more > 0 ? `${shown} i jeszcze ${this.fmt(more)}` : shown;
   }
 
   fmt(value: number): string {
@@ -218,9 +225,9 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
         /[&<>"']/g,
         (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char],
       );
-    const operators = gmina.operators.length
-      ? `<br>Instytucje: ${gmina.operators.slice(0, 5).map(escape).join(', ')}${gmina.operators.length > 5 ? '…' : ''}`
-      : '';
-    return `<strong>${escape(gmina.name)}</strong><br>AED w oficjalnych danych: ${gmina.officialCount}<br>AED w OpenStreetMap: ${gmina.osmCount}${operators}`;
+    const list = (label: string, names: string[]) =>
+      names.length ? `<br>${label}: ${names.slice(0, 5).map(escape).join(', ')}${names.length > 5 ? '…' : ''}` : '';
+    const institutions = list('Potwierdzeni dysponenci', gmina.operators) + list('Wydawcy danych', gmina.publishers);
+    return `<strong>${escape(gmina.name)}</strong><br>AED w oficjalnych danych: ${gmina.officialCount}<br>AED w OpenStreetMap: ${gmina.osmCount}${institutions}`;
   }
 }
