@@ -9,7 +9,7 @@ NOT_MAPPED = ("", "- nie przypisuj -")
 
 
 class SourceForm(forms.Form):
-    organization = forms.ModelChoiceField(queryset=None, label="Instytucja (dysponent AED)", empty_label=None)
+    organization = forms.ModelChoiceField(queryset=None, label="Instytucja publikująca dane", empty_label=None)
     file = forms.FileField(
         label="Plik CSV, XLSX lub GeoJSON", required=False,
         widget=forms.ClearableFileInput(attrs={"accept": ".csv,.xlsx,.geojson,.json"}),
@@ -62,9 +62,10 @@ class MappingForm(forms.Form):
             self.default_names.append(name)
         self.fields["operator_name"] = forms.CharField(
             label="Dysponent (operator_name) dla rekordów bez dysponenta w pliku", required=False, max_length=300,
-            help_text=("Instytucja odpowiedzialna za urządzenia i odbiór zgłoszeń o nich, np. szkoła, przychodnia "
-                       "lub zarządca obiektu. Nie musi to być instytucja, która wgrywa plik. Wpisz ją, jeśli plik "
-                       "nie ma kolumny dysponenta. Publikacja dysponenta nie może użyć wartości „nieustalony”."),
+            help_text=("Potwierdzona instytucja odpowiedzialna za urządzenia i odbiór zgłoszeń o nich. Nie musi to "
+                       "być instytucja, która wgrywa plik. Nie wpisuj nazwy obiektu ani właściciela budynku bez "
+                       "potwierdzenia dysponenta. Wpisz ją, jeśli plik nie ma kolumny dysponenta. Publikacja "
+                       "dysponenta nie może użyć wartości „nieustalony”."),
             widget=forms.TextInput(attrs={"aria-describedby": "operator-help"}),
         )
         self.fields["license"] = forms.ChoiceField(
