@@ -124,7 +124,7 @@ td code { font-size: 14.5px; background: var(--jasna); padding: 1px 5px; border-
 .lista li:first-child { border-top: 2px solid var(--ciemna); }
 .lista li b { font-weight: 800; }
 .etykieta { font-size: 17px; font-weight: 800; color: var(--ciemna); margin-bottom: 8px; }
-.pasek { display: grid; grid-template-columns: 200px 1fr 46px; align-items: center; gap: 12px; font-size: 16px; padding: 5px 0; }
+.pasek { display: grid; grid-template-columns: 216px 1fr 46px; align-items: center; gap: 12px; font-size: 16px; padding: 5px 0; }
 .pasek code { font-size: 14.5px; }
 .pasek .b { height: 14px; background: var(--zielen); border-radius: 2px; }
 .pasek .ile { font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; }

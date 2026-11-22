@@ -25,9 +25,14 @@ Stan na 2026-11-21.
 
 ## Dane
 
-6. Dane w demo to migawki pięciu istniejących zbiorów AED z dane.gov.pl
-   (Krosno, Marki, Przemyśl, Warszawa, Legionowo) z adresem źródła i datą
-   pobrania. Nie są aktualizowane na żywo z produkcji.
+6. Raport czyta pięć istniejących zbiorów AED z dane.gov.pl (Krosno, Marki,
+   Przemyśl, Warszawa, Legionowo) na żywo z publicznego API portalu, tylko
+   do odczytu. Gdy API nie odpowiada, używa datowanych kopii z repozytorium
+   i zapisuje, które źródło i kiedy zostało użyte. Punkty z OpenStreetMap
+   pozostają datowaną kopią. Oprócz rekordów z tych zbiorów demo zawiera
+   12 fikcyjnych rekordów czterech fikcyjnych dysponentów, oznaczonych
+   "(dane demonstracyjne)"; służą do pokazania drogi publikacji przez
+   kreator.
 7. Dla Warszawy nie potwierdzono metody i struktury odpowiedzi API z danymi
    AED; mapowanie tego zbioru jest oznaczone jako niepotwierdzone.
 8. Wpisy ze stron gov.pl i BIP (739 wpisów z 20 źródeł, w tym 137 ze
@@ -35,11 +40,16 @@ Stan na 2026-11-21.
    ponownego wykorzystania części stron gminnych nie są rozstrzygnięte.
 9. Żaden rekord nie potwierdza fizycznego istnienia, sprawności ani
    aktualnej dostępności AED. Nie przeprowadzono oględzin ani weryfikacji
-   u dysponentów.
-10. Punkty AED z OpenStreetMap są osobnym zasobem na licencji ODbL 1.0.
-    Selektor licencji w obecnym kodzie portalu nie zawiera ODbL; sposób
-    publikacji takiego zasobu na produkcji trzeba uzgodnić z operatorem
-    portalu. Dane OSM nie wskazują odpowiedzialnego dysponenta.
+   u dysponentów. W rekordach z plików miejskich dysponentem jest
+   instytucja nazwana w opisie lokalizacji w źródle (oznaczenie
+   `operator_from_location`), a wydawcą urząd miasta; żaden z tych
+   dysponentów nie potwierdził danych.
+10. Punkty AED z OpenStreetMap są osobnym zbiorem z tekstem licencji
+    ODbL 1.0 i wymaganym oznaczeniem autorów. Słownik licencji w obecnym
+    kodzie portalu nie zawiera ODbL, więc etykieta licencji odczytywana
+    maszynowo nadal wskazuje CC BY 4.0; sposób publikacji takich danych na
+    produkcji trzeba uzgodnić z operatorem portalu. Dane OSM nie wskazują
+    potwierdzonego dysponenta (oznaczenie `operator_unconfirmed`).
 
 ## Jakość danych i walidacja
 
@@ -55,8 +65,9 @@ Stan na 2026-11-21.
     współrzędne nie dowodzą, że dwa rekordy opisują to samo urządzenie.
 14. Wbudowana mapa portalu czyta dane tabelaryczne. Zasób GeoJSON jest
     do pobrania, bez podglądu na mapie.
-15. Odświeżanie raportu zbiorczego jest zaprojektowane jako codzienne
-    zadanie w tle; w demo uruchamia się je ręcznie.
+15. Raport zbiorczy odświeża codziennie (03:30 UTC) usługa `aed-beat`,
+    dopóki lokalna instancja działa; pierwsze odświeżenie po instalacji
+    uruchamia się ręcznie (`aed_refresh`).
 
 ## Zgłoszenia problemów
 

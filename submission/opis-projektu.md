@@ -61,7 +61,7 @@ i prowadzi do jego zbioru źródłowego.
 
 ### Elementy rozwiązania
 
-1. **Wzorcowy zakres danych AED** (`aed-standard/`): słownik 43 pól w XLSX
+1. **Wzorcowy zakres danych AED** (`aed-standard/`): słownik 44 pól w XLSX
    (15 wymaganych, 3 warunkowe, 25 opcjonalnych), szablon CSV, schemat
    maszynowy Table Schema, przykładowy rekord, mapowania pięciu istniejących
    zbiorów i OSM oraz walidator z testami. Lokalizacja w WGS84, adres z kodami
@@ -79,9 +79,10 @@ i prowadzi do jego zbioru źródłowego.
 4. **Agregator i raport zbiorczy AED**: mapowanie istniejących układów do
    standardu, walidacja, deduplikacja z zachowaniem pochodzenia rekordu,
    flagi jakości (np. zamienione współrzędne). Zasoby raportu: CSV
-   ze współrzędnymi, z którego korzysta wbudowana mapa portalu, GeoJSON do
-   pobrania oraz punkty AED z OSM jako osobny zasób na licencji ODbL.
-   Odświeżanie: zadanie okresowe w tle, w demo uruchamiane ręcznie.
+   ze współrzędnymi, z którego korzysta wbudowana mapa portalu, i GeoJSON
+   do pobrania. Punkty AED z OSM są osobnym zbiorem z licencją ODbL.
+   Źródła raport pobiera na żywo z API dane.gov.pl (gdy API nie odpowiada,
+   z datowanych kopii) i odświeża je codziennie zadaniem w tle.
 5. **Strona akcji w portalu**: kampania, liczniki (dysponenci, rekordy AED,
    gminy z danymi na tle 2479 gmin), mapa pokrycia gmin z lukami (gminy,
    w których OpenStreetMap ma punkty AED, a dane.gov.pl nie ma o nich danych;
@@ -175,7 +176,7 @@ i obywatele nie mają jednego aktualnego, maszynowo czytelnego źródła, które
 mówi, gdzie jest AED, kiedy jest dostępny i kto za niego odpowiada.
 
 **Rozwiązanie:** Mechanizm w portalu dane.gov.pl, na jego oficjalnym kodzie:
-wzorcowy zakres danych AED (43 pola, XLSX, CSV, schemat), kreator, w którym
+wzorcowy zakres danych AED (44 pola, XLSX, CSV, schemat), kreator, w którym
 dysponent wgrywa plik, dopasowuje kolumny, poprawia błędy i publikuje dane
 we własnym zbiorze, oraz automatyczny raport zbiorczy AED z mapą, API
 i pochodzeniem każdego rekordu. Zgłoszenia problemów z urządzeniem trafiają

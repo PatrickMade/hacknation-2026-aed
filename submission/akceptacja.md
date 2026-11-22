@@ -15,11 +15,14 @@ punktów 1.6 i 1.8 także "Zgłoszenia AED i kody QR"
 
 - [ ] 1.1 Portal działa pod https://mcod.local/ bez zmian wyglądu poza
       obszarami AED.
-- [ ] 1.2 Zbiór "Raport zbiorczy AED" ma zasoby CSV, GeoJSON i OSM (ODbL);
-      zakładka Mapa pokazuje punkty.
+- [ ] 1.2 Zbiór "Raport zbiorczy AED" ma kategorię Zdrowie i zasoby CSV
+      oraz GeoJSON; zakładka Mapa pokazuje punkty. Punkty z OpenStreetMap
+      są osobnym zbiorem z opisem licencji ODbL 1.0. Opis raportu podaje,
+      że źródła pobrano na żywo z api.dane.gov.pl.
 - [ ] 1.3 API zwraca rekordy raportu: `https://api.mcod.local/1.4/resources/<id CSV>/data`.
 - [ ] 1.4 Kreator: konto pełnomocnika Krosna, "Dodaj dane AED",
-      plik Krosna, przypisanie kolumn, raport walidacji, publikacja.
+      plik Krosna, przypisanie kolumn, data danych podana ręcznie (plik
+      jej nie zawiera), raport walidacji, publikacja.
 - [ ] 1.5 Walidator "Sprawdź swój plik" pokazuje błędy pliku
       z błędami bez logowania.
 - [ ] 1.6 Karta urządzenia i "Zgłoś problem" dla rekordu raportu i dla
@@ -58,7 +61,7 @@ Uwagi:
 
 `aed-standard/field-dictionary.xlsx`
 
-- [ ] 4.1 43 pola z polską etykietą, typem, wymagalnością, formatem,
+- [ ] 4.1 44 pola z polską etykietą, typem, wymagalnością, formatem,
       przykładem i opisem.
 - [ ] 4.2 Brak danych osobowych w zakresie; kontakt tylko instytucjonalny.
 
