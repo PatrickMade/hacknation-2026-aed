@@ -83,8 +83,9 @@ i prowadzi do jego zbioru źródłowego.
    do pobrania. Punkty AED z OSM są osobnym zbiorem z licencją ODbL.
    Źródła raport pobiera na żywo z API dane.gov.pl (gdy API nie odpowiada,
    z datowanych kopii) i odświeża je codziennie zadaniem w tle.
-5. **Strona akcji w portalu**: kampania, liczniki (dysponenci, rekordy AED,
-   gminy z danymi na tle 2479 gmin), mapa pokrycia gmin z lukami (gminy,
+5. **Strona akcji w portalu**: kampania, liczniki (wydawcy danych,
+   potwierdzeni dysponenci, rekordy AED, gminy z danymi na tle 2479 gmin;
+   dane demonstracyjne są podane osobno), mapa pokrycia gmin z lukami (gminy,
    w których OpenStreetMap ma punkty AED, a dane.gov.pl nie ma o nich danych;
    mapa porównuje tylko te dwa źródła) i przycisk prowadzący do kreatora.
 6. **Zgłoszenie problemu do konkretnego dysponenta**: kod QR na naklejce przy

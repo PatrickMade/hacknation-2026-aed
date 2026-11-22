@@ -28,8 +28,11 @@ Stan na 2026-11-22.
 6. Raport czyta pięć istniejących zbiorów AED z dane.gov.pl (Krosno, Marki,
    Przemyśl, Warszawa, Legionowo) na żywo z publicznego API portalu, tylko
    do odczytu. Gdy API nie odpowiada, używa datowanych kopii z repozytorium
-   i zapisuje, które źródło i kiedy zostało użyte. Punkty z OpenStreetMap
-   pozostają datowaną kopią. Oprócz rekordów z tych zbiorów demo zawiera
+   i zapisuje, które źródło i kiedy zostało użyte. Każdy zbiór jest czytany
+   przez zasób o identyfikatorze wpisanym w kod: gdy urząd zastąpi plik
+   nowym zasobem, odświeżanie wraca do datowanej kopii, dopóki ktoś nie
+   poprawi identyfikatora. Punkty z OpenStreetMap pozostają datowaną kopią
+   z 2026-11-21 i nie są odświeżane. Oprócz rekordów z tych zbiorów demo zawiera
    12 fikcyjnych rekordów czterech fikcyjnych dysponentów, oznaczonych
    "(dane demonstracyjne)"; służą do pokazania drogi publikacji przez
    kreator.
@@ -55,7 +58,12 @@ Stan na 2026-11-22.
 ## Jakość danych i walidacja
 
 11. Wzorcowy zakres danych to propozycja przygotowana na potrzeby zadania,
-    a nie obowiązujący standard państwowy.
+    a nie obowiązujący standard państwowy. Zgodność zasobu ze standardem
+    jest oznaczona słowem kluczowym i oznaczeniem w panelu, a nie
+    właściwością `dct:conformsTo` w metadanych RDF. Oznaczenie "Zgodny ze
+    standardem AED" dostaje też plik, w którym dostęp, stan urządzenia
+    i umieszczenie w budynku mają wartość "unknown": standard wymaga
+    jawnej wartości, a nie potwierdzonej informacji.
 12. Walidator sprawdza strukturę, typy, wymagane pola, słowniki, reguły
     między polami i orientacyjną ramkę Polski (48,9-55,1 N, 14-24,2 E).
     Nie sprawdza granic administracyjnych, istnienia kodu w rejestrze TERYT,
@@ -65,10 +73,15 @@ Stan na 2026-11-22.
 13. Deduplikacja wskazuje kandydatów do scalenia. Wspólny adres lub
     współrzędne nie dowodzą, że dwa rekordy opisują to samo urządzenie.
 14. Wbudowana mapa portalu czyta dane tabelaryczne. Zasób GeoJSON jest
-    do pobrania, bez podglądu na mapie.
+    do pobrania, bez podglądu na mapie. Filtr odległości na mapie
+    ("Najbliższy AED") wymaga wpisania adresu, który portal wysyła do
+    publicznego geokodera Nominatim; bez dostępu do internetu filtr nie
+    znajduje adresu.
 15. Raport zbiorczy odświeża codziennie (03:30 UTC) usługa `aed-beat`,
     dopóki lokalna instancja działa; pierwsze odświeżenie po instalacji
-    uruchamia się ręcznie (`aed_refresh`).
+    uruchamia się ręcznie (`aed_refresh`). Zadanie okresowe działa tylko
+    w środowisku lokalnym (`ENVIRONMENT=local`); uruchomienie go
+    w środowisku operatora wymaga jego decyzji i zmiany tego warunku.
 
 ## Zgłoszenia problemów
 
