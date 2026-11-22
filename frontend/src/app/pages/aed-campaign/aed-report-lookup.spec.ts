@@ -105,4 +105,13 @@ describe('isDemoRecord', () => {
     expect(isDemoRecord('not json')).toBe(false);
     expect(isDemoRecord(null)).toBe(false);
   });
+
+  it('counts a record merged with an official source as official, not demo', () => {
+    const merged = JSON.stringify([
+      { source_id: 'dysponent:demo-szpital', attribution: 'Szpital (dane demonstracyjne) - dane demonstracyjne' },
+      { source_id: 'dane.gov.pl:1', publisher_name: 'Urząd Miasta Lublin' },
+    ]);
+
+    expect(isDemoRecord(merged)).toBe(false);
+  });
 });

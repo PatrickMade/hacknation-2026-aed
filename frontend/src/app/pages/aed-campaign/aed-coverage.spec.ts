@@ -224,23 +224,34 @@ describe('computeCoverage', () => {
         lon: 21.2,
       })),
     ];
-    const result = computeCoverage(records, [{ lat: 52.5, lon: 21.5 }], gminy);
+    const withoutOsm = computeCoverage(records, [], gminy);
 
-    expect(result.records).toBe(5);
-    expect(result.demoRecords).toBe(3);
-    expect(result.publishers).toBe(3);
-    expect(result.demoPublishers).toBe(1);
-    expect(result.confirmedOperators).toBe(2);
-    expect(result.demoConfirmedOperators).toBe(1);
-    expect(result.gminyCovered).toBe(2);
-    expect(result.gminyDemoOnly).toBe(1);
-    expect(result.gaps).toBe(0);
-    const warszawa = result.gminy.get('1465011');
+    expect(withoutOsm.records).toBe(5);
+    expect(withoutOsm.demoRecords).toBe(3);
+    expect(withoutOsm.publishers).toBe(3);
+    expect(withoutOsm.demoPublishers).toBe(1);
+    expect(withoutOsm.confirmedOperators).toBe(2);
+    expect(withoutOsm.demoConfirmedOperators).toBe(1);
+    expect(withoutOsm.gminyCovered).toBe(2);
+    expect(withoutOsm.gminyDemoOnly).toBe(1);
+    expect(withoutOsm.gaps).toBe(0);
+    const warszawa = withoutOsm.gminy.get('1465011');
     expect(warszawa.status).toBe('demo');
     expect(warszawa.officialCount).toBe(0);
     expect(warszawa.demoCount).toBe(3);
-    expect(warszawa.osmCount).toBe(1);
-    expect(result.gminy.get('1408011').status).toBe('published');
+    expect(withoutOsm.gminy.get('1408011').status).toBe('published');
+  });
+
+  it('keeps a gmina with OSM points and only demo records counted as a gap in official data', () => {
+    const demo = { operatorName: 'Demo', publishers: ['Demo'], confirmedOperator: true, demo: true, lon: 21.2 };
+    const records = [{ ...demo, terc: null, lat: 52.3 }];
+    const result = computeCoverage(records, [{ lat: 52.5, lon: 21.5 }], gminy);
+
+    expect(result.gminy.get('1465011').status).toBe('gap');
+    expect(result.gminy.get('1465011').demoCount).toBe(1);
+    expect(result.gaps).toBe(1);
+    expect(result.gminyDemoOnly).toBe(1);
+    expect(result.gminyCovered).toBe(0);
   });
 
   it('counts a gmina with official and demo records as official, with only official records in its count', () => {

@@ -64,7 +64,7 @@ export interface CoverageSummary {
   demoConfirmedOperators: number;
   /** Gminy with at least one official (non-demo) record. */
   gminyCovered: number;
-  /** Gminy with demo records only. */
+  /** Gminy with demo records and no official ones (status gap when OSM has points there, otherwise demo). */
   gminyDemoOnly: number;
   /** Number of gminy in the boundary file (PRG). */
   gminyTotal: number;
@@ -232,12 +232,15 @@ export function computeCoverage(
     if (gmina.officialCount > 0) {
       gmina.status = 'published';
       gminyCovered++;
-    } else if (gmina.demoCount > 0) {
-      gmina.status = 'demo';
-      gminyDemoOnly++;
     } else if (gmina.osmCount > 0) {
+      // Demo records do not fill a gap in official data.
       gmina.status = 'gap';
       gaps++;
+    } else if (gmina.demoCount > 0) {
+      gmina.status = 'demo';
+    }
+    if (gmina.officialCount === 0 && gmina.demoCount > 0) {
+      gminyDemoOnly++;
     }
   });
 

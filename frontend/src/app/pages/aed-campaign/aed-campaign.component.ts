@@ -33,12 +33,19 @@ const STATUS_STYLE: Record<GminaStatus, { fillColor: string; fillOpacity: number
   // #087f45 = --mapa-serc-zielen in brand/tokens.css.
   published: { fillColor: '#087f45', fillOpacity: 0.75 },
   gap: { fillColor: '#d9480f', fillOpacity: 0.75 },
-  // Fictional demo data only (seed_aed_demo): a colour apart from official green and gap orange.
-  demo: { fillColor: '#7048e8', fillOpacity: 0.6 },
+  // Demo data only and no OSM points: no official data, so the same fill as "none"; the outline marks demo data.
+  demo: { fillColor: '#ced4da', fillOpacity: 0.35 },
   none: { fillColor: '#ced4da', fillOpacity: 0.35 },
 };
 
 const TABLE_PREVIEW = 20;
+
+/** Outline of gminy with fictional demo data only (seed_aed_demo). */
+const DEMO_OUTLINE = '#7048e8';
+
+function isDemoOnly(gmina: GminaCoverage): boolean {
+  return gmina.officialCount === 0 && gmina.demoCount > 0;
+}
 
 /**
  * AED campaign page: counters and gmina coverage map from the "Raport zbiorczy AED" dataset.
@@ -58,6 +65,7 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
   readonly providerPanelUrl = AED_PROVIDER_PANEL_URL;
   readonly statusStyle = STATUS_STYLE;
   readonly tablePreview = TABLE_PREVIEW;
+  readonly isDemoOnly = isDemoOnly;
 
   state: LoadState = 'loading';
   /** Loading of the OpenStreetMap resource, which feeds the gap map and tables. */
@@ -220,11 +228,16 @@ export class AedCampaignComponent implements AfterViewInit, OnDestroy {
       GminaFeature['properties']
     >;
     const layer = L.geoJSON(collection, {
-      style: (feature) => ({
-        ...STATUS_STYLE[coverage.get(feature.properties.terc)?.status || 'none'],
-        color: '#495057',
-        weight: 0.4,
-      }),
+      style: (feature) => {
+        const gmina = coverage.get(feature.properties.terc);
+        return {
+          ...STATUS_STYLE[gmina?.status || 'none'],
+          // Gminy with fictional demo data only keep their official-data fill and get a dashed violet outline.
+          ...(gmina && isDemoOnly(gmina)
+            ? { color: DEMO_OUTLINE, weight: 2.5, dashArray: '4 3' }
+            : { color: '#495057', weight: 0.4 }),
+        };
+      },
       onEachFeature: (feature, featureLayer) => {
         featureLayer.bindTooltip(this.tooltip(coverage.get(feature.properties.terc)), { sticky: true });
       },

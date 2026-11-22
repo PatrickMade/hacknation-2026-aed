@@ -139,7 +139,7 @@
           defibrylatory, ale w Raporcie zbiorczym AED nie ma o nich danych. Szare gminy nie mają danych z żadnego z tych
           źródeł. Te same informacje są w tabelach pod mapą.
           @if (summary.gminyDemoOnly) {
-            Fioletowe gminy mają tylko fikcyjne dane demonstracyjne.
+            Fioletowa przerywana ramka oznacza gminę, w której są tylko fikcyjne dane demonstracyjne.
           }
         </p>
         <p id="aed-campaign-map-scope" class="aed-campaign__source">
@@ -162,17 +162,14 @@
           </li>
           @if (summary.gminyDemoOnly) {
             <li>
-              <span
-                class="aed-campaign__swatch"
-                [style.background]="statusStyle.demo.fillColor"
-                aria-hidden="true"></span>
-              Tylko dane demonstracyjne (fikcyjne): {{ gminyLabel(summary.gminyDemoOnly) }}
+              <span class="aed-campaign__swatch aed-campaign__swatch--demo" aria-hidden="true"></span>
+              Fioletowa ramka - tylko dane demonstracyjne (fikcyjne): {{ gminyLabel(summary.gminyDemoOnly) }}
             </li>
           }
           <li>
             <span class="aed-campaign__swatch aed-campaign__swatch--none" aria-hidden="true"></span>
             Brak danych:
-            {{ gminyLabel(summary.gminyTotal - summary.gminyCovered - summary.gminyDemoOnly - summary.gaps) }}
+            {{ gminyLabel(summary.gminyTotal - summary.gminyCovered - summary.gaps) }}
           </li>
         </ul>
         <div
@@ -199,7 +196,12 @@
                 <tbody>
                   @for (gmina of showAllGaps ? gapGminy : gapGminy.slice(0, tablePreview); track gmina.terc) {
                     <tr>
-                      <th scope="row">{{ gmina.name }}</th>
+                      <th scope="row">
+                        {{ gmina.name }}
+                        @if (isDemoOnly(gmina)) {
+                          <span class="aed-campaign__demo-tag">(tylko dane demonstracyjne)</span>
+                        }
+                      </th>
                       <td class="text-end">{{ gmina.osmCount }}</td>
                     </tr>
                   }
